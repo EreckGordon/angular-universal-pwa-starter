@@ -1,0 +1,15 @@
+{
+    "name": "Angular Universal CLI Starter",
+    "display": "standalone",
+    "start_url": "./?utm_source=homescreen",
+    "short_name": "ng-pwa",
+    "theme_color": "#f27b00",
+    "orientation": "portrait",
+    "background_color": "#3a1c8d",
+    "icons": [{
+          "src": "/assets/logo-512x512.png",
+          "sizes": "512x512"
+        }
+    ]
+
+}

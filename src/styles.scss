@@ -1,0 +1,228 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$primary-font: "Roboto", "Helvetica", "Arial", sans-serif;
+$break-small: 320px;
+$break-mobile: 800px;
+$break-large: 1200px;
+
+$primary: mat-palette($mat-blue, 800);
+$accent:  mat-palette($mat-teal, 500, A400, 900);
+$warn:    mat-palette($mat-red, 900);
+$app-theme: mat-light-theme($primary, $accent, $warn);
+@include angular-material-theme($app-theme);
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: $primary-font;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px; 
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+
+pre {
+  font-family: $primary-font;
+  font-size: 14px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+/**
+  * Basic styles from Material Design Lite for HTML elements
+  */
+  h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0; }
+
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+  font-family: $primary-font;
+  font-size: 56px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  opacity: 0.54;
+  font-size: 0.6em; }
+
+h1 {
+  font-family: $primary-font;
+  font-size: 56px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin-top: 24px;
+  margin-bottom: 24px; }
+
+h2 {
+  font-family: $primary-font;
+  font-size: 45px;
+  font-weight: 400;
+  line-height: 48px;
+  margin-top: 24px;
+  margin-bottom: 24px; }
+
+h3 {
+  font-family: $primary-font;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 40px;
+  margin-top: 24px;
+  margin-bottom: 24px; }
+
+h4 {
+  font-family: $primary-font;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  -moz-osx-font-smoothing: grayscale;
+  margin-top: 24px;
+  margin-bottom: 16px; }
+
+h5 {
+  font-family: $primary-font;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-top: 24px;
+  margin-bottom: 16px; }
+
+h6 {
+  font-family: $primary-font;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.04em;
+  margin-top: 24px;
+  margin-bottom: 16px; }
+
+p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+  margin-bottom: 0; }
+
+a {
+  font-weight: 500; }
+
+blockquote {
+  font-family: $primary-font;
+  position: relative;
+  font-size: 24px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.35;
+  letter-spacing: 0.08em; }
+  blockquote:before {
+    position: absolute;
+    left: -0.5em;
+    content: '“'; }
+  blockquote:after {
+    content: '”';
+    margin-left: -0.05em; }
+
+mark {
+  background-color: #f4ff81; }
+
+dt {
+  font-weight: 700; }
+
+address {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  font-style: normal; }
+
+ul, ol {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0; }
+
+
+
+  
+.loader-wrap{
+  position: absolute;
+  left: 0;right: 0;top: 0;bottom: 0;
+  margin: auto;
+}
+
+.loader{
+  $loader-size: 4;
+  $animation-duration: 2s;
+  $animation-speed: 10;
+  $animation-scale: 1.4;
+  $loader-color: teal;
+  $loader-text-color: teal;
+  
+  position: absolute;
+  left: 0;right: 0;top: 0;bottom: 0;
+  margin: auto;
+  height: ($loader-size*10px);
+  width: ($loader-size*20px);
+  box-sizing: border-box;
+  
+  .loader-item{
+    position: relative;
+    float: left;
+    height: ($loader-size*10px);
+    width: ($loader-size*1px);
+    margin: 0 ($loader-size/2)*1px;
+    background-color: $loader-color;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}){
+        animation: loader-item-#{$i} $animation-duration linear infinite;
+      } 
+    }   
+    
+  }
+  
+  &:after{
+    content: 'Loading...';
+    font-size: ($loader-size*4px);
+    color: $loader-text-color;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: ($loader-size*-8px);
+    margin: auto;
+  }
+  
+  @for $i from 0 through 9 {
+    @keyframes loader-item-#{$i+1}{
+      #{$i+1+$i*5 * 1%}{
+        transform: scaleY(1);
+      }
+      #{$i+1+$i*5+$animation-speed * 1%}{
+        transform: scaleY($animation-scale);
+      }
+      #{$i+1+$i*5+$animation-speed*2 * 1%}{
+        transform: scaleY(1);
+      }
+      100%{
+        transform: scaleY(1);
+      }
+    } 
+  }
+
+}
