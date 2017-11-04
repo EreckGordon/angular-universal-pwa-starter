@@ -17,9 +17,11 @@ enableProdMode();
 const AppServerModuleNgFactory = require('../dist-server/main.bundle').AppServerModuleNgFactory;
 
 import { API } from './api';
+import { DatabaseConnection } from './database-connection';
 
 const app = express();
 const api = new API();
+const db = new DatabaseConnection();
 
 const baseUrl = `http://localhost:8000`;
 const bodyParser = require('body-parser');
@@ -76,4 +78,3 @@ app.post('/api/data', cors(options), (req, res, next) => {
 app.listen(8000, () => {
   console.log(`Listening at ${baseUrl}`);
 });
-

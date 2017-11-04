@@ -10,13 +10,31 @@ module.exports = {
   resolve: {
   	extensions: ['.ts', '.js']
   },
+  //externals: ["node_modules/pg"], 
   module: {
   	loaders: [
-  	  { test: /\.ts$/, loader: 'ts-loader' }
+  	  { test: /\.ts$/, loader: 'awesome-typescript-loader' }
   	]
   },  
   target: 'node',
   plugins: [
-  	new webpack.optimize.UglifyJsPlugin()
+    new webpack.ContextReplacementPlugin(
+      // fixes WARNING Critical dependency: the request of a dependency is an expression
+      /(.+)?angular(\\|\/)core(.+)?/,
+      path.join(__dirname, 'server'), // location of your src
+      {} // a map of your routes
+    ),
+    new webpack.ContextReplacementPlugin(
+      // fixes WARNING Critical dependency: the request of a dependency is an expression
+      /(.+)?express(\\|\/)(.+)?/,
+      path.join(__dirname, 'server'),
+      {}
+    )/*, 
+    new webpack.ContextReplacementPlugin(
+      // fixes WARNING Critical dependency: the request of a dependency is an expression
+      /(.+)?typeorm(\\|\/)(.+)?/,
+      path.join(__dirname, 'server'),
+      {}
+    )*/     
   ]
 };

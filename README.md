@@ -1,6 +1,12 @@
 # Angular Universal PWA Starter
 Angular Universal PWA Starter built with Angular Cli on Expressjs.
 
+## Important
+- webpack does not like typeorm because it uses a dynamic import statement.
+- to get around this, i edit `node_modules/typeorm/driver/postgres/PostgresDriver.js` starting at line 565, and replace the calls to PlatformTools with require("pg") and require("pg-native").
+- any type `typeorm` is installed, you will have to edit node_modules. Otherwise you could form typeorm and otherwise follow the updates.
+
+
 ## Assumptions
 - angular cli (project generated with version 1.3.1)
 - yarn (dependency management)
