@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: './server/server.ts',
@@ -10,7 +11,6 @@ module.exports = {
   resolve: {
   	extensions: ['.ts', '.js']
   },
-  //externals: ["node_modules/pg"], 
   module: {
   	loaders: [
   	  { test: /\.ts$/, loader: 'awesome-typescript-loader' }
@@ -25,16 +25,19 @@ module.exports = {
       {} // a map of your routes
     ),
     new webpack.ContextReplacementPlugin(
-      // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?express(\\|\/)(.+)?/,
       path.join(__dirname, 'server'),
       {}
-    )/*, 
+    ), 
     new webpack.ContextReplacementPlugin(
-      // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?typeorm(\\|\/)(.+)?/,
-      path.join(__dirname, 'server'),
-      {}
-    )*/     
+    ),
+    new UglifyJSPlugin({
+      uglifyOptions: {
+        ecma: 8,
+        mangle: false
+      },
+      parallel: 16
+    })
   ]
 };
