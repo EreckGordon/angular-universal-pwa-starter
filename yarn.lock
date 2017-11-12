@@ -6167,9 +6167,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typeorm@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.1.1.tgz#d2a4b41a087e6a6e3b9e23b303ae65a7d5446461"
+typeorm@^0.2.0-alpha.1:
+  version "0.2.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.0-alpha.1.tgz#5b1784a191f3879b093c7f594093951d5bcf8e50"
   dependencies:
     app-root-path "^2.0.1"
     chalk "^2.0.1"
@@ -6196,8 +6196,8 @@ typescript@~2.4.0:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.2.tgz#f8395f85d459276067c988aa41837a8f82870844"
 
 uglify-es@^3.1.3:
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.8.tgz#2f21a56871d6354dcc21469cc034c3967f14c5b1"
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.1.9.tgz#6c82df628ac9eb7af9c61fd70c744a084abe6161"
   dependencies:
     commander "~2.11.0"
     source-map "~0.6.1"
@@ -6517,6 +6517,10 @@ webpack-dev-server@~2.7.1:
     supports-color "^3.1.1"
     webpack-dev-middleware "^1.11.0"
     yargs "^6.0.0"
+
+webpack-filter-warnings-plugin@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/webpack-filter-warnings-plugin/-/webpack-filter-warnings-plugin-1.1.0.tgz#bafbe25827ad91213bc352b945409e8c509881b5"
 
 webpack-merge@^4.1.0:
   version "4.1.0"

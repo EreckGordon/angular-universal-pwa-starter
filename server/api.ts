@@ -1,5 +1,9 @@
 const util = require('util');
 
+import { DatabaseConnection } from './database-connection';
+
+const db = new DatabaseConnection();
+
 export class API {
 
   async helloWorld(body){

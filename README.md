@@ -1,17 +1,11 @@
 # Angular Universal PWA Starter
 Angular Universal PWA Starter built with Angular Cli on Expressjs.
 
-## Important
-- webpack does not like typeorm because it uses a dynamic import statement.
-- to get around this, i edit `node_modules/typeorm/driver/postgres/PostgresDriver.js` starting at line 565, and replace the calls to PlatformTools with require("pg") and require("pg-native").
-- any type `typeorm` is installed, you will have to edit node_modules. Otherwise you could form typeorm and otherwise follow the updates.
-
-
 ## Assumptions
 - angular cli (project generated with version 1.3.1)
 - yarn (dependency management)
 - angular 4.3+ (new httpClient)
-- It is written for a windows machine, simple commands like copying (robocopy) and delete (del) would need to be replaced with os equivalent.
+- The deployment scripts are written for a windows machine, simple commands like copying (robocopy) and delete (del) would need to be replaced with os equivalent.
 - You have another folder called angular-universal-pwa-starter-deploy on the same level that you have angular-universal-pwa-starter.
 	- angular-universal-pwa-starter-deploy contains:a git repo, .gitignore, and .gitattributes. It is the deployment folder that you pull from to update the server.
 	- The various build scripts add server.js and the entire frontend dist folder to the angular-universal-pwa-starter-deploy folder.

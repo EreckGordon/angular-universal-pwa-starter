@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: './server/server.ts',
@@ -15,7 +16,7 @@ module.exports = {
   	loaders: [
   	  { test: /\.ts$/, loader: 'awesome-typescript-loader' }
   	]
-  },  
+  },
   target: 'node',
   plugins: [
     new webpack.ContextReplacementPlugin(
@@ -31,13 +32,19 @@ module.exports = {
     ), 
     new webpack.ContextReplacementPlugin(
       /(.+)?typeorm(\\|\/)(.+)?/,
+      path.join(__dirname, 'server'),
+      {}
     ),
+    new FilterWarningsPlugin({
+    	exclude: [/mongodb/, /mssql/, /mysql/, /mysql2/, /oracledb/, /redis/, /sqlite3/]
+    }),
     new UglifyJSPlugin({
+      exclude: [/typeorm/, /pg/, /pg-native/, /pg-query-stream/],
       uglifyOptions: {
         ecma: 8,
         mangle: false
       },
-      parallel: 16
+      parallel: true
     })
   ]
 };
