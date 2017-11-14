@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 
 import { CustomMaterialModule } from './shared/custom-material-module/index';
 
@@ -22,6 +22,10 @@ import { BlogModule } from './features/blog/index';
     CustomMaterialModule,
     BlogModule,
     HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+        cookieName: 'XSRF-TOKEN',
+        headerName: 'x-xsrf-token'
+    }),    
     RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' }), 
   ],
   providers: [],

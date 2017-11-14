@@ -16,6 +16,12 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 enableProdMode();
 const AppServerModuleNgFactory = require('../dist-server/main.bundle').AppServerModuleNgFactory;
 
+import {retrieveUserIdFromRequest} from "./middleware/get-user.middleware";
+import {checkIfAuthenticated} from "./middleware/authentication.middleware";
+import {checkCsrfToken} from "./middleware/csrf.middleware";
+import {checkIfAuthorized} from "./middleware/authorization.middleware";
+
+
 import { API } from './api';
 
 const app = express();
@@ -23,6 +29,7 @@ const api = new API();
 
 const baseUrl = `http://localhost:8000`;
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 import * as cors from 'cors';
 
 app.engine('html', ngExpressEngine({
@@ -33,7 +40,7 @@ app.set('view engine', 'html');
 app.set('views', 'src');
 
 const options:cors.CorsOptions = {
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization", "x-xsrf-token"],
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
   origin: ['http://localhost:4200', 'http://localhost:8000'],
@@ -48,6 +55,8 @@ app.use('/', express.static('dist', { index: false }));
 app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: 30 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(retrieveUserIdFromRequest);
 
 const routes: string[] = [
   '',
@@ -67,10 +76,22 @@ routes.forEach(route => {
   });
 });
 
-app.post('/api/data', cors(options), (req, res, next) => {
+app.post('/api/login', (req, res, next) => {
   console.time(`GET: ${req.originalUrl}`);
-  api.helloWorld(req.body).then(value => res.json(value));
+  api.login(req, res)
   console.timeEnd(`GET: ${req.originalUrl}`);
+});
+
+app.post('/api/logout', checkIfAuthenticated, checkCsrfToken, (req, res, next) => {
+  console.time(`GET: ${req.originalUrl}`);
+  api.logout(req, res)
+  console.timeEnd(`GET: ${req.originalUrl}`);  
+});
+
+app.post('/api/create-user', (req, res, next) => {
+  console.time(`GET: ${req.originalUrl}`);
+  api.createUser(req, res);
+  console.timeEnd(`GET: ${req.originalUrl}`);  
 });
 
 app.listen(8000, () => {
