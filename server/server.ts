@@ -82,11 +82,7 @@ app.post('/api/login', (req, res, next) => {
   console.timeEnd(`GET: ${req.originalUrl}`);
 });
 
-app.post('/api/logout', checkIfAuthenticated, checkCsrfToken, (req, res, next) => {
-  console.time(`GET: ${req.originalUrl}`);
-  api.logout(req, res)
-  console.timeEnd(`GET: ${req.originalUrl}`);  
-});
+app.post('/api/logout', checkIfAuthenticated, checkCsrfToken, api.logout);
 
 app.post('/api/create-user', (req, res, next) => {
   console.time(`GET: ${req.originalUrl}`);

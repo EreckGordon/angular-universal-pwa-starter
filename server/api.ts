@@ -39,7 +39,7 @@ export class API {
 
       const credentials = req.body;
 
-      const usernameTaken = await !!db.findUserByEmail(credentials.email)
+      const usernameTaken = await this.checkIfUserExists(credentials.email)
 
       if (usernameTaken) res.sendStatus(409).json({error: 'email already in use'});
 
@@ -62,7 +62,7 @@ export class API {
   }
 
   private async checkIfUserExists(email:string) {
-    return await !!db.findUserByEmail(email);
+    return await db.findUserByEmail(email) === undefined ? false : true;
   }
 
   private async createUserAndSession(res:Response, credentials) {
