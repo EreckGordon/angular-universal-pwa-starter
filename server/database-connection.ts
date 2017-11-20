@@ -43,7 +43,8 @@ export class DatabaseConnection {
   }
 
   async findUserById(id:string){
-      return await this.connection.manager.findOneById(User, id)
+    this.connection.manager.findByIds
+      return await this.connection.getRepository(User).findOne(id)
   }
 
   async createUser(email:string, passwordHash:string){

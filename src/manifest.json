@@ -1,5 +1,8 @@
 {
-    "name": "Angular Universal CLI Starter",
+    "dir": "ltr",
+    "lang": "en",
+    "name": "Angular Universal PWA + CLI Starter",
+    "scope": "/",
     "display": "standalone",
     "start_url": "./?utm_source=homescreen",
     "short_name": "ng-pwa",

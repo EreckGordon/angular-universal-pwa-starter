@@ -8,13 +8,15 @@ import 'ts-helpers';
 
 import * as express from 'express';
 import * as path from 'path';
+import { readFileSync } from 'fs';
 const compression = require('compression');
 
 import { platformServer, renderModuleFactory } from '@angular/platform-server';
 import { enableProdMode } from '@angular/core';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 enableProdMode();
-const AppServerModuleNgFactory = require('../dist-server/main.bundle').AppServerModuleNgFactory;
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist-server/main.bundle');
+import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
 
 import {retrieveUserIdFromRequest} from "./middleware/get-user.middleware";
 import {checkIfAuthenticated} from "./middleware/authentication.middleware";
@@ -32,9 +34,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 import * as cors from 'cors';
 
-app.engine('html', ngExpressEngine({
-  bootstrap: AppServerModuleNgFactory
-}));
+const configuredNgExpressEngine = ngExpressEngine({
+  bootstrap: AppServerModuleNgFactory,
+  providers: [
+    provideModuleMap(LAZY_MODULE_MAP)
+  ]
+});
+
+app.engine('html', configuredNgExpressEngine)
 
 app.set('view engine', 'html');
 app.set('views', 'src');
@@ -52,7 +59,7 @@ app.options("*", cors(options));
 
 app.use(compression());
 app.use('/', express.static('dist', { index: false }));
-app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: 30 }));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: '1y' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());

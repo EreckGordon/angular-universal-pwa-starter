@@ -11,6 +11,7 @@ import { HomeComponent } from './features/home/home.component';
 import { AboutComponent } from './features/about/about.component';
 import { BlogModule } from './features/blog/index';
 
+
 @NgModule({
   declarations: [
   	NotFound404Component,
@@ -26,7 +27,7 @@ import { BlogModule } from './features/blog/index';
         cookieName: 'XSRF-TOKEN',
         headerName: 'x-xsrf-token'
     }),    
-    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' }), 
+    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
   ],
   providers: [],
   bootstrap: [],

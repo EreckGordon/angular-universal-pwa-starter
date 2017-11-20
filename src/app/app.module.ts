@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
+
+import { TransferHttpCacheModule } from '@nguniversal/common'
+import { BrowserTransferStateModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { AppCommonModule } from './app.common.module';
-import { SEOService } from './shared/seo.service';
 
+import { SEOService } from './shared/seo.service';
+import { NGSWService } from './shared/ngsw.service';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -13,8 +18,14 @@ import { SEOService } from './shared/seo.service';
   ],
   imports: [
     BrowserAnimationsModule,
-    AppCommonModule   
+    AppCommonModule,
+    BrowserTransferStateModule,
+    TransferHttpCacheModule,
+    ServiceWorkerModule.register('/ngsw-worker.js')
   ],
-  providers: [ SEOService ]
+  providers: [ 
+    SEOService,
+    NGSWService
+  ]
 })
 export class AppModule { }

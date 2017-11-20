@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ServerModule } from '@angular/platform-server';
+import { ServerModule, ServerTransferStateModule } from '@angular/platform-server';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -13,9 +13,12 @@ import { SEOService } from './shared/seo.service';
   imports: [
     AppCommonModule,
     NoopAnimationsModule,
+    ServerTransferStateModule,
     ServerModule
   ],
   bootstrap: [ AppComponent ],
-  providers: [ SEOService ]
+  providers: [ 
+  	SEOService 
+  ]
 })
 export class AppServerModule {}

@@ -1,20 +1,20 @@
 <div style="display:flex; min-height: 100vh; flex-direction: column;">
 
-	<nav md-tab-nav-bar>
-		<a mdTabLink
+	<nav mat-tab-nav-bar>
+		<a matTabLink
 			 routerLink="/"
 			 routerLinkActive #rla="routerLinkActive"
 			 [active]="rla.isActive"
 			 [routerLinkActiveOptions]="{exact:true}">
-			 Home<md-icon style="padding-left: .3em">home</md-icon>
+			 Home<mat-icon style="padding-left: .3em">home</mat-icon>
 		</a>	
-		<a mdTabLink
+		<a matTabLink
 			 *ngFor="let view of views"
 			 [routerLink]="view.link"
 			 routerLinkActive #rla="routerLinkActive"
 			 [active]="rla.isActive"
 			 >
-			 {{view.name}}<md-icon style="padding-left: .3em">{{view.icon}}</md-icon>
+			 {{view.name}}<mat-icon style="padding-left: .3em">{{view.icon}}</mat-icon>
 		</a>
 	</nav>	
 
@@ -23,8 +23,8 @@
 	</div>
 
 	<div>
-		<md-toolbar>
+		<mat-toolbar>
 
-		</md-toolbar>
+		</mat-toolbar>
 	</div>
 </div>
