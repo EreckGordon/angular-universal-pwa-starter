@@ -15,12 +15,12 @@ export class AppComponent {
 	views = views;
 	worker:NGSWService;
 
-	constructor(public router: Router, private injector:Injector, @Inject(PLATFORM_ID) private platformId: Object){}
-
-	ngOnInit(){
+	constructor(public router: Router, private injector:Injector, @Inject(PLATFORM_ID) private platformId: Object){
 		if (isPlatformBrowser(this.platformId)){
 			this.worker = this.injector.get(NGSWService)
 		}
 	}
+
+	ngOnInit(){}
 
 }

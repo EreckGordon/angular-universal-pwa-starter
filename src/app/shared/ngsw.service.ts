@@ -12,16 +12,17 @@ import 'rxjs/add/operator/startWith';
 export class NGSWService {
 	private checkForUpdateSubj = new Subject();
 	private checkInterval = 1000 * 60 * 60 * 6;   // 6 hours
-
 	constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar){
 		this.checkForUpdateSubj
 			.debounceTime(this.checkInterval)
 	        .startWith(null)
-	        .subscribe(() => this.activateUpdate());		
+	        .subscribe(() => this.checkForUpdate());
 	}
 
 	ngOnInit(){
+
 	    this.swUpdate.available.subscribe(event => {
+	    	console.log(event)
 
 	    	console.log('[App] Update available: current version is', event.current, 'available version is', event.available);
 	    	let snackBarRef = this.snackBar.open('Newer version of the app is available', 'Refresh');
@@ -33,14 +34,17 @@ export class NGSWService {
 	    });
 
 	    this.swUpdate.activated.subscribe(event => {
+	    	console.log(event)
 	    	console.log('[App] Update activated: old version was', event.previous, 'new version is', event.current);
 	    });
+
 	}		
 
 	checkForUpdate() {
 		console.log('[App] checkForUpdate started')
 		this.swUpdate.checkForUpdate()
 		.then(() => {
+			this.scheduleCheckForUpdate();
 			console.log('[App] checkForUpdate completed')
 		})
 		.catch(err => {
@@ -53,7 +57,6 @@ export class NGSWService {
 		this.swUpdate.activateUpdate()
 		.then(() => {
 			console.log('[App] activateUpdate completed')
-			window.location.reload()
 	  	})
 	  	.catch(err => {
 	    	console.error(err);
@@ -62,7 +65,6 @@ export class NGSWService {
 
 	private scheduleCheckForUpdate(){
 		this.checkForUpdateSubj.next();
-	}	
-
+	}
 	
 }
