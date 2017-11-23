@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { views } from './app-nav-views';
 import { NGSWService } from './shared/ngsw.service';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class AppComponent {
 	worker:NGSWService;
 
 	constructor(public router: Router, private injector:Injector, @Inject(PLATFORM_ID) private platformId: Object){
-		if (isPlatformBrowser(this.platformId)){
+		if (isPlatformBrowser(this.platformId) && environment.production){
 			this.worker = this.injector.get(NGSWService)
 		}
 	}
