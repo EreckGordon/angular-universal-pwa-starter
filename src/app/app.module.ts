@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { AppCommonModule } from './app.common.module';
 import { SEOService } from './shared/seo.service';
 import { NGSWService } from './shared/ngsw.service';
+import { environment } from '../environments/environment';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -20,7 +21,7 @@ import { NGSWService } from './shared/ngsw.service';
     AppCommonModule,
     BrowserTransferStateModule,
     TransferHttpCacheModule,
-    ServiceWorkerModule.register('/ngsw-worker.js')
+    environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
   ],
   providers: [ 
     SEOService,
