@@ -1,25 +1,14 @@
-import { Component, Inject } from '@nestjs/common';
+import { Component } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Article } from './article.entity';
+import { AuthService } from '../auth/auth.service';
+import { ArticleService } from '../article/article.service';
 
 @Component()
 export class APIService {
-  constructor(@Inject('ArticleRepositoryToken') private readonly articleRepository: Repository<Article>) {}
+  constructor(
+  	private readonly authService: AuthService, 
+  	private readonly articleService:ArticleService
+  ) {}
 
-  async findAllArticles(): Promise<Article[]> {
-    return await this.articleRepository.find();
-  }
-
-  async findArticleById(id:string){
-    return await this.articleRepository.findOne(id)
-  }
-
-  async createArticle(title:string, slug:string, content:string){
-	const article = new Article();
-	article.title = title;
-	article.slug = slug;
-	article.content = content;
-	return await this.articleRepository.save(article)
-  }
 
 }
