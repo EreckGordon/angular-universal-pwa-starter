@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
 		const body = {
 			hello: 'world'
 		};
-		const helloWorld = this.http.post('http://localhost:8000/api/data', body, options)
+		const helloWorld = this.http.post('http://localhost:8000/api/hello-world', body, options)
 	    .take(1).subscribe(result => {
 	    	console.log(result)
 	    }, (error) => console.log(error));
