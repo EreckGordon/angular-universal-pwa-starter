@@ -17,10 +17,10 @@ import * as path from 'path';
 import * as compression from 'compression';
 
 import { ApplicationModule } from './modules/app.module';
+const DIST_FOLDER = path.join(process.cwd(), 'dist');
+const DIST_BROWSER_FOLDER = path.join(DIST_FOLDER, 'dist-browser');
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOLDER, 'dist-bridge', 'main.bundle'));
 
-
-const server = express();
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist-server/main.bundle');
 enableProdMode();
 const configuredNgExpressEngine = ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
@@ -28,9 +28,12 @@ const configuredNgExpressEngine = ngExpressEngine({
     provideModuleMap(LAZY_MODULE_MAP)
   ]
 });
+
+const server = express();
+
 server.engine('html', configuredNgExpressEngine)
 server.set('view engine', 'html');
-server.set('views', 'dist');
+server.set('views', DIST_BROWSER_FOLDER);
 
 const options:cors.CorsOptions = {
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization", "x-xsrf-token"],
@@ -42,8 +45,7 @@ const options:cors.CorsOptions = {
 };
 
 server.use(compression());
-server.use('/', express.static('dist', { index: false }));
-server.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: '1y' }));
+server.get('*.*', express.static(DIST_BROWSER_FOLDER, {maxAge: '1y'}));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cookieParser());
