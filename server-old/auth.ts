@@ -13,7 +13,7 @@ const signJwt = util.promisify(jwt.sign);
 
 const RSA_PRIVATE_KEY = fs.readFileSync('./private.key');
 const RSA_PUBLIC_KEY = fs.readFileSync('./public.key');
-const SESSION_DURATION = 1000;
+
 
 
 export class Auth {
