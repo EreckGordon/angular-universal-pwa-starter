@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { ArticleService } from '../article/article.service';
 import { User } from '../auth/user.entity';
 
-interface UserSessionCSRFResult {
+interface AuthResult {
 	apiCallResult: boolean,
 	result: {
 		user?: User,
@@ -13,6 +13,7 @@ interface UserSessionCSRFResult {
 		error?: any
 	}
 }
+
 
 
 @Component()
@@ -27,8 +28,7 @@ export class APIService {
   	return this.authService.publicRSAKey
   }
 
-
-  async login(body): Promise<UserSessionCSRFResult> {
+  async login(body): Promise<AuthResult> {
 
       const credentials = body;
 
@@ -37,7 +37,7 @@ export class APIService {
       const userExists = user === undefined ? false : true;
 
       if (!userExists) {
-      	const result: UserSessionCSRFResult = {apiCallResult: false, result: {error:'user does not exist'}}
+      	const result: AuthResult = {apiCallResult: false, result: {error:'user does not exist'}}
         return result
       }
 
@@ -45,7 +45,7 @@ export class APIService {
       	try {
       		const loginResult = await this.authService.loginAndCreateSession(credentials, user);
       		if (loginResult["message"]==="Password Invalid") throw new Error("Password Invalid");
-      		const result: UserSessionCSRFResult = {
+      		const result: AuthResult = {
       			apiCallResult: true, 
       			result: {
       				user, 
@@ -56,45 +56,59 @@ export class APIService {
         	return result
     	}
     	catch (error) {
-    		const result: UserSessionCSRFResult = {apiCallResult: false, result: {error: "Password Invalid"}}
+    		const result: AuthResult = {apiCallResult: false, result: {error: "Password Invalid"}}
     		return result
     	}
       }
 
   }
 
-  logout() {
+  async createUser(body): Promise<AuthResult> {
 
-      //res.clearCookie("SESSIONID");
+      const credentials = body;
 
-      //res.clearCookie("XSRF-TOKEN");
+      const usernameTaken = await this.authService.emailTaken(credentials.email)
 
-      //res.sendStatus(200);
-  }
+      if (usernameTaken) {
+      	const result: AuthResult = {apiCallResult: false, result: {error: 'Email already in use'}}
+      	return result
+      	//res.sendStatus(409).json({error: 'email already in use'});
+      }
 
-  async createUser(body) {
-
-      /*const credentials = body;
-
-      const usernameTaken = await this.checkIfUserExists(credentials.email)
-
-      if (usernameTaken) res.sendStatus(409).json({error: 'email already in use'});
-
-      const passwordErrors = auth.validatePassword(credentials.password);
+      const passwordErrors = this.authService.validatePassword(credentials.password);
 
       if (passwordErrors.length > 0) {
-          res.status(400).json({passwordErrors});
+      	  const result: AuthResult = {apiCallResult: false, result: {error: passwordErrors}}
+      	  return result;
+      	  //res.status(400).json({passwordErrors});
       }
 
       else {
+      	try{
+          	const createUserResult = await this.authService.createUserAndSession(credentials);
+      		const result: AuthResult = {
+      			apiCallResult: true, 
+      			result: {
+      				user: createUserResult.user, 
+      				sessionToken: createUserResult.sessionToken, 
+      				csrfToken: createUserResult.csrfToken
+      			}
+      		};
+        	return result 
+      //something similar will be sent in the api controller for create-user
+      //res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
 
-          this.createUserAndSession(res, credentials)
-              .catch((err) => {
-              console.log("Error creating new user", err);
-              res.sendStatus(500);
-          });
+      //res.cookie("XSRF-TOKEN", csrfToken);
 
-      }*/
+      //res.status(200).json({id:user.id, email:user.email, roles: user.roles});        	               		
+      	}
+      	catch(e){
+          	const result: AuthResult = {apiCallResult: false, result: {error: 'Error creating new user'}}
+            return result
+            //res.sendStatus(500);      		
+      	}
+
+      }
 
   }  
 

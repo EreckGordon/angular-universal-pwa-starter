@@ -46,51 +46,37 @@ export class AuthService {
   	return await this.userRepository.save(user)
   }
 
-  async createUserAndSession(res:Response, credentials) {
-
+  async createUserAndSession(credentials) {
+    try {
       const passwordHash = await argon2.hash(credentials.password);
-
       const user = await this.addUserToDatabase(credentials.email, passwordHash);
-
       const sessionToken = await this.createSessionToken(user);
-
       const csrfToken = await this.createCsrfToken();
-
       const result = {user, sessionToken, csrfToken};
-
       return result;
-
-      //something similar will be sent in the api controller for create-user
-      //res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
-
-      //res.cookie("XSRF-TOKEN", csrfToken);
-
-      //res.status(200).json({id:user.id, email:user.email, roles: user.roles});
+    }
+    catch(err){
+      return err
+    }
   }  
 
   async loginAndCreateSession(credentials:any, user:User): Promise<SessionAndCSRFToken> {
-
       try {
           const sessionToken = await this.attemptLogin(credentials, user);
           const csrfToken = await this.createCsrfToken();
           const result:SessionAndCSRFToken = {sessionToken, csrfToken}
           return result
-      }
-      
+      }      
       catch(err) {
         return err
       }
-
   }
 
   async attemptLogin(credentials:any, user:User) {
-
       const isPasswordValid = await argon2.verify(user.passwordHash, credentials.password);
-
       if (!isPasswordValid) {
           throw new Error("Password Invalid");
       }
-
       return this.createSessionToken(user);
   }
 
@@ -110,22 +96,16 @@ export class AuthService {
   }
 
   async decodeJwt(token:string) {
-
       const payload = await jwt.verify(token, RSA_PUBLIC_KEY);
-
       return payload;
   }
 
   validatePassword(password:string) {
-
     const schema = new passwordValidator();
-
     schema
       .is().min(10)
       .is().not().oneOf(['Passw0rd', 'Password123']);
-
-    return schema.validate(password, {list:true})
-
+    return schema.validate(password, {list:true});
   }    
 
 }

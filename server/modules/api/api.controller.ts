@@ -26,16 +26,14 @@ export class APIController {
   	}
   	else {
   		res.status(401).json({error: loginResult.result.error})
-  	}
-  	
+  	}  	
   }
 
-
   @Post('logout')
-  async logout(@Res() res:Response, @Body() body){
-  	const result = await this.apiService.logout()
-  	// this one had me checking auth status and csrf status via middleware before logging out. i guess i should use that middleware somehow.
-  	// return a result or an error code depending on the result of the logout request.  	
+  async logout(@Res() res:Response){
+      res.clearCookie("SESSIONID");
+      res.clearCookie("XSRF-TOKEN");
+      res.sendStatus(200);  		
   }
 
   @Post('create-user')
