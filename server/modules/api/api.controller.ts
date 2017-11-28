@@ -3,6 +3,11 @@ import { Request, Response, } from 'express';
 
 import { APIService } from './api.service';
 
+interface LoginInterface {
+	email: string,
+	password: string
+}
+
 
 @Controller('api')
 export class APIController {
@@ -16,7 +21,7 @@ export class APIController {
   }
 
   @Post('login')
-  async login(@Res() res:Response, @Body() body){
+  async login(@Res() res:Response, @Body() body:LoginInterface){
   	const loginResult = await this.apiService.login(body)
   	if (loginResult.apiCallResult) {
           const {user, sessionToken, csrfToken} = loginResult.result
@@ -25,7 +30,7 @@ export class APIController {
 		  res.status(200).json({id:user.id, email:user.email, roles: user.roles});		
   	}
   	else {
-  		res.status(401).json({error: loginResult.result.error})
+  		res.status(401).json(loginResult.result.error)
   	}  	
   }
 
@@ -37,9 +42,29 @@ export class APIController {
   }
 
   @Post('create-user')
-  async createUser(@Res() res:Response, @Body() body){
-  	const result = await this.apiService.createUser(body)
-  	// return a result or an error code depending on the result of the create user request.  
+  async createUser(@Res() res:Response, @Body() body:LoginInterface){
+  	const createUserResult = await this.apiService.createUser(body);
+  	if (createUserResult.apiCallResult){
+  		const {user, sessionToken, csrfToken} = createUserResult.result
+  		res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
+  		res.cookie("XSRF-TOKEN", csrfToken);
+  		res.status(200).json({id:user.id, email:user.email, roles: user.roles});  
+  	}
+  	else {  		
+  		switch (createUserResult.result.error) {
+  			case "Email already in use":
+  				res.sendStatus(409).json({error: 'Email already in use'});
+  				break;
+
+  			case "Error creating new user":
+  				res.sendStatus(500); 
+  				break;
+
+  			default:
+  				res.status(400).json(createUserResult.result.error);
+  				break;
+  		}
+  	} 
   }  
 
 }

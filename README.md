@@ -1,10 +1,12 @@
 # Angular Universal PWA Starter
-Angular Universal PWA Starter built with Angular Cli on Expressjs.
+Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Postgres.
 
 ## Assumptions
 - angular cli (project generated with version 1.6.0-rc.0)
 - yarn (dependency management)
 - angular 5.0+ (new service worker)
+- you don't actually use these provided public and private keys in your own project
+	- really, please don't that is a bad idea.
 - You have another folder called angular-universal-pwa-starter-deploy on the same level that you have angular-universal-pwa-starter.
 	- angular-universal-pwa-starter-deploy contains:a git repo, .gitignore, and .gitattributes. You will copy over the needed files with build scripts. It is the deployment folder that you pull from to update the server.
 	- The various build scripts compile the server and move the dist folder & package.json to the angular-universal-pwa-starter-deploy folder.
@@ -33,10 +35,12 @@ Angular Universal PWA Starter built with Angular Cli on Expressjs.
 
 
 creating deployment on vps:
-- cd /var/www/
-- sudo git remote add origin https://github.com/EreckGordon/angular-universal-pwa-starter-deploy
-- sudo git pull origin master
-- yarn
+```
+cd /var/www/
+sudo git remote add origin https://github.com/EreckGordon/angular-universal-pwa-starter-deploy
+sudo git pull origin master
+yarn
+```
 
 updating deployment:
 ```

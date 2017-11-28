@@ -72,7 +72,6 @@ export class APIService {
       if (usernameTaken) {
       	const result: AuthResult = {apiCallResult: false, result: {error: 'Email already in use'}}
       	return result
-      	//res.sendStatus(409).json({error: 'email already in use'});
       }
 
       const passwordErrors = this.authService.validatePassword(credentials.password);
@@ -80,7 +79,6 @@ export class APIService {
       if (passwordErrors.length > 0) {
       	  const result: AuthResult = {apiCallResult: false, result: {error: passwordErrors}}
       	  return result;
-      	  //res.status(400).json({passwordErrors});
       }
 
       else {
@@ -94,18 +92,11 @@ export class APIService {
       				csrfToken: createUserResult.csrfToken
       			}
       		};
-        	return result 
-      //something similar will be sent in the api controller for create-user
-      //res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
-
-      //res.cookie("XSRF-TOKEN", csrfToken);
-
-      //res.status(200).json({id:user.id, email:user.email, roles: user.roles});        	               		
+        	return result      	               		
       	}
       	catch(e){
           	const result: AuthResult = {apiCallResult: false, result: {error: 'Error creating new user'}}
-            return result
-            //res.sendStatus(500);      		
+            return result     		
       	}
 
       }
