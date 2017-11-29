@@ -8,6 +8,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - I have provided public and private keys for demonstration purposes only. Please do not use them in your project.
 	- don't even check your real keys into source control.
 - You have another folder called angular-universal-pwa-starter-deploy on the same level that you have angular-universal-pwa-starter.
+	- [Example deploy repo](https://github.com/EreckGordon/angular-universal-pwa-starter-deploy)
 	- angular-universal-pwa-starter-deploy contains:a git repo, .gitignore, and .gitattributes. You will copy over the needed files with build scripts. It is the deployment folder that you pull from to update the server.
 	- The various build scripts compile the server and move the dist folder & package.json to the angular-universal-pwa-starter-deploy folder.
 
