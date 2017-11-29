@@ -1,39 +1,27 @@
-/* tslint:disable no-console */
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
 import 'ts-helpers';
-//import 'rxjs/Rx';
 
-import * as express from 'express';
-import * as path from 'path';
-import { readFileSync } from 'fs';
-const compression = require('compression');
-
-import { platformServer, renderModuleFactory } from '@angular/platform-server';
+import { NestFactory } from '@nestjs/core';
 import { enableProdMode } from '@angular/core';
 import { ngExpressEngine } from '@nguniversal/express-engine';
-enableProdMode();
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist-server/main.bundle');
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
 
-import {retrieveUserIdFromRequest} from "./middleware/get-user.middleware";
-import {checkIfAuthenticated} from "./middleware/authentication.middleware";
-import {checkCsrfToken} from "./middleware/csrf.middleware";
-import {checkIfAuthorized} from "./middleware/authorization.middleware";
-
-
-import { API } from './api';
-
-const app = express();
-const api = new API();
-
-const baseUrl = `http://localhost:8000`;
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
+import * as path from 'path';
+import * as compression from 'compression';
 
+import { ApplicationModule } from './modules/app.module';
+const DIST_FOLDER = path.join(process.cwd(), 'dist');
+const DIST_BROWSER_FOLDER = path.join(DIST_FOLDER, 'dist-browser');
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOLDER, 'dist-bridge', 'main.bundle'));
+
+enableProdMode();
 const configuredNgExpressEngine = ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
   providers: [
@@ -41,10 +29,11 @@ const configuredNgExpressEngine = ngExpressEngine({
   ]
 });
 
-app.engine('html', configuredNgExpressEngine)
+const server = express();
 
-app.set('view engine', 'html');
-app.set('views', 'src');
+server.engine('html', configuredNgExpressEngine)
+server.set('view engine', 'html');
+server.set('views', DIST_BROWSER_FOLDER);
 
 const options:cors.CorsOptions = {
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization", "x-xsrf-token"],
@@ -54,49 +43,18 @@ const options:cors.CorsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 200
 };
-app.use(cors(options));
-app.options("*", cors(options));
 
-app.use(compression());
-app.use('/', express.static('dist', { index: false }));
-app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: '1y' }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(retrieveUserIdFromRequest);
+server.use(compression());
+server.get('*.*', express.static(DIST_BROWSER_FOLDER, {maxAge: '1y'}));
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(cookieParser());
+server.use(cors(options));
+server.options("*", cors(options));
 
-const routes: string[] = [
-  '',
-  'about',
-  'blog/*',
-  '*'
-];
+async function bootstrap() {
+  const app = await NestFactory.create(ApplicationModule, server);
+  await app.listen(8000);
+}
 
-routes.forEach(route => {
-  app.get('/' + route, (req, res) => {
-    console.time(`GET: ${req.originalUrl}`);
-    res.render('../dist/index', {
-      req: req,
-      res: res
-    });
-    console.timeEnd(`GET: ${req.originalUrl}`);
-  });
-});
-
-app.post('/api/login', (req, res, next) => {
-  console.time(`GET: ${req.originalUrl}`);
-  api.login(req, res)
-  console.timeEnd(`GET: ${req.originalUrl}`);
-});
-
-app.post('/api/logout', checkIfAuthenticated, checkCsrfToken, api.logout);
-
-app.post('/api/create-user', (req, res, next) => {
-  console.time(`GET: ${req.originalUrl}`);
-  api.createUser(req, res);
-  console.timeEnd(`GET: ${req.originalUrl}`);  
-});
-
-app.listen(8000, () => {
-  console.log(`Listening at ${baseUrl}`);
-});
+bootstrap();
