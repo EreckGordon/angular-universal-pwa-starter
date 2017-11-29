@@ -27,8 +27,8 @@ export class APIController {
   async login(@Res() res:Response, @Body() body:LoginInterface){
   	const loginResult = await this.apiService.login(body)
   	if (loginResult.apiCallResult) {
-          const {user, sessionToken, csrfToken} = loginResult.result
-          res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
+      const {user, sessionToken, csrfToken} = loginResult.result
+      res.cookie("SESSIONID", sessionToken, {httpOnly:true, secure:true});
 		  res.cookie("XSRF-TOKEN", csrfToken);
 		  res.status(200).json({id:user.id, email:user.email, roles: user.roles});		
   	}
@@ -40,9 +40,9 @@ export class APIController {
   @Post('logout')
   @Roles('user')
   async logout(@Res() res:Response){
-      res.clearCookie("SESSIONID");
-      res.clearCookie("XSRF-TOKEN");
-      res.sendStatus(200);  		
+      await res.clearCookie("SESSIONID");
+      await res.clearCookie("XSRF-TOKEN");
+      return res.sendStatus(200);  		
   }
 
   @Post('create-user')
