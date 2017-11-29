@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from './shared/custom-material-module/index';
 
@@ -21,13 +22,14 @@ import { BlogModule } from './features/blog/index';
   imports: [
     BrowserModule.withServerTransition({appId: 'angular-universal-pwa-starter'}),
     CustomMaterialModule,
-    BlogModule,
+    ReactiveFormsModule,
     HttpClientModule,
     HttpClientXsrfModule.withOptions({
         cookieName: 'XSRF-TOKEN',
         headerName: 'x-xsrf-token'
     }),    
-    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
+    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' }),
+    BlogModule
   ],
   providers: [],
   bootstrap: [],

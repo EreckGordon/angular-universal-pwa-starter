@@ -1,19 +1,20 @@
 # Angular Universal PWA Starter
-Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Postgres.
+Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Postgres. Auth with jsonwebtoken library.
 
 ## Assumptions
 - angular cli (project generated with version 1.6.0-rc.0)
 - yarn (dependency management)
 - angular 5.0+ (new service worker)
-- you don't actually use these provided public and private keys in your own project
-	- really, please don't that is a bad idea.
+- I have provided public and private keys for demonstration purposes only. Please do not use them in your project.
+	- don't even check your real keys into source control.
 - You have another folder called angular-universal-pwa-starter-deploy on the same level that you have angular-universal-pwa-starter.
 	- angular-universal-pwa-starter-deploy contains:a git repo, .gitignore, and .gitattributes. You will copy over the needed files with build scripts. It is the deployment folder that you pull from to update the server.
 	- The various build scripts compile the server and move the dist folder & package.json to the angular-universal-pwa-starter-deploy folder.
 
 ## Files that require changes for a fresh project
 - /src/app/app.common.module.ts `{appId: 'angular-universal-pwa-starter'}`
-- package.json you may want to rename your project
+- `private.key` and `public.key` generate your own. Don't store your production keys on github.
+- in `/server/modules/api/api.controller.ts` you may want to turn the session id setting from `secure:true` to `secure:false` to test if you are able to properly log in and out. For Production you want both `httpOnly` and `secure` to be true.
 
 ## Useful Commands
 - `ng serve` - Run in frontend development mode on port 4200.
@@ -33,7 +34,6 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 	- third it runs `copy-needed-files-to-deploy-folder` which copies yarn.lock and package.json for installing dependencies on server and moves the dist folder to angular-universal-pwa-starter-deploy (or whatever you name your folder ending in -deploy)
 	- fourth it runs `deploy-to-github` which changes your directory to the deploy folder, then makes an auto generated commit of the contents of the deploy folder.
 
-
 creating deployment on vps:
 ```
 cd /var/www/
@@ -51,3 +51,11 @@ sudo git pull origin master
 yarn
 pm2 restart dist/server
 ```
+
+## To Do List
+- testing
+- linting + standardize code formatting
+- database migrations
+- websocket
+- comments / chat system
+- configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.

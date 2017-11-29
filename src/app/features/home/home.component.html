@@ -3,12 +3,40 @@
     Welcome to the site!!
   </h5>
 </header>
+
 <body>
-	<button mat-raised-button color="primary" (click)="helloWorld()">Hello World (f12)</button><br>
 
-	<button mat-raised-button color="accent" (click)="login()">Log In</button><br>
+	<div style="margin:2em"><button mat-raised-button color="primary" (click)="helloWorld()">Hello World (f12)</button></div>
+	<div style="margin:2em"><button mat-raised-button color="warn" (click)="logout()">Log Out</button></div>
 
-	<button mat-raised-button color="warn" (click)="logout()">Log Out</button><br>
+	<form style="margin:2em" autocomplete="off" novalidate class="login-form" [formGroup]="loginForm">
 
-	<button mat-raised-button color="primary" (click)="createUser()">Create User</button><br>
+		<mat-input-container style="width: 100%">
+			<input matInput placeholder="Email" formControlName="email">
+		</mat-input-container>
+
+		<mat-input-container style="width: 100%">
+			<input matInput placeholder="Password" formControlName="password">
+		</mat-input-container>
+
+		<button mat-raised-button color="accent" (click)="login()">Log In</button>
+
+	</form>
+
+
+
+	<form style="margin:2em" autocomplete="off" novalidate class="create-user-form" [formGroup]="createUserForm">
+
+		<mat-input-container style="width: 100%">
+			<input matInput placeholder="Email" formControlName="email">
+		</mat-input-container>
+
+		<mat-input-container style="width: 100%">
+			<input matInput placeholder="Password" formControlName="password">
+		</mat-input-container>
+
+		<button mat-raised-button color="primary" (click)="createUser()">Create User</button>
+
+	</form>
+
 </body>
