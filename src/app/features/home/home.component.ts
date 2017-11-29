@@ -22,7 +22,6 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-    	console.log('cookie', document.cookie)
 		this.loginForm = this.fb.group({
 	      email: ['',Validators.required],
 	      password: ['',Validators.required]
