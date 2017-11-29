@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
 			email: 'ereckgordon@gmail.com',
 			password: 'greatestPass'
 		};
-		const helloWorld = this.http.post('http://localhost:8000/api/login', body, options)
+		const loginResult = this.http.post('http://localhost:8000/api/login', body, options)
 	    .take(1).subscribe(result => {
 	    	console.log(result)
 	    }, (error) => console.log(error));
@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
 		const body = {
 			bye: '!'
 		};
-		const helloWorld = this.http.post('http://localhost:8000/api/logout', body, options)
+		const logoutResult = this.http.post('http://localhost:8000/api/logout', body, options)
 	    .take(1).subscribe(result => {
 	    	console.log(result)
 	    }, (error) => console.log(error));
@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
 			email: 'ereckgordon@gmail.com',
 			password: 'asdfasdfasdf'
 		};
-		const helloWorld = this.http.post('http://localhost:8000/api/create-user', body, options)
+		const createUserResult = this.http.post('http://localhost:8000/api/create-user', body, options)
 	    .take(1).subscribe(result => {
 	    	console.log(result)
 	    }, (error) => console.log(error));

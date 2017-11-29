@@ -8,7 +8,7 @@ import 'rxjs/add/operator/startWith';
 
 
 @Injectable()
-export class NGSWService {
+export class NGSWUpdateService {
 	private checkForUpdateSubj = new Subject();
 	private checkInterval = 1000 * 60 * 60 * 6;   // 6 hours
 	constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar){

@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { views } from './app-nav-views';
-import { NGSWService } from './shared/ngsw.service';
+import { NGSWUpdateService } from './shared/ngsw-update.service';
 import { environment } from '../environments/environment';
 
 
@@ -14,11 +14,11 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
 	views = views;
-	worker:NGSWService;
+	worker:NGSWUpdateService;
 
 	constructor(public router: Router, private injector:Injector, @Inject(PLATFORM_ID) private platformId: Object){
 		if (isPlatformBrowser(this.platformId) && environment.production){
-			this.worker = this.injector.get(NGSWService)
+			this.worker = this.injector.get(NGSWUpdateService)
 		}
 	}
 
