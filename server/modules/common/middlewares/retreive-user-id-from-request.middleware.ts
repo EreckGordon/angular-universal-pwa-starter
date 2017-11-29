@@ -1,11 +1,12 @@
 import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
-import { APIService } from '../api.service'
+import { APIService } from '../../api/api.service';
+import { Request, Response, NextFunction } from 'express';
 
 @Middleware()
 export class RetrieveUserIdFromRequestMiddleware implements NestMiddleware {
 	constructor(private readonly apiService:APIService){}
 	async resolve(): Promise<ExpressMiddleware> {	
-    	return async (req, res, next) => {
+    	return async (req:Request, res:Response, next:NextFunction) => {
 	    	const jwt = req.cookies["SESSIONID"];
 		    if (jwt) {
 			    try {
