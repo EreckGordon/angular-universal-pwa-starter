@@ -90,7 +90,7 @@ export class AuthService {
           },
           RSA_PRIVATE_KEY, {
           algorithm: 'RS256',
-          expiresIn: 7200,
+          expiresIn: '2h',
           subject: user.id.toString()
       });
   }

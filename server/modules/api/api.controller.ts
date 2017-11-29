@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, Param, ReflectMetadata } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, ReflectMetadata, UseGuards } from '@nestjs/common';
 import { Request, Response, } from 'express';
 
 import { APIService } from './api.service';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 interface LoginInterface {
 	email: string,
@@ -10,6 +12,7 @@ interface LoginInterface {
 
 
 @Controller('api')
+@UseGuards(RolesGuard)
 export class APIController {
 	
   constructor(private readonly apiService: APIService) {}
@@ -35,6 +38,7 @@ export class APIController {
   }
 
   @Post('logout')
+  @Roles('user')
   async logout(@Res() res:Response){
       res.clearCookie("SESSIONID");
       res.clearCookie("XSRF-TOKEN");
