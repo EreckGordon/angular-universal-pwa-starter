@@ -28,6 +28,10 @@ export class APIService {
   	return this.authService.publicRSAKey
   }
 
+  decodeJwt(jwt){
+    return this.authService.decodeJwt(jwt)
+  }
+
   async login(body): Promise<AuthResult> {
 
       const credentials = body;
