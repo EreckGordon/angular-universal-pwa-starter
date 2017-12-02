@@ -14,6 +14,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 
 ## Files that require changes for a fresh project
 - /src/app/app.common.module.ts `{appId: 'angular-universal-pwa-starter'}`
+- /server/modules/database/database.providers.ts set your database `username`, `password`, and  `database` fields.
 - `private.key` and `public.key` generate your own. Don't store your production keys on github.
 
 ## Thoughts
@@ -21,7 +22,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - why bother with a depoyment repo? precompile everything on your dev environment, it is probably a beefier machine.
 
 ## Useful Commands
-- `ng serve` - Run in frontend development mode on port 4200.
+- `ng serve --aot` - Run in frontend aot development mode on port 4200.
 - `npm run dev-server` - Runs server on port 8000 via ts-node, assumes no frontend changes.
 - `npm run prep-dev-server` - Full build of frontend, then serves frontend and backend on port 8000 via ts-node.
 - `npm run deploy` - Build and push server & frontend assets to github deployment repo.

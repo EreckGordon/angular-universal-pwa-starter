@@ -10,7 +10,6 @@ import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
 import { HomeComponent } from './features/home/home.component';
 import { AboutComponent } from './features/about/about.component';
-import { BlogModule } from './features/blog/index';
 
 
 @NgModule({
@@ -28,8 +27,7 @@ import { BlogModule } from './features/blog/index';
         cookieName: 'XSRF-TOKEN',
         headerName: 'x-xsrf-token'
     }),    
-    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' }),
-    BlogModule
+    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
   ],
   providers: [],
   bootstrap: [],
