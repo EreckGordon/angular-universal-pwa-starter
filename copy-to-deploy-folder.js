@@ -46,7 +46,8 @@ filesToCopy.forEach(file => {
 
 foldersToCopy.forEach(folder => {
   let src = path.join(__dirname, folder);
-  let destDir = path.join('..', currentFolder + '-deploy', folder);  
+  let destDir = path.join('..', currentFolder + '-deploy', folder);
+  fse.removeSync(destDir);
   fse.copy(src, destDir, (err) => {
     if (err) console.log(err)
     console.log(`successfully moved ${folder}`)
