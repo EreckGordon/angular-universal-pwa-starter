@@ -8,15 +8,15 @@ import { APIController } from './api.controller';
 import { checkCSRFTokenMiddleware, checkIfAuthenticatedMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares'
 
 @Module({
-  modules: [AuthModule, ArticleModule],
-  components: [APIService],
-  controllers: [APIController]
+    modules: [AuthModule, ArticleModule],
+    components: [APIService],
+    controllers: [APIController]
 })
 export class APIModule implements NestModule {
-	configure(consumer:MiddlewaresConsumer): void {
-		consumer.apply([RetrieveUserIdFromRequestMiddleware]).forRoutes(APIController);
-		consumer.apply([checkIfAuthenticatedMiddleware, checkCSRFTokenMiddleware]).forRoutes(
-			{path: '/logout', method: RequestMethod.ALL}
-		);
-	}
+    configure(consumer: MiddlewaresConsumer): void {
+        consumer.apply([RetrieveUserIdFromRequestMiddleware]).forRoutes(APIController);
+        consumer.apply([checkIfAuthenticatedMiddleware, checkCSRFTokenMiddleware]).forRoutes(
+            { path: '/logout', method: RequestMethod.ALL }
+        );
+    }
 }

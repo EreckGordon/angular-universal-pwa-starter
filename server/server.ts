@@ -23,10 +23,10 @@ const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOL
 
 enableProdMode();
 const configuredNgExpressEngine = ngExpressEngine({
-  bootstrap: AppServerModuleNgFactory,
-  providers: [
-    provideModuleMap(LAZY_MODULE_MAP)
-  ]
+    bootstrap: AppServerModuleNgFactory,
+    providers: [
+        provideModuleMap(LAZY_MODULE_MAP)
+    ]
 });
 
 const server = express();
@@ -35,17 +35,17 @@ server.engine('html', configuredNgExpressEngine)
 server.set('view engine', 'html');
 server.set('views', DIST_BROWSER_FOLDER);
 
-const options:cors.CorsOptions = {
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization", "x-xsrf-token"],
-  credentials: true,
-  methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-  origin: ['http://localhost:4200', 'http://localhost:8000'],
-  preflightContinue: false,
-  optionsSuccessStatus: 200
+const options: cors.CorsOptions = {
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization", "x-xsrf-token"],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    origin: ['http://localhost:4200', 'http://localhost:8000'],
+    preflightContinue: false,
+    optionsSuccessStatus: 200
 };
 
 server.use(compression());
-server.get('*.*', express.static(DIST_BROWSER_FOLDER, {maxAge: '1y'}));
+server.get('*.*', express.static(DIST_BROWSER_FOLDER, { maxAge: '1y' }));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cookieParser());
@@ -53,8 +53,8 @@ server.use(cors(options));
 server.options("*", cors(options));
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApplicationModule, server);
-  await app.listen(8000);
+    const app = await NestFactory.create(ApplicationModule, server);
+    await app.listen(8000);
 }
 
 bootstrap();

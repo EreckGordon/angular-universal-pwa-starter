@@ -6,11 +6,11 @@ import { AuthService } from './auth.service';
 
 
 @Module({
-  modules: [DatabaseModule],
-  components: [
-  	...authProviders,
-  	AuthService
-  ],
-  exports: [AuthService]
+    modules: [DatabaseModule],
+    components: [
+        ...authProviders,
+        AuthService
+    ],
+    exports: [AuthService]
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Article {
@@ -13,6 +13,6 @@ export class Article {
     slug: string;
 
     @Column('text')
-    content:string;
+    content: string;
 
 }

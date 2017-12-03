@@ -6,5 +6,5 @@ export const checkCSRFTokenMiddleware = (req, res, next) => {
     }
     else {
         res.sendStatus(403);
-    }	
+    }
 };

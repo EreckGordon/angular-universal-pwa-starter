@@ -4,5 +4,5 @@ export const checkIfAuthenticatedMiddleware = (req, res, next) => {
     }
     else {
         res.sendStatus(403);
-    }	 
+    }
 };

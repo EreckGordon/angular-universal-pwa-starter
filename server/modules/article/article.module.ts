@@ -6,11 +6,11 @@ import { ArticleService } from './article.service';
 
 
 @Module({
-  modules: [DatabaseModule],
-  components: [
-  	...articleProviders,
-  	ArticleService
-  ],
-  exports: [ArticleService]
+    modules: [DatabaseModule],
+    components: [
+        ...articleProviders,
+        ArticleService
+    ],
+    exports: [ArticleService]
 })
-export class ArticleModule {}
+export class ArticleModule { }

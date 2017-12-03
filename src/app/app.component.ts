@@ -8,18 +8,18 @@ import { environment } from '../environments/environment';
 
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	views = views;
-	worker:NGSWUpdateService;
+    views = views;
+    worker: NGSWUpdateService;
 
-	constructor(public router: Router, private injector:Injector, @Inject(PLATFORM_ID) private platformId: Object){
-		if (isPlatformBrowser(this.platformId) && environment.production){
-			this.worker = this.injector.get(NGSWUpdateService)
-		}
-	}
+    constructor (public router: Router, private injector: Injector, @Inject(PLATFORM_ID) private platformId: Object) {
+        if (isPlatformBrowser(this.platformId) && environment.production) {
+            this.worker = this.injector.get(NGSWUpdateService);
+        }
+    }
 
 }

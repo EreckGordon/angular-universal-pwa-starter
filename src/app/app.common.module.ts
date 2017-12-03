@@ -13,27 +13,27 @@ import { AboutComponent } from './features/about/about.component';
 
 
 @NgModule({
-  declarations: [
-  	NotFound404Component,
-  	HomeComponent,
-  	AboutComponent
-  ],
-  imports: [
-    BrowserModule.withServerTransition({appId: 'angular-universal-pwa-starter'}),
-    CustomMaterialModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    HttpClientXsrfModule.withOptions({
-        cookieName: 'XSRF-TOKEN',
-        headerName: 'x-xsrf-token'
-    }),    
-    RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
-  ],
-  providers: [],
-  bootstrap: [],
-  exports: [
-    CustomMaterialModule,
-    RouterModule
-  ]
+    declarations: [
+        NotFound404Component,
+        HomeComponent,
+        AboutComponent
+    ],
+    imports: [
+        BrowserModule.withServerTransition({ appId: 'angular-universal-pwa-starter' }),
+        CustomMaterialModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        HttpClientXsrfModule.withOptions({
+            cookieName: 'XSRF-TOKEN',
+            headerName: 'x-xsrf-token'
+        }),
+        RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
+    ],
+    providers: [],
+    bootstrap: [],
+    exports: [
+        CustomMaterialModule,
+        RouterModule
+    ]
 })
 export class AppCommonModule { }

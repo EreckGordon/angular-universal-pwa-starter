@@ -5,11 +5,11 @@ import { AppBrowserModule } from './app/app.browser.module';
 import { environment } from './environments/environment';
 
 if (environment.production) {
-  enableProdMode();
+    enableProdMode();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  platformBrowserDynamic()
-  .bootstrapModule(AppBrowserModule)
-  .catch(err => console.log(err));
+    platformBrowserDynamic()
+        .bootstrapModule(AppBrowserModule)
+        .catch(err => console.log(err));
 });

@@ -7,17 +7,18 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "prep-front-end": "ng build --prod && ng build --prod --app 1 --output-hashing=false",
     "prep-server": "./node_modules/.bin/tsc -p nestjs.tsconfig.json",
     "copy-needed-files-to-deploy-folder": "node copy-to-deploy-folder.js",
     "deploy-to-github": "node deploy-to-github.js",
-    "deploy": "npm run prep-front-end && npm run prep-server && npm run copy-needed-files-to-deploy-folder && npm run deploy-to-github",
+    "deploy": "npm run format && npm run prep-front-end && npm run prep-server && npm run copy-needed-files-to-deploy-folder && npm run deploy-to-github",
     "dev-server": "node server/index.js",
-    "prep-dev-server": "npm run prep-front-end && npm run dev-server",
+    "prep-dev-server": "npm run format && npm run prep-front-end && npm run dev-server",
     "analyze-deploy": "ng build --prod --stats-json --build-optimizer && webpack-bundle-analyzer dist/stats.json",
-    "analyze": "ng build --aot --stats-json && webpack-bundle-analyzer dist/stats.json"
+    "analyze": "ng build --aot --stats-json && webpack-bundle-analyzer dist/stats.json",
+    "format": "tsfmt -r"
   },
   "private": true,
   "dependencies": {
@@ -91,6 +92,7 @@
     "ts-helpers": "^1.1.2",
     "ts-node": "^3.3.0",
     "tslint": "~5.3.2",
-    "typescript": "~2.5.0"
+    "typescript": "~2.5.0",
+    "typescript-formatter": "^7.0.0"
   }
 }

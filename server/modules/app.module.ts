@@ -8,4 +8,4 @@ import { AppController } from './app.controller';
     modules: [APIModule],
     controllers: [AppController]
 })
-export class ApplicationModule {}
+export class ApplicationModule { }

@@ -7,8 +7,8 @@ import { BlogModule } from './features/blog/blog.module';
 
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'blog', loadChildren: './features/blog/blog.module#BlogModule' },
-  { path: '**', component: NotFound404Component }
+    { path: '', component: HomeComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'blog', loadChildren: './features/blog/blog.module#BlogModule' },
+    { path: '**', component: NotFound404Component }
 ];

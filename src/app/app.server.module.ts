@@ -10,16 +10,16 @@ import { SEOService } from './shared/seo.service';
 
 
 @NgModule({
-  imports: [
-    AppCommonModule,
-    NoopAnimationsModule,
-    ServerTransferStateModule,
-    ServerModule,
-    ModuleMapLoaderModule
-  ],
-  bootstrap: [ AppComponent ],
-  providers: [ 
-  	SEOService 
-  ]
+    imports: [
+        AppCommonModule,
+        NoopAnimationsModule,
+        ServerTransferStateModule,
+        ServerModule,
+        ModuleMapLoaderModule
+    ],
+    bootstrap: [AppComponent],
+    providers: [
+        SEOService
+    ]
 })
-export class AppServerModule {}
+export class AppServerModule { }

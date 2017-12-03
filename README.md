@@ -29,15 +29,17 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - `npm run analyze` - Bundle analysis of non-tree shaken bundle. lets you see the individual angular module pieces.
 - `npm run analyze-deploy` - Bundle analysis of tree shaken bundle. kind of opaque, but truest to reality.
 - `yarn upgrade-interactive` - Upgrade only what you want to.
+- `npm run format` - formats with tsfmt (typescript-formatter) based on tsfmt.json settings. This script gets called automatically before `prep-dev-server` and `deploy`.
 
-## Build Scripts Explained
+## Build Script Explained
 - `npm run deploy`
-	- first it runs `prep-front-end`
+	- first it runs `format` whichs reads options from tsfmt.json and formats code for consistent style.
+	- second it runs `prep-front-end`
 		- a: it runs `ng build prod` to build the frontend production app.
 		- b: it runs `ng build --prod --app 1 --output-hashing=false` to build the server Aot Factory: `AppServerModuleNgFactory`
-	- second it runs `prep-server` which uses nestjs.tsconfig.json to compile the server assets to js.
-	- third it runs `copy-needed-files-to-deploy-folder` which copies yarn.lock and package.json for installing dependencies on server and moves the dist folder to angular-universal-pwa-starter-deploy (or whatever you name your folder ending in -deploy)
-	- fourth it runs `deploy-to-github` which changes your directory to the deploy folder, then makes an auto generated commit of the contents of the deploy folder.
+	- third it runs `prep-server` which uses nestjs.tsconfig.json to compile the server assets to js.
+	- fourth it runs `copy-needed-files-to-deploy-folder` which copies yarn.lock and package.json for installing dependencies on server and moves the dist folder to angular-universal-pwa-starter-deploy (or whatever you name your folder ending in -deploy)
+	- fifth it runs `deploy-to-github` which changes your directory to the deploy folder, then makes an auto generated commit of the contents of the deploy folder.
 
 creating deployment on vps:
 ```
@@ -59,7 +61,7 @@ pm2 restart dist/server
 
 ## To Do List
 - testing
-- linting + standardize code formatting
+- ~linting + standardize code formatting~
 - database migrations
 - websocket
 - comments / chat system
