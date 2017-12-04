@@ -61,7 +61,7 @@ pm2 restart dist/server
 
 ## To Do List
 - testing
-- ~linting + standardize code formatting~
+- ~linting + standardize code formatting~ <-- tsfmt
 - database migrations
 - websocket
 - comments / chat system
