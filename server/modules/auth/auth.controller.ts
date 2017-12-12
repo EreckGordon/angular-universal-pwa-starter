@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, ReflectMetadata, UseGuards } from '@nestjs/common';
 import { Request, Response, } from 'express';
 
-import { APIService } from './api.service';
+import { AuthService } from './auth.service';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 
@@ -11,21 +11,15 @@ interface LoginInterface {
 }
 
 
-@Controller('api')
+@Controller('auth')
 @UseGuards(RolesGuard)
-export class APIController {
+export class AuthController {
 
-    constructor (private readonly apiService: APIService) { }
-
-    @Post('hello-world')
-    async helloWorld( @Res() res: Response, @Body() body) {
-        console.log(body);
-        res.status(HttpStatus.OK).json({ hello: "world" })
-    }
+    constructor (private readonly authService: AuthService) { }
 
     @Post('login')
     async login( @Res() res: Response, @Body() body: LoginInterface) {
-        const loginResult = await this.apiService.login(body)
+        const loginResult = await this.authService.login(body)
         if (loginResult.apiCallResult) {
             const { user, sessionToken, csrfToken } = loginResult.result
             res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: true });
@@ -47,7 +41,7 @@ export class APIController {
 
     @Post('create-user')
     async createUser( @Res() res: Response, @Body() body: LoginInterface) {
-        const createUserResult = await this.apiService.createUser(body);
+        const createUserResult = await this.authService.createUser(body);
         if (createUserResult.apiCallResult) {
             const { user, sessionToken, csrfToken } = createUserResult.result
             res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: true });
