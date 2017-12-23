@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/take';
 
 
 @Injectable()

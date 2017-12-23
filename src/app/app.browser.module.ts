@@ -21,7 +21,7 @@ import { environment } from '../environments/environment';
         AppCommonModule,
         BrowserTransferStateModule,
         TransferHttpCacheModule,
-        environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
+        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
     ],
     providers: [
         SEOService,
