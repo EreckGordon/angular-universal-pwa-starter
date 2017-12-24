@@ -7,8 +7,8 @@ describe('Angular Universal PWA Starter App', () => {
         page = new AppPage();
     });
 
-    it('should display welcome message', () => {
+    it('should have a top nav', () => {
         page.navigateTo();
-        expect(page.getParagraphText()).toEqual('Welcome to app!');
+        expect(page.getTopNav().getTagName()).toMatch('nav');
     });
 });
