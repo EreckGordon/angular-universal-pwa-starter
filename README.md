@@ -61,6 +61,8 @@ pm2 restart dist/server
 
 ## To Do List
 - testing
+	- ~frontend~ <- angular-cli has working tests now.
+	- backend
 - ~linting + standardize code formatting~ <-- tsfmt
 - database migrations
 - websocket
@@ -68,3 +70,12 @@ pm2 restart dist/server
 - configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
+- refactor auth to handle multiple types of logins.
+	- username / pw
+	- refactor functions so name reflects intent
+	- anonymous
+	- social: google
+	- social: facebook
+	- social: twitter
+	- social: github
+- refactor auth-service so it isn't just one large file.

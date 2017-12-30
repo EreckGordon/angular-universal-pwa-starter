@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const options = { headers, withCredentials: true };
         const body = { email, password };
-        const loginResult = this.http.post('http://localhost:8000/auth/login', body, options)
+        const loginResult = this.http.post('http://localhost:8000/auth/login-email-and-password-user', body, options)
             .take(1).subscribe(result => {
                 console.log(result);
             }, (error) => console.log(error));
@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const options = { headers, withCredentials: true };
         const body = { email, password };
-        const createUserResult = this.http.post('http://localhost:8000/auth/create-user', body, options)
+        const createUserResult = this.http.post('http://localhost:8000/auth/create-email-and-password-user', body, options)
             .take(1).subscribe(result => {
                 console.log(result);
             }, (error) => console.log(error));

@@ -1,6 +1,8 @@
 import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
+
 
 const util = require('util');
 import * as fs from "fs";
@@ -34,10 +36,11 @@ interface AuthResult {
 
 @Component()
 export class AuthService {
-    constructor ( @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>) { }
+    constructor (
+        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>) { }
 
 
-    async login(body): Promise<AuthResult> {
+    async loginEmailAndPasswordUser(body): Promise<AuthResult> {
 
         const credentials = body;
 
@@ -72,7 +75,7 @@ export class AuthService {
 
     }
 
-    async createUser(body): Promise<AuthResult> {
+    async createEmailAndPasswordUser(body): Promise<AuthResult> {
 
         const credentials = body;
 
@@ -92,7 +95,7 @@ export class AuthService {
 
         else {
             try {
-                const createUserResult = await this.createUserAndSession(credentials);
+                const createUserResult = await this.createEmailAndPasswordUserAndSession(credentials);
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
@@ -117,25 +120,33 @@ export class AuthService {
     }
 
     async findUserByEmail(email: string): Promise<User> {
-        return await this.userRepository.findOne({ email })
+        return await this.userRepository.findOne({
+            relations: ["emailAndPasswordProvider"],
+            where: { email },
+            cache: true // default 1000 = 1 second
+        })
     }
 
     async emailTaken(email: string): Promise<boolean> {
         return await this.findUserByEmail(email) === undefined ? false : true;
     }
 
-    async addUserToDatabase(email: string, passwordHash: string): Promise<User> {
+    async addEmailAndPasswordUserToDatabase(email: string, passwordHash: string): Promise<User> {
+
+        const emailAndPasswordProvider = new EmailAndPasswordProvider();
+        emailAndPasswordProvider.email = email;
+        emailAndPasswordProvider.passwordHash = passwordHash;
         const user = new User();
-        user.email = email;
-        user.passwordHash = passwordHash;
+        user.isAnonymous = false;
         user.roles = ['user'];
-        return await this.userRepository.save(user)
+        user.emailAndPasswordProvider = emailAndPasswordProvider;
+        return await this.userRepository.save(user);
     }
 
-    async createUserAndSession(credentials) {
+    async createEmailAndPasswordUserAndSession(credentials) {
         try {
             const passwordHash = await argon2.hash(credentials.password);
-            const user = await this.addUserToDatabase(credentials.email, passwordHash);
+            const user = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
             const sessionToken = await this.createSessionToken(user);
             const csrfToken = await this.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
@@ -148,7 +159,7 @@ export class AuthService {
 
     async loginAndCreateSession(credentials: any, user: User): Promise<SessionAndCSRFToken> {
         try {
-            const sessionToken = await this.attemptLogin(credentials, user);
+            const sessionToken = await this.attemptLoginWithEmailAndPassword(credentials, user);
             const csrfToken = await this.createCsrfToken();
             const result: SessionAndCSRFToken = { sessionToken, csrfToken }
             return result
@@ -158,8 +169,8 @@ export class AuthService {
         }
     }
 
-    async attemptLogin(credentials: any, user: User) {
-        const isPasswordValid = await argon2.verify(user.passwordHash, credentials.password);
+    async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
+        const isPasswordValid = await argon2.verify(user.emailAndPasswordProvider.passwordHash, credentials.password);
         if (!isPasswordValid) {
             throw new Error("Password Invalid");
         }

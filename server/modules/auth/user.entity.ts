@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
 
 @Entity()
 export class User {
@@ -6,13 +7,17 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    email: string;
+    @CreateDateColumn()
+    createdDate: Date;
 
     @Column()
-    passwordHash: string;
+    isAnonymous: boolean;
 
     @Column('simple-array')
     roles: string[];
+
+    @OneToOne(type => EmailAndPasswordProvider, { cascade: true })
+    @JoinColumn()
+    emailAndPasswordProvider: EmailAndPasswordProvider;
 
 }
