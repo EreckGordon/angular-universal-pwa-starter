@@ -11,6 +11,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 	- [Example deploy repo](https://github.com/EreckGordon/angular-universal-pwa-starter-deploy)
 	- angular-universal-pwa-starter-deploy contains:a git repo, .gitignore, and .gitattributes. You will copy over the needed files with build scripts. It is the deployment folder that you pull from to update the server.
 	- The various build scripts compile the server and move the dist folder & package.json to the angular-universal-pwa-starter-deploy folder.
+- [Postgres Config](https://github.com/EreckGordon/angular-universal-pwa-starter/blob/master/server/modules/database/database.providers.ts) You have a database with the same configuration as linked, or you change that config to database user info of your choosing.
 
 ## Files that require changes for a fresh project
 - /src/app/app.common.module.ts `{appId: 'angular-universal-pwa-starter'}`
@@ -71,8 +72,8 @@ pm2 restart dist/server
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
 - refactor auth to handle multiple types of logins.
-	- username / pw
-	- refactor functions so name reflects intent
+	- ~username / pw~
+	- ~refactor functions so name reflects intent~
 	- anonymous
 	- social: google
 	- social: facebook
