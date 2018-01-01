@@ -17,9 +17,13 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - /src/app/app.common.module.ts `{appId: 'angular-universal-pwa-starter'}`
 - /server/modules/database/database.providers.ts set your database `username`, `password`, and  `database` fields.
 - `private.key` and `public.key` generate your own. Don't store your production keys on github.
+- dotenv: create a file called `.env` in the root of the project (ie next to readme.md). Do not save it to source control. Give it the following variables:
+	```
+	SESSION_ID_SECURE_COOKIE=false
+	```
+- create another `.env` file in your deploy folder, it will have the same variable names, but with values suited for a production environment.
 
 ## Thoughts
-- in `/server/modules/api/api.controller.ts` you may want to turn the session id setting from `secure:true` to `secure:false` to test if you are able to properly log in and out. For Production you want both `httpOnly` and `secure` to be true.
 - why bother with a depoyment repo? precompile everything on your dev environment, it is probably a beefier machine.
 
 ## Useful Commands
@@ -61,22 +65,21 @@ pm2 restart dist/server
 ```
 
 ## To Do List
+- ~linting + standardize code formatting~ <-- tsfmt
 - testing
 	- ~frontend~ <-- angular-cli has working tests now.
 	- backend
-- ~linting + standardize code formatting~ <-- tsfmt
-- database migrations
-- websocket
-- comments / chat system
 - ~configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.~ <-- dotenv
-- copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
-- SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
+- ~refactor auth-service so it isn't just one large file.~
 - refactor auth to handle multiple types of logins.
 	- ~username / pw~
-	- ~refactor functions so name reflects intent~
 	- anonymous
 	- social: google
 	- social: facebook
 	- social: twitter
 	- social: github
-- refactor auth-service so it isn't just one large file.
+- database migrations
+- websocket
+- comments / chat system
+- copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
+- SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.

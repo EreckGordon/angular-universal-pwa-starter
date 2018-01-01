@@ -1,16 +1,16 @@
 import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
-import { AuthService } from '../../auth/auth.service';
+import { SecurityService } from '../security/security.service';
 import { Request, Response, NextFunction } from 'express';
 
 @Middleware()
 export class RetrieveUserIdFromRequestMiddleware implements NestMiddleware {
-    constructor (private readonly authService: AuthService) { }
+    constructor (private readonly securityService: SecurityService) { }
     async resolve(): Promise<ExpressMiddleware> {
         return async (req: Request, res: Response, next: NextFunction) => {
             const jwt = req.cookies["SESSIONID"];
             if (jwt) {
                 try {
-                    const payload = await this.authService.decodeJwt(jwt);
+                    const payload = await this.securityService.decodeJwt(jwt);
                     req["user"] = payload;
                     next()
                 }
@@ -26,6 +26,3 @@ export class RetrieveUserIdFromRequestMiddleware implements NestMiddleware {
     }
 
 }
-
-
-
