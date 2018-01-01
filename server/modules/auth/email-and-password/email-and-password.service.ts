@@ -22,14 +22,27 @@ export class EmailAndPasswordService {
     ) { }
 
     async findUserByEmail(email: string): Promise<User> {
-        let currentProvider: EmailAndPasswordProvider = await this.emailAndPasswordProviderRepository.findOne({
+        let currentProvider: EmailAndPasswordProvider = await this.findEmailAndPasswordProviderByEmail(email);
+        if (currentProvider === undefined) return Promise.resolve(undefined);
+        return this.findUserAccountByEmailAndPasswordProviderId(currentProvider.id)
+    }
+
+    async findEmailAndPasswordProviderById(providerId: number) {
+        return await this.emailAndPasswordProviderRepository.findOne({
+            where: { id: providerId },
+            cache: true
+        });
+    }
+
+    async findEmailAndPasswordProviderByEmail(email: string) {
+        return await this.emailAndPasswordProviderRepository.findOne({
             where: { email }
         });
+    }
 
-        if (currentProvider === undefined) return Promise.resolve(undefined);
-
+    async findUserAccountByEmailAndPasswordProviderId(id) {
         return await this.userRepository.findOne({
-            where: { emailAndPasswordProviderId: currentProvider.id },
+            where: { emailAndPasswordProviderId: id },
             relations: ["emailAndPasswordProvider"],
             cache: true
         });
@@ -78,15 +91,8 @@ export class EmailAndPasswordService {
         }
     }
 
-    async findEmailProviderById(providerId: number) {
-        return await this.emailAndPasswordProviderRepository.findOne({
-            where: { id: providerId },
-            cache: true
-        });
-    }
-
     async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
-        let emailProvider = await this.findEmailProviderById(user.emailAndPasswordProviderId)
+        let emailProvider = await this.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId)
         const isPasswordValid = await this.securityService.verifyPasswordHash({ passwordHash: emailProvider.passwordHash, password: credentials.password });
         if (!isPasswordValid) {
             throw new Error("Password Invalid");
