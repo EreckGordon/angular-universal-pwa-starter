@@ -1,6 +1,6 @@
 {
   "name": "angular-universal-pwa-starter",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "author": "Ereck Gordon",
   "license": "MIT",
   "scripts": {
@@ -24,13 +24,13 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^5.0.0",
-    "@angular/cdk": "^5.0.0-rc.2",
+    "@angular/cdk": "^5.0.0",
     "@angular/common": "^5.0.0",
     "@angular/compiler": "^5.0.0",
     "@angular/core": "^5.0.0",
     "@angular/forms": "^5.0.0",
     "@angular/http": "^5.0.0",
-    "@angular/material": "^5.0.0-rc.2",
+    "@angular/material": "^5.0.0",
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/platform-server": "^5.0.0",
@@ -67,7 +67,7 @@
     "zone.js": "^0.8.17"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.0-rc.1",
+    "@angular/cli": "^1.6.0",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/body-parser": "^1.16.5",
