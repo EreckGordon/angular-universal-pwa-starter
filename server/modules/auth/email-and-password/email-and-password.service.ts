@@ -68,9 +68,9 @@ export class EmailAndPasswordService {
     async createEmailAndPasswordUserAndSession(credentials) {
         try {
             const passwordHash = await this.securityService.createPasswordHash({ password: credentials.password });
-            const user = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
-            const sessionToken = await this.createSessionToken(user);
-            const csrfToken = await this.createCsrfToken();
+            const user: User = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
+            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
+            const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
             return result;
         }
@@ -82,7 +82,7 @@ export class EmailAndPasswordService {
     async loginAndCreateSession(credentials: any, user: User): Promise<SessionAndCSRFToken> {
         try {
             const sessionToken = await this.attemptLoginWithEmailAndPassword(credentials, user);
-            const csrfToken = await this.createCsrfToken();
+            const csrfToken = await this.securityService.createCsrfToken();
             const result: SessionAndCSRFToken = { sessionToken, csrfToken }
             return result
         }
@@ -97,14 +97,6 @@ export class EmailAndPasswordService {
         if (!isPasswordValid) {
             throw new Error("Password Invalid");
         }
-        return this.createSessionToken(user);
-    }
-
-    createCsrfToken() {
-        return this.securityService.createCsrfToken();
-    }
-
-    createSessionToken(user: User) {
         return this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
     }
 
