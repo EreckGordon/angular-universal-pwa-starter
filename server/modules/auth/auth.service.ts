@@ -131,6 +131,7 @@ export class AuthService {
 
         return await this.userRepository.findOne({
             where: { emailAndPasswordProviderId: currentProvider.id },
+            relations: ["emailAndPasswordProvider"],
             cache: true
         });
     }

@@ -22,10 +22,7 @@ export class AuthController {
     async login( @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const loginResult = await this.authService.loginEmailAndPasswordUser(body)
         if (loginResult.apiCallResult) {
-            const { user, sessionToken, csrfToken } = loginResult.result
-            res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
-            res.cookie("XSRF-TOKEN", csrfToken);
-            res.status(200).json({ id: user.id, email: body.email, roles: user.roles });
+            this.sendSuccessfulResult(res, loginResult.result);
         }
         else {
             res.status(401).json(loginResult.result.error)
@@ -36,10 +33,7 @@ export class AuthController {
     async createUser( @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const createUserResult = await this.authService.createEmailAndPasswordUser(body);
         if (createUserResult.apiCallResult) {
-            const { user, sessionToken, csrfToken } = createUserResult.result
-            res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
-            res.cookie("XSRF-TOKEN", csrfToken);
-            res.status(200).json({ id: user.id, email: user.emailAndPasswordProvider.email, roles: user.roles });
+            this.sendSuccessfulResult(res, createUserResult.result);
         }
         else {
             switch (createUserResult.result.error) {
@@ -56,6 +50,13 @@ export class AuthController {
                     break;
             }
         }
+    }
+
+    sendSuccessfulResult(res: Response, authServiceResult) {
+        const { user, sessionToken, csrfToken } = authServiceResult
+        res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
+        res.cookie("XSRF-TOKEN", csrfToken);
+        res.status(200).json({ id: user.id, email: user.emailAndPasswordProvider.email, roles: user.roles });
     }
 
     @Post('logout')
