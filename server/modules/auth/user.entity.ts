@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
-import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
+import { EmailAndPasswordProvider } from './email-and-password/email-and-password-provider.entity';
 
 @Entity()
 export class User {

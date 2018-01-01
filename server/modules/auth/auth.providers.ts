@@ -1,6 +1,6 @@
 import { Connection, Repository } from 'typeorm';
 import { User } from './user.entity';
-import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
+import { EmailAndPasswordProvider } from './email-and-password/email-and-password-provider.entity';
 
 export const authProviders = [
     {

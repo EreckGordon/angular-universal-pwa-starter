@@ -4,12 +4,15 @@ import { DatabaseModule } from '../database/database.module';
 import { AuthController } from './auth.controller';
 import { authProviders } from './auth.providers';
 import { AuthService } from './auth.service';
-
+import { CommonModule } from '../common/common.module';
 import { checkCSRFTokenMiddleware, checkIfAuthenticatedMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
 
 
 @Module({
-    modules: [DatabaseModule],
+    modules: [
+        CommonModule,
+        DatabaseModule
+    ],
     components: [
         ...authProviders,
         AuthService

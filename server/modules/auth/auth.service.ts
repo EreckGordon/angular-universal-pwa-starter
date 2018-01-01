@@ -1,23 +1,11 @@
 import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
+import { EmailAndPasswordProvider } from './email-and-password/email-and-password-provider.entity';
+import { SecurityService } from '../common/security/security.service';
 
-
-const util = require('util');
-import * as fs from "fs";
-import * as path from 'path';
-const crypto = require('crypto');
-import * as argon2 from 'argon2';
-import * as jwt from 'jsonwebtoken';
 import * as passwordValidator from 'password-validator';
 
-
-const randomBytes = util.promisify(crypto.randomBytes);
-const signJwt = util.promisify(jwt.sign);
-
-const RSA_PRIVATE_KEY = fs.readFileSync(path.join(process.cwd(), 'private.key'))
-const RSA_PUBLIC_KEY = fs.readFileSync(path.join(process.cwd(), 'public.key'))
 
 interface SessionAndCSRFToken {
     sessionToken: string;
@@ -38,9 +26,9 @@ interface AuthResult {
 export class AuthService {
     constructor (
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('EmailAndPasswordProviderRepositoryToken') private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>
+        @Inject('EmailAndPasswordProviderRepositoryToken') private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>,
+        private readonly securityService: SecurityService
     ) { }
-
 
     async loginEmailAndPasswordUser(body): Promise<AuthResult> {
 
@@ -117,10 +105,6 @@ export class AuthService {
 
     }
 
-    get publicRSAKey() {
-        return RSA_PUBLIC_KEY;
-    }
-
     async findUserByEmail(email: string): Promise<User> {
         let currentProvider: EmailAndPasswordProvider = await this.emailAndPasswordProviderRepository.findOne({
             where: { email },
@@ -155,7 +139,7 @@ export class AuthService {
 
     async createEmailAndPasswordUserAndSession(credentials) {
         try {
-            const passwordHash = await argon2.hash(credentials.password);
+            const passwordHash = await this.securityService.createPasswordHash({ password: credentials.password });
             const user = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
             const sessionToken = await this.createSessionToken(user);
             const csrfToken = await this.createCsrfToken();
@@ -188,31 +172,23 @@ export class AuthService {
 
     async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
         let emailProvider = await this.findEmailProviderById(user.emailAndPasswordProviderId)
-        const isPasswordValid = await argon2.verify(emailProvider.passwordHash, credentials.password);
+        const isPasswordValid = await this.securityService.verifyPasswordHash({ passwordHash: emailProvider.passwordHash, password: credentials.password });
         if (!isPasswordValid) {
             throw new Error("Password Invalid");
         }
         return this.createSessionToken(user);
     }
 
-    async createCsrfToken() {
-        return await randomBytes(32).then(bytes => bytes.toString("hex"));
+    createCsrfToken() {
+        return this.securityService.createCsrfToken();
     }
 
-    async createSessionToken(user: User) {
-        return await signJwt({
-            roles: user.roles
-        },
-            RSA_PRIVATE_KEY, {
-                algorithm: 'RS256',
-                expiresIn: '2h',
-                subject: user.id.toString()
-            });
+    createSessionToken(user: User) {
+        return this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
     }
 
-    async decodeJwt(token: string) {
-        const payload = await jwt.verify(token, RSA_PUBLIC_KEY);
-        return payload;
+    decodeJwt(token: string) {
+        return this.securityService.decodeJwt(token);
     }
 
     validatePassword(password: string) {
