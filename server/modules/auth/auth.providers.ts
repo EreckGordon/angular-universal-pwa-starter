@@ -8,4 +8,9 @@ export const authProviders = [
         useFactory: (connection: Connection) => connection.getRepository(User),
         inject: ['DbConnectionToken'],
     },
+    {
+        provide: 'EmailAndPasswordProviderRepositoryToken',
+        useFactory: (connection: Connection) => connection.getRepository(EmailAndPasswordProvider),
+        inject: ['DbConnectionToken'],
+    },
 ];

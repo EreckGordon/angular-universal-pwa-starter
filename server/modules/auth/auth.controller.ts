@@ -14,6 +14,7 @@ interface EmailAndPasswordLoginInterface {
 @Controller('auth')
 @UseGuards(RolesGuard)
 export class AuthController {
+    useSecure: boolean = process.env.SESSION_ID_SECURE_COOKIE === 'true';
 
     constructor (private readonly authService: AuthService) { }
 
@@ -22,21 +23,13 @@ export class AuthController {
         const loginResult = await this.authService.loginEmailAndPasswordUser(body)
         if (loginResult.apiCallResult) {
             const { user, sessionToken, csrfToken } = loginResult.result
-            res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: true });
+            res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
             res.cookie("XSRF-TOKEN", csrfToken);
-            res.status(200).json({ id: user.id, email: user.emailAndPasswordProvider.email, roles: user.roles });
+            res.status(200).json({ id: user.id, email: body.email, roles: user.roles });
         }
         else {
             res.status(401).json(loginResult.result.error)
         }
-    }
-
-    @Post('logout')
-    @Roles('user')
-    async logout( @Res() res: Response) {
-        await res.clearCookie("SESSIONID");
-        await res.clearCookie("XSRF-TOKEN");
-        return res.sendStatus(200);
     }
 
     @Post('create-email-and-password-user')
@@ -44,7 +37,7 @@ export class AuthController {
         const createUserResult = await this.authService.createEmailAndPasswordUser(body);
         if (createUserResult.apiCallResult) {
             const { user, sessionToken, csrfToken } = createUserResult.result
-            res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: true });
+            res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
             res.cookie("XSRF-TOKEN", csrfToken);
             res.status(200).json({ id: user.id, email: user.emailAndPasswordProvider.email, roles: user.roles });
         }
@@ -63,6 +56,14 @@ export class AuthController {
                     break;
             }
         }
+    }
+
+    @Post('logout')
+    @Roles('user')
+    async logout( @Res() res: Response) {
+        await res.clearCookie("SESSIONID");
+        await res.clearCookie("XSRF-TOKEN");
+        return res.sendStatus(200);
     }
 
 }

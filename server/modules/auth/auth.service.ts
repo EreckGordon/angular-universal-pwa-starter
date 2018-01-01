@@ -37,7 +37,9 @@ interface AuthResult {
 @Component()
 export class AuthService {
     constructor (
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>) { }
+        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
+        @Inject('EmailAndPasswordProviderRepositoryToken') private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>
+    ) { }
 
 
     async loginEmailAndPasswordUser(body): Promise<AuthResult> {
@@ -120,15 +122,22 @@ export class AuthService {
     }
 
     async findUserByEmail(email: string): Promise<User> {
-        return await this.userRepository.findOne({
-            relations: ["emailAndPasswordProvider"],
+        let currentProvider: EmailAndPasswordProvider = await this.emailAndPasswordProviderRepository.findOne({
             where: { email },
             cache: true // default 1000 = 1 second
-        })
+        });
+
+        if (currentProvider === undefined) return Promise.resolve(undefined);
+
+        return await this.userRepository.findOne({
+            where: { emailAndPasswordProviderId: currentProvider.id },
+            cache: true
+        });
     }
 
     async emailTaken(email: string): Promise<boolean> {
         return await this.findUserByEmail(email) === undefined ? false : true;
+
     }
 
     async addEmailAndPasswordUserToDatabase(email: string, passwordHash: string): Promise<User> {
@@ -169,8 +178,16 @@ export class AuthService {
         }
     }
 
+    async findEmailProviderById(providerId: number) {
+        return await this.emailAndPasswordProviderRepository.findOne({
+            where: { id: providerId },
+            cache: true
+        });
+    }
+
     async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
-        const isPasswordValid = await argon2.verify(user.emailAndPasswordProvider.passwordHash, credentials.password);
+        let emailProvider = await this.findEmailProviderById(user.emailAndPasswordProviderId)
+        const isPasswordValid = await argon2.verify(emailProvider.passwordHash, credentials.password);
         if (!isPasswordValid) {
             throw new Error("Password Invalid");
         }

@@ -16,6 +16,9 @@ export class User {
     @Column('simple-array')
     roles: string[];
 
+    @Column({ nullable: true })
+    emailAndPasswordProviderId: number;
+
     @OneToOne(type => EmailAndPasswordProvider, { cascade: true })
     @JoinColumn()
     emailAndPasswordProvider: EmailAndPasswordProvider;
