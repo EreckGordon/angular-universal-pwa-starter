@@ -13,6 +13,7 @@ import 'rxjs/add/operator/take';
 export class HomeComponent implements OnInit {
     loginForm: FormGroup;
     createUserForm: FormGroup;
+    upgradeAnonymousUserForm: FormGroup;
     keywords = 'angular, universal, angular-cli, PWA, expressjs';
     description = 'ngiso: Angular Isomorphic. It is a Progressive Web App (PWA) built with Angular Universal.';
 
@@ -31,6 +32,11 @@ export class HomeComponent implements OnInit {
             email: ['', Validators.required],
             password: ['', Validators.required]
         });
+
+        this.upgradeAnonymousUserForm = this.fb.group({
+            email: ['', Validators.required],
+            password: ['', Validators.required]
+        });
     }
 
     helloWorld() {
@@ -41,7 +47,6 @@ export class HomeComponent implements OnInit {
             .take(1).subscribe(result => {
                 console.log(result);
             }, (error) => console.log(error));
-
     }
 
     login() {
@@ -54,7 +59,6 @@ export class HomeComponent implements OnInit {
             .take(1).subscribe(result => {
                 console.log(result);
             }, (error) => console.log(error));
-
     }
 
     logout() {
@@ -65,7 +69,6 @@ export class HomeComponent implements OnInit {
             .take(1).subscribe(result => {
                 console.log(result);
             }, (error) => console.log(error));
-
     }
 
     createUser() {
@@ -78,7 +81,28 @@ export class HomeComponent implements OnInit {
             .take(1).subscribe(result => {
                 console.log(result);
             }, (error) => console.log(error));
+    }
 
+    createAnonymousUser() {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const options = { headers, withCredentials: true };
+        const body = {};
+        const createAnonymousUserResult = this.http.post('http://localhost:8000/auth/create-anonymous-user', body, options)
+            .take(1).subscribe(result => {
+                console.log(result);
+            }, (error) => console.log(error));
+    }
+
+    upgradeAnonymousUser() {
+        const email = this.upgradeAnonymousUserForm.value.email;
+        const password = this.upgradeAnonymousUserForm.value.password;
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const options = { headers, withCredentials: true };
+        const body = { email, password };
+        const upgradeUserResult = this.http.patch('http://localhost:8000/auth/upgrade-anonymous-user-to-email-and-password', body, options)
+            .take(1).subscribe(result => {
+                console.log(result);
+            }, (error) => console.log(error));
     }
 
 }

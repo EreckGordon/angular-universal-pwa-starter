@@ -12,6 +12,12 @@ interface SessionAndCSRFToken {
     csrfToken: string;
 }
 
+interface UserSessionAndCSRFToken {
+    user: User;
+    sessionToken: string;
+    csrfToken: string
+}
+
 
 @Component()
 export class EmailAndPasswordService {
@@ -54,7 +60,6 @@ export class EmailAndPasswordService {
     }
 
     async addEmailAndPasswordUserToDatabase(email: string, passwordHash: string): Promise<User> {
-
         const emailAndPasswordProvider = new EmailAndPasswordProvider();
         emailAndPasswordProvider.email = email;
         emailAndPasswordProvider.passwordHash = passwordHash;
@@ -65,7 +70,7 @@ export class EmailAndPasswordService {
         return await this.userRepository.save(user);
     }
 
-    async createEmailAndPasswordUserAndSession(credentials) {
+    async createEmailAndPasswordUserAndSession(credentials): Promise<UserSessionAndCSRFToken> {
         try {
             const passwordHash = await this.securityService.createPasswordHash({ password: credentials.password });
             const user: User = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
@@ -98,6 +103,32 @@ export class EmailAndPasswordService {
             throw new Error("Password Invalid");
         }
         return this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
+    }
+
+    async upgradeAnonymousUserToEmailAndPassword({ email, password, userId }: { email: string, password: string, userId: number }) {
+        try {
+            const passwordHash = await this.securityService.createPasswordHash({ password });
+            const user = await this.upgradeAnonymousUserInDatabase({ email, passwordHash, userId });
+            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
+            const csrfToken = await this.securityService.createCsrfToken();
+            const result = { user, sessionToken, csrfToken };
+            return result;
+        }
+        catch (err) {
+            return err
+        }
+    }
+
+    async upgradeAnonymousUserInDatabase({ email, passwordHash, userId }) {
+        const user = await this.userRepository.findOne(userId);
+        if (!user.isAnonymous) throw new Error('User is not anonymous');
+        const emailAndPasswordProvider = new EmailAndPasswordProvider();
+        emailAndPasswordProvider.email = email;
+        emailAndPasswordProvider.passwordHash = passwordHash;
+        user.isAnonymous = false;
+        user.roles = ['user'];
+        user.emailAndPasswordProvider = emailAndPasswordProvider;
+        return await this.userRepository.save(user);
     }
 
     validatePassword(password: string) {

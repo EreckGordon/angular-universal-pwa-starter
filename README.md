@@ -72,8 +72,8 @@ pm2 restart dist/server
 - ~configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.~ <-- dotenv
 - ~refactor auth-service so it isn't just one large file.~
 - refactor auth to handle multiple types of logins.
-	- ~username / pw~
-	- anonymous
+	- ~email and password~
+	- ~anonymous~
 	- social: google
 	- social: facebook
 	- social: twitter
@@ -83,3 +83,27 @@ pm2 restart dist/server
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
+
+- `Error: Could not extract user from request: jwt expired` need to deal with expired JWT.
+	- attempt to renew toke, if fails flush cookies?
+
+
+- test prerequisite: wipe out testing database.
+- needed tests
+	- username / password auth
+		- login non-existent user (fails)
+		- create new user(1)
+		- create same user (fails)
+		- logout
+		- login user(1)
+		- logout
+		- create user(2)
+		- logout
+		- login user(2)
+		- create user(3) rapidly. first time success, subsequent fails -- to verify not caching something we shouldn't
+	- anonymous auth
+		- create anonymous user(1)
+		- logout attempt (fail, insufficient permission)
+		- upgrade user to username / password, user id stays same
+		- upgrade anonymous user when not logged in (fails)
+		- upgrade anonymous user when account already has associated email (fails)

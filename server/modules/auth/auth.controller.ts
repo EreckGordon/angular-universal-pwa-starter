@@ -1,14 +1,10 @@
-import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, ReflectMetadata, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, ReflectMetadata, UseGuards, Patch } from '@nestjs/common';
 import { Request, Response, } from 'express';
 
 import { AuthService } from './auth.service';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
-
-interface EmailAndPasswordLoginInterface {
-    email: string;
-    password: string;
-}
+import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
 
 
 @Controller('auth')
@@ -19,10 +15,10 @@ export class AuthController {
     constructor (private readonly authService: AuthService) { }
 
     @Post('login-email-and-password-user')
-    async login( @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
+    async loginEmailAndPasswordUser( @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const loginResult = await this.authService.loginEmailAndPasswordUser(body)
         if (loginResult.apiCallResult) {
-            this.sendSuccessfulResult(res, loginResult.result);
+            this.sendSuccessfulUserResult(res, loginResult.result);
         }
         else {
             res.status(401).json(loginResult.result.error)
@@ -30,10 +26,10 @@ export class AuthController {
     }
 
     @Post('create-email-and-password-user')
-    async createUser( @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
+    async createEmailAndPasswordUser( @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const createUserResult = await this.authService.createEmailAndPasswordUser(body);
         if (createUserResult.apiCallResult) {
-            this.sendSuccessfulResult(res, createUserResult.result);
+            this.sendSuccessfulUserResult(res, createUserResult.result);
         }
         else {
             switch (createUserResult.result.error) {
@@ -52,11 +48,35 @@ export class AuthController {
         }
     }
 
-    sendSuccessfulResult(res: Response, authServiceResult) {
-        const { user, sessionToken, csrfToken } = authServiceResult
-        res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
-        res.cookie("XSRF-TOKEN", csrfToken);
-        res.status(200).json({ id: user.id, email: user.emailAndPasswordProvider.email, roles: user.roles });
+    @Post('create-anonymous-user')
+    async createAnonymousUser( @Res() res: Response) {
+        const createAnonymousUserResult = await this.authService.createAnonymousUser()
+        if (createAnonymousUserResult.apiCallResult) {
+            this.sendSuccessfulUserResult(res, createAnonymousUserResult.result);
+        }
+        else {
+            res.status(401).json(createAnonymousUserResult.result.error)
+        }
+    }
+
+    @Patch('upgrade-anonymous-user-to-email-and-password')
+    async upgradeAnonymousUser( @Req() req: Request, @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
+        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(req, body)
+        if (upgradeResult.apiCallResult) {
+            this.sendSuccessfulUserResult(res, upgradeResult.result);
+        }
+        else {
+            switch (upgradeResult.result.error) {
+                case "User is not anonymous":
+                    res.status(409).json({ error: 'User is not anonymous' })
+                    break;
+
+                default:
+                    res.status(401).json(upgradeResult.result.error);
+                    break;
+            }
+
+        }
     }
 
     @Post('logout')
@@ -65,6 +85,13 @@ export class AuthController {
         await res.clearCookie("SESSIONID");
         await res.clearCookie("XSRF-TOKEN");
         return res.sendStatus(200);
+    }
+
+    private sendSuccessfulUserResult(res: Response, authServiceResult) {
+        const { user, sessionToken, csrfToken } = authServiceResult
+        res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
+        res.cookie("XSRF-TOKEN", csrfToken);
+        res.status(200).json({ id: user.id, isAnonymous: user.isAnonymous, roles: user.roles });
     }
 
 }

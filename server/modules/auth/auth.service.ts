@@ -2,6 +2,9 @@ import { Component } from '@nestjs/common';
 
 import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
+import { AnonymousService } from './anonymous/anonymous.service';
+import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
+import { Request } from 'express';
 
 interface AuthResult {
     apiCallResult: boolean;
@@ -16,12 +19,14 @@ interface AuthResult {
 
 @Component()
 export class AuthService {
-    constructor (private readonly emailAndPasswordService: EmailAndPasswordService) { }
+    constructor (
+        private readonly emailAndPasswordService: EmailAndPasswordService,
+        private readonly anonymousService: AnonymousService
+    ) { }
 
-    async loginEmailAndPasswordUser(body): Promise<AuthResult> {
+    async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
 
-        const credentials = body;
-        const user = await this.emailAndPasswordService.findUserByEmail(credentials.email);
+        const user = await this.emailAndPasswordService.findUserByEmail(body.email);
         const userExists = user === undefined ? false : true;
 
         if (!userExists) {
@@ -31,8 +36,8 @@ export class AuthService {
 
         else {
             try {
-                const loginResult = await this.emailAndPasswordService.loginAndCreateSession(credentials, user);
-                if (loginResult["message"] === "Password Invalid") throw new Error("Password Invalid");
+                const loginResult = await this.emailAndPasswordService.loginAndCreateSession(body, user);
+                if (loginResult["message"] === 'Password Invalid') throw new Error('Password Invalid');
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
@@ -44,34 +49,42 @@ export class AuthService {
                 return result
             }
             catch (error) {
-                const result: AuthResult = { apiCallResult: false, result: { error: "Password Invalid" } }
+                const result: AuthResult = { apiCallResult: false, result: { error: 'Password Invalid' } }
                 return result
             }
         }
 
     }
 
-    async createEmailAndPasswordUser(body): Promise<AuthResult> {
+    private async verifyEmailAndPasswordValidity(body: EmailAndPasswordLoginInterface) {
 
-        const credentials = body;
-
-        const usernameTaken = await this.emailAndPasswordService.emailTaken(credentials.email)
+        const usernameTaken = await this.emailAndPasswordService.emailTaken(body.email)
 
         if (usernameTaken) {
             const result: AuthResult = { apiCallResult: false, result: { error: 'Email already in use' } }
             return result
         }
 
-        const passwordErrors = this.emailAndPasswordService.validatePassword(credentials.password);
+        const passwordErrors = this.emailAndPasswordService.validatePassword(body.password);
 
         if (passwordErrors.length > 0) {
             const result: AuthResult = { apiCallResult: false, result: { error: passwordErrors } }
             return result;
         }
 
+        return 'success';
+
+    }
+
+    async createEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
+
+        const verifyResult = await this.verifyEmailAndPasswordValidity(body)
+
+        if (verifyResult !== 'success') return verifyResult;
+
         else {
             try {
-                const createUserResult = await this.emailAndPasswordService.createEmailAndPasswordUserAndSession(credentials);
+                const createUserResult = await this.emailAndPasswordService.createEmailAndPasswordUserAndSession(body);
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
@@ -83,10 +96,58 @@ export class AuthService {
                 return result
             }
             catch (e) {
-                const result: AuthResult = { apiCallResult: false, result: { error: 'Error creating new user' } }
+                const result: AuthResult = { apiCallResult: false, result: { error: 'Error creating new email and password user' } }
                 return result
             }
         }
+
+    }
+
+    async createAnonymousUser(): Promise<AuthResult> {
+        try {
+            const createAnonymousUserResult = await this.anonymousService.createAnonymousUserAndSession();
+            const result: AuthResult = {
+                apiCallResult: true,
+                result: {
+                    user: createAnonymousUserResult.user,
+                    sessionToken: createAnonymousUserResult.sessionToken,
+                    csrfToken: createAnonymousUserResult.csrfToken
+                }
+            };
+            return result
+        }
+        catch (e) {
+            const result: AuthResult = { apiCallResult: false, result: { error: 'Error creating new anonymous user' } }
+            return result
+        }
+    }
+
+    async upgradeAnonymousUserToEmailAndPassword(req: Request, body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
+
+        const verifyResult = await this.verifyEmailAndPasswordValidity(body)
+
+        if (verifyResult !== 'success') return verifyResult;
+
+        else {
+            try {
+                const userId = req["user"]["sub"];
+                const upgradeAnonymousUserToEmailAndPasswordResult = await this.emailAndPasswordService.upgradeAnonymousUserToEmailAndPassword({ email: body.email, password: body.password, userId });
+                if (upgradeAnonymousUserToEmailAndPasswordResult["message"] === 'User is not anonymous') return <AuthResult>{ apiCallResult: false, result: { error: 'User is not anonymous' } };
+                const result: AuthResult = {
+                    apiCallResult: true,
+                    result: {
+                        user: upgradeAnonymousUserToEmailAndPasswordResult.user,
+                        sessionToken: upgradeAnonymousUserToEmailAndPasswordResult.sessionToken,
+                        csrfToken: upgradeAnonymousUserToEmailAndPasswordResult.csrfToken
+                    }
+                };
+                return result
+            }
+            catch (e) {
+                return <AuthResult>{ apiCallResult: false, result: { error: 'Not logged in' } }
+            }
+        }
+
     }
 
 }
