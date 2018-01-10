@@ -4,8 +4,8 @@ import { EmailAndPasswordProvider } from './email-and-password/email-and-passwor
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @CreateDateColumn()
     createdDate: Date;

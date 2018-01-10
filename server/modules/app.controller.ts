@@ -14,15 +14,15 @@ export class AppController {
 
         res.render('index', { req }, (err, html) => {
 
-        	// prevent caching these routes
-        	if (req.originalUrl.startsWith('/admin')) {
-        		return res.send(html);
-        	}
+            // prevent caching these routes
+            if (req.originalUrl.startsWith('/admin')) {
+                return res.send(html);
+            }
 
-        	else {
-	            this.renderCache[req.originalUrl] = html;
-	            return res.send(html);
-        	}
+            else {
+                this.renderCache[req.originalUrl] = html;
+                return res.send(html);
+            }
 
         });
     }
