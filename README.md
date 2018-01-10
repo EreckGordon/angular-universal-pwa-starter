@@ -20,6 +20,10 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - dotenv: create a file called `.env` in the root of the project (ie next to readme.md). Do not save it to source control. Give it the following variables:
 	```
 	SESSION_ID_SECURE_COOKIE=false
+	POSTGRES_PORT=5432
+	POSTGRES_USERNAME=postgres
+	POSTGRES_PASSWORD=testingpass
+	POSTGRES_DATABASE=testingDB
 	```
 - create another `.env` file in your deploy folder, it will have the same variable names, but with values suited for a production environment.
 
