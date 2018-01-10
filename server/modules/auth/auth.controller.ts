@@ -91,7 +91,14 @@ export class AuthController {
         const { user, sessionToken, csrfToken } = authServiceResult
         res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
         res.cookie("XSRF-TOKEN", csrfToken);
-        res.status(200).json({ id: user.id, isAnonymous: user.isAnonymous, roles: user.roles });
+        let email: string;
+        try {
+            email = user.emailAndPasswordProvider.email
+        }
+        catch (e) {
+            email = null
+        }
+        res.status(200).json({ id: user.id, isAnonymous: user.isAnonymous, roles: user.roles, email });
     }
 
 }
