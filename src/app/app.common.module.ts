@@ -8,15 +8,12 @@ import { CustomMaterialModule } from './shared/custom-material-module/index';
 
 import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
-import { HomeComponent } from './features/home/home.component';
-import { AboutComponent } from './features/about/about.component';
+
 
 
 @NgModule({
     declarations: [
-        NotFound404Component,
-        HomeComponent,
-        AboutComponent
+        NotFound404Component
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'angular-universal-pwa-starter' }),
