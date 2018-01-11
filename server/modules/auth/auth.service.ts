@@ -1,4 +1,5 @@
-import { Component } from '@nestjs/common';
+import { Component, Inject } from '@nestjs/common';
+import { Repository } from 'typeorm';
 
 import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
@@ -21,7 +22,8 @@ interface AuthResult {
 export class AuthService {
     constructor (
         private readonly emailAndPasswordService: EmailAndPasswordService,
-        private readonly anonymousService: AnonymousService
+        private readonly anonymousService: AnonymousService,
+        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
     ) { }
 
     async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
@@ -148,6 +150,10 @@ export class AuthService {
             }
         }
 
+    }
+
+    async findUserByUuid(uuid: string) {
+        return await this.userRepository.findOne(uuid);
     }
 
 }

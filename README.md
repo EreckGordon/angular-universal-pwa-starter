@@ -88,8 +88,8 @@ pm2 restart dist/server
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
 
-- `Error: Could not extract user from request: jwt expired` need to deal with expired JWT.
-	- attempt to renew toke, if fails flush cookies?
+- ~`Error: Could not extract user from request: jwt expired` need to deal with expired JWT.~
+	- ~attempt to renew token, if user no longer exists on db flush cookies~
 
 
 - test prerequisite: wipe out testing database.

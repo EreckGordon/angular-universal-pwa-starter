@@ -39,7 +39,7 @@ export class SecurityService {
     }
 
     async decodeJwt(token: string) {
-        const payload = await jwt.verify(token, RSA_PUBLIC_KEY);
+        const payload = await jwt.verify(token, RSA_PUBLIC_KEY, { ignoreExpiration: true });
         return payload;
     }
 
