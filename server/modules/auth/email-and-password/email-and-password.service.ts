@@ -74,7 +74,7 @@ export class EmailAndPasswordService {
         try {
             const passwordHash = await this.securityService.createPasswordHash({ password: credentials.password });
             const user: User = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
-            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
+            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString(), loginProvider: 'emailAndPassword' });
             const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
             return result;
@@ -102,14 +102,14 @@ export class EmailAndPasswordService {
         if (!isPasswordValid) {
             throw new Error("Password Invalid");
         }
-        return this.securityService.createSessionToken({ roles: user.roles, id: user.id });
+        return this.securityService.createSessionToken({ roles: user.roles, id: user.id, loginProvider: 'emailAndPassword' });
     }
 
     async upgradeAnonymousUserToEmailAndPassword({ email, password, userId }: { email: string, password: string, userId: string }) {
         try {
             const passwordHash = await this.securityService.createPasswordHash({ password });
             const user = await this.upgradeAnonymousUserInDatabase({ email, passwordHash, userId });
-            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id });
+            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id, loginProvider: 'emailAndPassword' });
             const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
             return result;

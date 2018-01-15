@@ -156,4 +156,22 @@ export class AuthService {
         return await this.userRepository.findOne(uuid);
     }
 
+    async reauthenticateUser(jwt): Promise<AuthResult> {
+        try {
+            const user = await this.findUserByUuid(jwt["sub"]);
+            if (user.isAnonymous) {
+                return { apiCallResult: true, result: { user } }
+            }
+            switch (jwt["loginProvider"]) {
+                case "emailAndPassword":
+                    const emailProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId)
+                    user.emailAndPasswordProvider = emailProvider
+                    return { apiCallResult: true, result: { user } }
+            }
+        }
+        catch (e) {
+            return { apiCallResult: false, result: { error: 'could not reauthenticate' } }
+        }
+    }
+
 }

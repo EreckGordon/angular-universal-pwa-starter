@@ -79,10 +79,24 @@ export class AuthController {
         }
     }
 
+    @Post('reauthenticate')
+    async reauthenticateUser( @Req() req: Request, @Res() res: Response) {
+        const jwt = await req["user"];
+        const reauthenticateResult = await this.authService.reauthenticateUser(jwt);
+        if (reauthenticateResult.apiCallResult) {
+            this.sendUserDetails(reauthenticateResult.result.user, res);
+        }
+        else {
+            res.clearCookie("SESSIONID");
+            await res.clearCookie("XSRF-TOKEN");
+            res.status(401).json(reauthenticateResult.result.error)
+        }
+    }
+
     @Post('logout')
     @Roles('user')
     async logout( @Res() res: Response) {
-        await res.clearCookie("SESSIONID");
+        res.clearCookie("SESSIONID");
         await res.clearCookie("XSRF-TOKEN");
         return res.sendStatus(200);
     }
@@ -91,6 +105,11 @@ export class AuthController {
         const { user, sessionToken, csrfToken } = authServiceResult
         res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
         res.cookie("XSRF-TOKEN", csrfToken);
+        this.sendUserDetails(user, res)
+
+    }
+
+    private sendUserDetails(user, res) {
         let email: string;
         try {
             email = user.emailAndPasswordProvider.email

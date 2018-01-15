@@ -75,13 +75,16 @@ pm2 restart dist/server
 	- backend
 - ~configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.~ <-- dotenv
 - ~refactor auth-service so it isn't just one large file.~
-- refactor auth to handle multiple types of logins.
+- refactor backend auth to handle multiple types of logins.
 	- ~email and password~
 	- ~anonymous~
 	- social: google
 	- social: facebook
 	- social: twitter
 	- social: github
+- frontend auth module
+	- observable auth service
+	- guards
 - database migrations
 - websocket
 - comments / chat system

@@ -27,9 +27,10 @@ export class SecurityService {
         return await randomBytes(32).then(bytes => bytes.toString("hex"));
     }
 
-    async createSessionToken({ roles, id }) {
+    async createSessionToken({ roles, id, loginProvider }) {
         return await signJwt({
-            roles
+            roles,
+            loginProvider
         },
             RSA_PRIVATE_KEY, {
                 algorithm: 'RS256',

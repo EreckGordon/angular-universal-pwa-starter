@@ -14,7 +14,7 @@ export class AnonymousService {
     async createAnonymousUserAndSession() {
         try {
             const user: User = await this.addAnonymousUserToDatabase();
-            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString() });
+            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString(), loginProvider: 'anonymous' });
             const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
             return result;
