@@ -10,7 +10,7 @@ import { AppCommonModule } from './app.common.module';
 import { SEOService } from './shared/seo.service';
 import { NGSWUpdateService } from './shared/ngsw-update.service';
 import { environment } from '../environments/environment';
-import { AuthService } from './shared/auth.service';
+
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -26,8 +26,7 @@ import { AuthService } from './shared/auth.service';
     ],
     providers: [
         SEOService,
-        NGSWUpdateService,
-        AuthService
+        NGSWUpdateService
     ]
 })
 export class AppBrowserModule { }

@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from './shared/custom-material-module/index';
+import { AuthService } from './shared/auth.service';
 
 import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
@@ -26,7 +27,7 @@ import { NotFound404Component } from './features/not-found404.component';
         }),
         RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
     ],
-    providers: [],
+    providers: [AuthService],
     bootstrap: [],
     exports: [
         CustomMaterialModule,
