@@ -16,10 +16,11 @@ export class RetrieveUserIdFromRequestMiddleware implements NestMiddleware {
                 try {
                     const payload = await this.securityService.decodeJwt(jwt);
                     if (((payload.exp * 1000) - Date.now()) < 1) {
-                        const userExists = await this.authService.findUserByUuid(payload.sub) === undefined ? false : true;
-                        if (userExists) {
-                            const sessionToken = await this.securityService.createSessionToken({ roles: payload.roles, id: payload.sub });
+                        const user = await this.authService.findUserByUuid(payload.sub);
+                        if (user !== undefined) {
+                            const sessionToken = await this.securityService.createSessionToken({ roles: payload.roles, id: payload.sub, loginProvider: payload.loginProvider });
                             res.cookie("SESSIONID", sessionToken, { httpOnly: true, secure: this.useSecure });
+                            req["user"] = await this.securityService.decodeJwt(sessionToken);
                             return next();
                         }
                         else {
