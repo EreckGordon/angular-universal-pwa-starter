@@ -14,11 +14,11 @@ export class HomeComponent implements OnInit {
     loginForm: FormGroup;
     createUserForm: FormGroup;
     upgradeAnonymousUserForm: FormGroup;
-    keywords = 'angular, universal, angular-cli, PWA, expressjs';
+    keywords = 'angular, universal, angular-cli, PWA, nestjs';
     description = 'ngiso: Angular Isomorphic. It is a Progressive Web App (PWA) built with Angular Universal.';
 
     constructor (public seoService: SEOService, private http: HttpClient, public fb: FormBuilder) {
-        this.seoService.setPageTitle('igiso - Angular Isomorphic');
+        this.seoService.setPageTitle('angular universal pwa - home');
         this.seoService.setKeywordsAndDescription(this.keywords, this.description);
     }
 

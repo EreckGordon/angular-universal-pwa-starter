@@ -5,7 +5,7 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from './shared/custom-material-module/index';
-import { AuthService } from './shared/auth.service';
+import { AuthModule } from './shared/auth/auth.module';
 
 import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
@@ -25,9 +25,10 @@ import { NotFound404Component } from './features/not-found404.component';
             cookieName: 'XSRF-TOKEN',
             headerName: 'x-xsrf-token'
         }),
-        RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' })
+        RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' }),
+        AuthModule
     ],
-    providers: [AuthService],
+    providers: [],
     bootstrap: [],
     exports: [
         CustomMaterialModule,

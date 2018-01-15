@@ -5,8 +5,8 @@ import { BlogService } from './blog.service';
 import { Observable } from 'rxjs/Observable';
 
 import { SEOService } from '../../shared/seo.service';
-import { AuthService } from '../../shared/auth.service';
-import { AuthenticatedUser } from '../../shared/auth.service';
+import { AuthService } from '../../shared/auth/services/auth.service';
+import { AuthenticatedUser } from '../../shared/auth/services/auth.service';
 
 @Component({
     selector: 'app-blog',
