@@ -35,7 +35,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - `npm run dev-server` - Runs server on port 8000 via ts-node, assumes no frontend changes.
 - `npm run prep-dev-server` - Full build of frontend, then serves frontend and backend on port 8000 via ts-node.
 - `npm run deploy` - Build and push server & frontend assets to github deployment repo.
-- `npm run analyze` - Bundle analysis of non-tree shaken bundle. lets you see the individual angular module pieces.
+- `npm run analyze-aot` - Bundle analysis of non-tree shaken bundle. lets you see the individual angular module pieces.
 - `npm run analyze-deploy` - Bundle analysis of tree shaken bundle. kind of opaque, but truest to reality.
 - `yarn upgrade-interactive` - Upgrade only what you want to.
 - `npm run format` - formats with tsfmt (typescript-formatter) based on tsfmt.json settings. This script gets called automatically before `prep-dev-server` and `deploy`.

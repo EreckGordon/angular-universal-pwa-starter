@@ -1,6 +1,6 @@
 {
   "name": "angular-universal-pwa-starter",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "author": "Ereck Gordon",
   "license": "MIT",
   "scripts": {
@@ -17,9 +17,10 @@
     "deploy": "npm run format && npm run prep-front-end && npm run prep-server && npm run copy-needed-files-to-deploy-folder && npm run deploy-to-github",
     "dev-server": "node server/index.js",
     "prep-dev-server": "npm run format && npm run prep-front-end && npm run dev-server",
-    "analyze-deploy": "ng build --prod --stats-json --build-optimizer && webpack-bundle-analyzer dist/stats.json",
-    "analyze": "ng build --aot --stats-json && webpack-bundle-analyzer dist/stats.json",
-    "format": "tsfmt -r"
+    "analyze-deploy": "ng build --prod --stats-json --build-optimizer && npm run analyze-bundle",
+    "analyze-aot": "ng build --aot --stats-json && npm run analyze-bundle",
+    "format": "tsfmt -r",
+    "analyze-bundle": "./node_modules/.bin/webpack-bundle-analyzer dist/dist-browser/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -95,6 +96,7 @@
     "ts-node": "^3.3.0",
     "tslint": "~5.3.2",
     "typescript": "~2.5.0",
-    "typescript-formatter": "^7.0.0"
+    "typescript-formatter": "^7.0.0",
+    "webpack-bundle-analyzer": "^2.9.2"
   }
 }
