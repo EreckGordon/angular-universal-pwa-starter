@@ -74,7 +74,12 @@ pm2 restart dist/server
 	- ~frontend~ <-- angular-cli has working tests now.
 	- backend
 - ~configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.~ <-- dotenv
-- ~refactor auth-service so it isn't just one large file.~
+- ~`Error: Could not extract user from request: jwt expired` need to deal with expired JWT.~
+	- ~attempt to renew token, if user no longer exists on db flush cookies~
+	- ~refactor auth-service so it isn't just one large file.~
+- ~frontend auth module~
+	- ~observable auth service~
+	- ~guards~
 - refactor backend auth to handle multiple types of logins.
 	- ~email and password~
 	- ~anonymous~
@@ -82,18 +87,12 @@ pm2 restart dist/server
 	- social: facebook
 	- social: twitter
 	- social: github
-- frontend auth module
-	- observable auth service
-	- guards
 - database migrations
 - websocket
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
-
-- ~`Error: Could not extract user from request: jwt expired` need to deal with expired JWT.~
-	- ~attempt to renew token, if user no longer exists on db flush cookies~
-
+- add baseUrl to environment variables / auth service
 
 - test prerequisite: wipe out testing database.
 - needed tests
