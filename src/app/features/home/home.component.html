@@ -6,6 +6,14 @@
 
 <body>
 
+	<div *ngIf="user$ | async as user">
+		{{user.id}} <br>
+		{{user.isAnonymous}} <br>
+		{{user.roles}} <br>
+		{{user.email}} <br>
+	</div>
+
+
 	<div style="margin:2em"><button mat-raised-button color="primary" (click)="helloWorld()">Hello World (f12)</button></div>
 
 
@@ -22,7 +30,7 @@
 			<input matInput placeholder="Password" formControlName="password">
 		</mat-input-container>
 
-		<button mat-raised-button color="accent" (click)="login()">Log In</button>
+		<button mat-raised-button color="accent" (click)="loginWithEmailAndPassword()">Log In</button>
 
 	</form>
 
@@ -37,7 +45,7 @@
 			<input matInput placeholder="Password" formControlName="password">
 		</mat-input-container>
 
-		<button mat-raised-button color="primary" (click)="createUser()">Create User</button>
+		<button mat-raised-button color="primary" (click)="createEmailAndPasswordUser()">Create User</button>
 
 	</form>
 
@@ -52,7 +60,7 @@
 			<input matInput placeholder="Password" formControlName="password">
 		</mat-input-container>
 
-		<button mat-raised-button color="accent" (click)="upgradeAnonymousUser()">Upgrade Anonymous User</button>
+		<button mat-raised-button color="accent" (click)="upgradeAnonymousUserToEmailAndPasswordUser()">Upgrade Anonymous User</button>
 
 	</form>
 

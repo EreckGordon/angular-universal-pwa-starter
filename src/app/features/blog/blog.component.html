@@ -3,10 +3,3 @@
     Blog
   </h5>
 </header>
-
-<div *ngIf="auth$ | async as user">
-	{{user.id}} <br>
-	{{user.isAnonymous}} <br>
-	{{user.roles}} <br>
-	{{user.email}} <br>
-</div>

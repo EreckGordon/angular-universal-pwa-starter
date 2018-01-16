@@ -12,7 +12,7 @@ export class AboutComponent implements OnInit {
     keywords = 'angular, universal, angular-cli, PWA, expressjs';
     description = 'About page. It contains contact information.';
 
-    constructor (public seoService: SEOService, authService: AuthService) {
+    constructor (public seoService: SEOService) {
         this.seoService.setPageTitle('angular universal pwa - about');
         this.seoService.setKeywordsAndDescription(this.keywords, this.description);
     }

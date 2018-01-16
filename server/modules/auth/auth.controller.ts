@@ -98,7 +98,7 @@ export class AuthController {
     async logout( @Res() res: Response) {
         res.clearCookie("SESSIONID");
         await res.clearCookie("XSRF-TOKEN");
-        return res.sendStatus(200);
+        return res.status(200).json({ goodbye: "come again soon" });
     }
 
     private sendSuccessfulUserResult(res: Response, authServiceResult) {
