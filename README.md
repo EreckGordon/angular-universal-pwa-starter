@@ -87,12 +87,14 @@ pm2 restart dist/server
 	- social: facebook
 	- social: twitter
 	- social: github
+- ~baseUrl as a part of environment~
 - database migrations
 - websocket
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
-- add baseUrl to environment variables / auth service
+- auth controller: delete user
+- auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
 
 - test prerequisite: wipe out testing database.
 - needed tests
