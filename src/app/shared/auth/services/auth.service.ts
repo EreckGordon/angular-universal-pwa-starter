@@ -24,8 +24,8 @@ interface EmailAndPassword {
 export class AuthService {
     private userSubject = new ReplaySubject<AuthenticatedUser | null>(1);
     user$: Observable<AuthenticatedUser> = this.userSubject.asObservable();
-    jsonHeaders: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
-    jsonOptions = { headers: this.jsonHeaders, withCredentials: true };
+    private jsonHeaders: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+    private jsonOptions = { headers: this.jsonHeaders, withCredentials: true };
 
     constructor (private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
         if (isPlatformBrowser(this.platformId)) {
