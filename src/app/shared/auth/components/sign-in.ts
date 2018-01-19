@@ -25,7 +25,8 @@ export class SignInComponent implements OnInit {
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if (!!user.id && !user.isAnonymous) this.router.navigate(['/protected']);
+            if (user === null) {} // null check so it doesn't break the component
+            else if (!!user.id && !user.isAnonymous) this.router.navigate(['/protected']);
             else if (user === 'user does not exist') {
                 this.form.patchValue({ email: '', password: '' })
             }
