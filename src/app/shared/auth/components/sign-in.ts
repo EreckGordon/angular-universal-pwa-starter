@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -11,7 +11,7 @@ import 'rxjs/add/operator/takeUntil';
     templateUrl: './sign-in.html'
 })
 
-export class SignInComponent implements OnInit {
+export class SignInComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
@@ -25,12 +25,12 @@ export class SignInComponent implements OnInit {
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if (user === null) {} // null check so it doesn't break the component
-            else if (!!user.id && !user.isAnonymous) this.router.navigate(['/protected']);
-            else if (user === 'user does not exist') {
+            if (user === null) { } // null check so it doesn't break the component
+            else if (this.auth.isAuthenticatedUser(user) && !user.isAnonymous) this.router.navigate(['/protected']);
+            else if (this.auth.isHttpErrorResponse(user) && user.error === 'user does not exist') {
                 this.form.patchValue({ email: '', password: '' })
             }
-            else if (user === 'Password Invalid') {
+            else if (this.auth.isHttpErrorResponse(user) && user.error === 'Password Invalid') {
                 this.form.patchValue({ password: '' })
             }
         })
@@ -41,6 +41,6 @@ export class SignInComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.destroy.next()
+        this.destroy.next();
     }
 }

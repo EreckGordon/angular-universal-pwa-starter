@@ -1,6 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -19,11 +19,13 @@ interface EmailAndPassword {
     password: string;
 }
 
+export type UserOrError = AuthenticatedUser | HttpErrorResponse | null
+
 
 @Injectable()
 export class AuthService {
-    private userSubject = new ReplaySubject<AuthenticatedUser | null | any>(1);
-    user$: Observable<AuthenticatedUser | null | any> = this.userSubject.asObservable();
+    private userSubject = new ReplaySubject<UserOrError>(1);
+    user$: Observable<UserOrError> = this.userSubject.asObservable();
     private jsonHeaders: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     private jsonOptions = { headers: this.jsonHeaders, withCredentials: true };
 
@@ -61,13 +63,21 @@ export class AuthService {
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
-    private handleError(error) {
-        this.userSubject.next(error.error);
-    }
-
     logout(): void {
         this.http.post(`${environment.baseUrl}/auth/logout`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(null), error => console.log(error));
+    }
+
+    private handleError(error: HttpErrorResponse) {
+        this.userSubject.next(error);
+    }
+
+    isAuthenticatedUser(user: AuthenticatedUser | HttpErrorResponse): user is AuthenticatedUser {
+        return (<AuthenticatedUser>user).id !== undefined;
+    }
+
+    isHttpErrorResponse(user: AuthenticatedUser | HttpErrorResponse): user is HttpErrorResponse {
+        return (<HttpErrorResponse>user).error !== undefined;
     }
 
 }

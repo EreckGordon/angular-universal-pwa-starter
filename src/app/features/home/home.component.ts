@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { SEOService } from '../../shared/seo.service';
 import { AuthService } from '../../shared/auth/services/auth.service';
-import { AuthenticatedUser } from '../../shared/auth/services/auth.service';
+import { UserOrError } from '../../shared/auth/services/auth.service';
 
 import 'rxjs/add/operator/take';
 
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
     upgradeAnonymousUserForm: FormGroup;
     keywords = 'angular, universal, angular-cli, PWA, nestjs';
     description = 'ngiso: Angular Isomorphic. It is a Progressive Web App (PWA) built with Angular Universal.';
-    user$: Observable<AuthenticatedUser>;
+    user$: Observable<UserOrError>;
 
     constructor (public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
         this.seoService.setPageTitle('angular universal pwa - home');
