@@ -39,32 +39,32 @@ export class AuthService {
     }
 
     private reauthenticate(): void {
-        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/auth/reauthenticate`, {}, this.jsonOptions)
+        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reauthenticate`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
     createAnonymousUser(): void {
-        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/auth/create-anonymous-user`, {}, this.jsonOptions)
+        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-anonymous-user`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
     upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
-        this.http.patch<AuthenticatedUser>(`${environment.baseUrl}/auth/upgrade-anonymous-user-to-email-and-password`, { email, password }, this.jsonOptions)
+        this.http.patch<AuthenticatedUser>(`${environment.baseUrl}/api/auth/upgrade-anonymous-user-to-email-and-password`, { email, password }, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
     createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
-        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/auth/create-email-and-password-user`, { email, password }, this.jsonOptions)
+        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-email-and-password-user`, { email, password }, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
     loginWithEmailAndPassword({ email, password }: EmailAndPassword): void {
-        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/auth/login-email-and-password-user`, { email, password }, this.jsonOptions)
+        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/login-email-and-password-user`, { email, password }, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
     logout(): void {
-        this.http.post(`${environment.baseUrl}/auth/logout`, {}, this.jsonOptions)
+        this.http.post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(null), error => console.log(error));
     }
 

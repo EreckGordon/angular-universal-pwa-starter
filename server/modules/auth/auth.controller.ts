@@ -7,7 +7,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
 
 
-@Controller('auth')
+@Controller('api/auth')
 @UseGuards(RolesGuard)
 export class AuthController {
     useSecure: boolean = process.env.SESSION_ID_SECURE_COOKIE === 'true';
