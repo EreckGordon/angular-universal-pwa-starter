@@ -11,7 +11,6 @@ import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
 
 
-
 @NgModule({
     declarations: [
         NotFound404Component

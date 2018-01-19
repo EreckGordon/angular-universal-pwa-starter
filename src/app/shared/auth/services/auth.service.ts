@@ -22,8 +22,8 @@ interface EmailAndPassword {
 
 @Injectable()
 export class AuthService {
-    private userSubject = new ReplaySubject<AuthenticatedUser | null>(1);
-    user$: Observable<AuthenticatedUser> = this.userSubject.asObservable();
+    private userSubject = new ReplaySubject<AuthenticatedUser | null | any>(1);
+    user$: Observable<AuthenticatedUser | null | any> = this.userSubject.asObservable();
     private jsonHeaders: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     private jsonOptions = { headers: this.jsonHeaders, withCredentials: true };
 
@@ -58,7 +58,11 @@ export class AuthService {
 
     loginWithEmailAndPassword({ email, password }: EmailAndPassword): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/auth/login-email-and-password-user`, { email, password }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
+    }
+
+    private handleError(error) {
+        this.userSubject.next(error.error);
     }
 
     logout(): void {
