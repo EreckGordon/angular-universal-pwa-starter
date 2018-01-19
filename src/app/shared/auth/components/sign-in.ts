@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
+
+import { AuthService, AuthenticatedUser } from '../services/auth.service';
 
 @Component({
     selector: 'sign-in',
     templateUrl: './sign-in.html'
 })
 
-export class SignInComponent implements OnInit {
+export class SignInComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
@@ -25,14 +27,23 @@ export class SignInComponent implements OnInit {
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if (!!user.id && !user.isAnonymous) this.router.navigate(['/protected']);
-            else if (user === 'user does not exist') {
+            if (this.isAuthenticatedUser(user) && !user.isAnonymous) this.router.navigate(['/protected']);
+            
+            else if (this.isHttpErrorResponse(user) && user.error === 'user does not exist') {
                 this.form.patchValue({ email: '', password: '' })
             }
-            else if (user === 'Password Invalid') {
+            else if (this.isHttpErrorResponse(user) && user.error === 'Password Invalid') {
                 this.form.patchValue({ password: '' })
             }
         })
+    }
+
+    isAuthenticatedUser(user: AuthenticatedUser | HttpErrorResponse): user is AuthenticatedUser {
+        return (<AuthenticatedUser>user).id !== undefined;
+    }
+
+    isHttpErrorResponse(user: AuthenticatedUser | HttpErrorResponse): user is HttpErrorResponse {
+        return (<HttpErrorResponse>user).error !== undefined;
     }
 
     signIn(): void {
@@ -40,6 +51,6 @@ export class SignInComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.destroy.next()
+        this.destroy.next();
     }
 }
