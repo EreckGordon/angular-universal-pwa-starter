@@ -5,27 +5,29 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from '../custom-material-module/index';
 
-import { SignInComponent } from './components/sign-in';
+import { SignInComponent } from './components/sign-in.component';
+import { CreateAccountComponent } from './components/create-account.component';
+import { RequestPasswordResetComponent } from './components/request-password-reset.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './services/auth.service';
+import { routes } from './auth.routing';
 
 
 @NgModule({
     declarations: [
-        SignInComponent
+        SignInComponent,
+        CreateAccountComponent,
+        RequestPasswordResetComponent
     ],
     imports: [
         CommonModule,
         CustomMaterialModule,
         ReactiveFormsModule,
-        RouterModule.forChild([])
+        RouterModule.forChild(routes)
     ],
     providers: [
         AuthGuard,
         AuthService
-    ],
-    exports: [
-        SignInComponent
     ]
 })
 

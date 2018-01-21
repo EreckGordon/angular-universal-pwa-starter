@@ -1,0 +1,33 @@
+<div class="center-everything">
+    <h3> Sign in </h3>
+</div>
+
+<div class="center-everything">
+    <form class="sign-in-form" [formGroup]="form" style="min-width: 80%" autocomplete="off">
+
+        <div style="margin: 1em">
+            <mat-input-container floatPlaceholder="always" style="width: 100%">
+                <input matInput placeholder="Email Address:" formControlName="email">
+            </mat-input-container>
+        </div>
+
+        <div style="margin: 1em">
+            <mat-input-container floatPlaceholder="always" style="width: 100%">
+                <input matInput type="password" placeholder="Password:" formControlName="password">
+            </mat-input-container>
+        </div>
+
+        <div class="center-everything" style="margin: 1em">
+            <button mat-raised-button color="primary" (click)="signIn()">Login</button>
+        </div>
+
+        <div class="center-everything" style="margin: 1em">
+            <a mat-button color="accent" routerLink="/reset-password">Forget Your Password?</a>
+        </div>
+
+        <div class="center-everything" style="margin: 1em">
+            <a mat-button color="primary" routerLink="/create-account">Create An Account</a>
+        </div>
+
+    </form>
+</div>

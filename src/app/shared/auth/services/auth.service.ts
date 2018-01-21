@@ -31,7 +31,7 @@ export class AuthService {
 
     constructor (private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
         if (isPlatformBrowser(this.platformId)) {
-            document.cookie.length > 0 ? this.reauthenticate() : this.createAnonymousUser();
+            document.cookie.length > 0 ? this.reauthenticate() : this.userSubject.next(null);
         }
         else {
             this.userSubject.next(null)
@@ -43,11 +43,13 @@ export class AuthService {
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
+    // use this function when you need to pre-load their basic database access
     createAnonymousUser(): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-anonymous-user`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
+    // use this function when offering to create an account after entering their email
     upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http.patch<AuthenticatedUser>(`${environment.baseUrl}/api/auth/upgrade-anonymous-user-to-email-and-password`, { email, password }, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
@@ -55,7 +57,7 @@ export class AuthService {
 
     createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-email-and-password-user`, { email, password }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
     loginWithEmailAndPassword({ email, password }: EmailAndPassword): void {
