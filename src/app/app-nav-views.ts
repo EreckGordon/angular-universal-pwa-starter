@@ -8,10 +8,5 @@ export const views: Object[] = [
         name: 'Blog',
         icon: 'trending_up',
         link: ['blog']
-    },
-    {
-        name: 'Sign In',
-        icon: 'fingerprint',
-        link: ['sign-in']
     }
 ];

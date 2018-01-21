@@ -1,4 +1,4 @@
-<div style="display:flex; min-height: 100vh; flex-direction: column;">
+<div style="display:flex; min-height: 100vh; flex-direction: column;overflow-x: hidden" class="center-everything">
 
 	<nav mat-tab-nav-bar>
 		<a matTabLink
@@ -16,14 +16,39 @@
 			 >
 			 {{view.name}}<mat-icon style="padding-left: .3em">{{view.icon}}</mat-icon>
 		</a>
+		<span *ngIf="user$ | async as user; else signIn">
+			<a matTabLink *ngIf="user.isAnonymous || user?.ok === false"
+				 routerLink="/sign-in"
+				 routerLinkActive #rla="routerLinkActive"
+				 [active]="rla.isActive"
+				 >
+				 Sign In / Sign Up<mat-icon style="padding-left: .3em">fingerprint</mat-icon>
+			</a>		
+			<a matTabLink *ngIf="!user.isAnonymous && user?.ok !== false"
+				 routerLink="/account"
+				 routerLinkActive #rla="routerLinkActive"
+				 [active]="rla.isActive"
+				 >
+				 Account<mat-icon style="padding-left: .3em">settings</mat-icon>
+			</a>	
+		</span>
+		<ng-template #signIn>
+			<a matTabLink
+				 routerLink="/sign-in"
+				 routerLinkActive #rla="routerLinkActive"
+				 [active]="rla.isActive"
+				 >
+				 Sign In / Sign Up<mat-icon style="padding-left: .3em">fingerprint</mat-icon>
+			</a>	
+		</ng-template>	
 	</nav>	
 
-	<div style="flex: 1; margin: 1em">
+	<div style="flex: 1; margin: 1em; margin-left: 1em;min-width: 95vw">
 		<router-outlet></router-outlet>
 	</div>
 
 	<div>
-		<mat-toolbar>
+		<mat-toolbar style="min-width: 100vw; max-width: 100vw;">
 
 		</mat-toolbar>
 	</div>

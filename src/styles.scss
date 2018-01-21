@@ -32,6 +32,16 @@ html, body {
   flex: 1 1 auto;
 }
 
+.center-everything {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   -webkit-align-items: center;
+   align-items: center;
+   -webkit-justify-content: center;
+   justify-content: center;
+}
 
 pre {
   font-family: $primary-font;
@@ -44,9 +54,9 @@ pre {
 }
 
 /**
-  * Basic styles from Material Design Lite for HTML elements
-  */
-  h1, h2, h3, h4, h5, h6, p {
+* Basic styles from Material Design Lite for HTML elements
+*/
+h1, h2, h3, h4, h5, h6, p {
   margin: 0;
   padding: 0; }
 
@@ -156,9 +166,9 @@ ul, ol {
   line-height: 24px;
   letter-spacing: 0; }
 
-
-
-  
+/**
+* Loader container and contents
+*/  
 .loader-wrap{
   position: absolute;
   left: 0;right: 0;top: 0;bottom: 0;
