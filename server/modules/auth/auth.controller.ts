@@ -34,7 +34,7 @@ export class AuthController {
         else {
             switch (createUserResult.result.error) {
                 case "Email already in use":
-                    res.status(409).json({ error: 'Email already in use' });
+                    res.status(409).json(createUserResult.result.error);
                     break;
 
                 case "Error creating new user":
