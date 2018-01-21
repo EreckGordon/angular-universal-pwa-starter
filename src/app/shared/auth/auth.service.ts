@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export interface AuthenticatedUser {
     id: string;

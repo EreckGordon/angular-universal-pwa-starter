@@ -5,8 +5,7 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { Observable } from 'rxjs/Observable';
 
 import { SEOService } from '../../shared/seo.service';
-import { AuthService } from '../../shared/auth/services/auth.service';
-import { UserOrError } from '../../shared/auth/services/auth.service';
+import { AuthService, UserOrError } from '../../shared/auth/auth.service';
 
 import 'rxjs/add/operator/take';
 
@@ -19,7 +18,7 @@ export class HomeComponent implements OnInit {
     createUserForm: FormGroup;
     upgradeAnonymousUserForm: FormGroup;
     keywords = 'angular, universal, angular-cli, PWA, nestjs';
-    description = 'ngiso: Angular Isomorphic. It is a Progressive Web App (PWA) built with Angular Universal.';
+    description = 'Angular Universal PWA, built with nestjs and typeorm.';
     user$: Observable<UserOrError>;
 
     constructor (public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {

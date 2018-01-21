@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../auth.service';
 
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';

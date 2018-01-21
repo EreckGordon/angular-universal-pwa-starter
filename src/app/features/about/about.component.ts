@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { SEOService } from '../../shared/seo.service';
-import { AuthService } from '../../shared/auth/services/auth.service';
 
 @Component({
     selector: 'app-about',
