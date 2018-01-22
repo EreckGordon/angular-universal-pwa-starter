@@ -24,6 +24,9 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 	POSTGRES_USERNAME=postgres
 	POSTGRES_PASSWORD=testingpass
 	POSTGRES_DATABASE=testingDB
+	MAILGUN_API_KEY=yourAPIKey
+	MAILGUN_EMAIL_DOMAIN=mail.yourwebsite.com
+	SITENAME_BASE=yourwebsite.com	
 	```
 - create another `.env` file in your deploy folder, it will have the same variable names, but with values suited for a production environment.
 
