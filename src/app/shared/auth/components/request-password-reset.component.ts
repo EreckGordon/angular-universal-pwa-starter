@@ -33,8 +33,8 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
     }
 
     requestPasswordReset(): void {
-        // to do: implement below non-existent auth function
-        //this.auth.requestPasswordReset(this.form.value);
+        this.auth.requestPasswordReset(this.form.value);
+        // to do: snackbar that upon closing navigates to /sign-in
         this.router.navigate(['/sign-in'])
     }
 

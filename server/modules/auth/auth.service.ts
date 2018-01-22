@@ -174,4 +174,8 @@ export class AuthService {
         }
     }
 
+    async requestPasswordReset({ email }: { email: string }) {
+        return await this.emailAndPasswordService.requestPasswordReset({ email })
+    }
+
 }

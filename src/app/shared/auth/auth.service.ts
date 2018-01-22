@@ -65,6 +65,11 @@ export class AuthService {
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
+    requestPasswordReset({ email }: { email: string }) {
+        this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
+            .take(1).subscribe(() => console.log('password reset has been requested.'))
+    }
+
     logout(): void {
         this.http.post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(null), error => console.log(error));

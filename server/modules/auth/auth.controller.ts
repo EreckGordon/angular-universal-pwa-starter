@@ -79,6 +79,12 @@ export class AuthController {
         }
     }
 
+    @Post('request-password-reset')
+    async requestPasswordReset( @Req() req: Request, @Res() res: Response, @Body() body: { email: string }) {
+        // to do: implement
+        this.authService.requestPasswordReset(body)
+    }
+
     @Post('reauthenticate')
     async reauthenticateUser( @Req() req: Request, @Res() res: Response) {
         const jwt = await req["user"];

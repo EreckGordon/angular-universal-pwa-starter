@@ -1,10 +1,11 @@
 import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import * as passwordValidator from 'password-validator';
+
 import { User } from '../user.entity';
 import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
 import { SecurityService } from '../../common/security/security.service';
-
-import * as passwordValidator from 'password-validator';
+import { MailgunService } from '../../common/mailgun.service';
 
 
 interface SessionAndCSRFToken {
@@ -24,7 +25,8 @@ export class EmailAndPasswordService {
     constructor (
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
         @Inject('EmailAndPasswordProviderRepositoryToken') private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>,
-        private readonly securityService: SecurityService
+        private readonly securityService: SecurityService,
+        private readonly mailgunService: MailgunService
     ) { }
 
     async findUserByEmail(email: string): Promise<User> {
@@ -129,6 +131,22 @@ export class EmailAndPasswordService {
         user.roles = ['user'];
         user.emailAndPasswordProvider = emailAndPasswordProvider;
         return await this.userRepository.save(user);
+    }
+
+    async requestPasswordReset({ email }: { email: string }) {
+        try {
+            const passwordResetEmail = await this.mailgunService.nodemailerMailgun.sendMail({
+                to: email,
+                from: `noreply@${process.env.MAILGUN_EMAIL_DOMAIN}`,
+                subject: `Password Reset Request for ${process.env.SITENAME_BASE}`,
+                html: `<b>hello</b>`
+            })
+
+            console.log(passwordResetEmail)
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     validatePassword(password: string) {
