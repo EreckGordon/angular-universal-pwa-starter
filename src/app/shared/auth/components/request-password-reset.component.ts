@@ -34,8 +34,7 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
 
     requestPasswordReset(): void {
         this.auth.requestPasswordReset(this.form.value);
-        // to do: snackbar that upon closing navigates to /sign-in
-        this.router.navigate(['/sign-in'])
+        // to do: snackbar that confirms that email has been sent.
     }
 
     ngOnDestroy() {
