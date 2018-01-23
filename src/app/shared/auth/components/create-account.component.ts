@@ -27,7 +27,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if (user === null) { } // null check so it doesn't break the component
             else if (this.auth.isAuthenticatedUser(user) && !user.isAnonymous) this.router.navigate(['/account']);
-            else if (this.auth.isHttpErrorResponse(user) && user.error === 'Email already in use') { // user exists check, probably different error message
+            else if (this.auth.isHttpErrorResponse(user) && user.error === 'Email already in use') { 
                 this.form.patchValue({ email: '' })
             }
             else if (this.auth.isHttpErrorResponse(user) && Array.isArray(user.error)) { // password validation errors. to do: handle the specifics in snackbar

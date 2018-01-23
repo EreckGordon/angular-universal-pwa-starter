@@ -1,11 +1,12 @@
 import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { Request } from 'express';
 
 import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
 import { AnonymousService } from './anonymous/anonymous.service';
 import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
-import { Request } from 'express';
+import { MailgunService } from '../common/mailgun.service';
 
 interface AuthResult {
     apiCallResult: boolean;
@@ -24,6 +25,7 @@ export class AuthService {
         private readonly emailAndPasswordService: EmailAndPasswordService,
         private readonly anonymousService: AnonymousService,
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
+        private readonly mailgunService: MailgunService
     ) { }
 
     async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
@@ -174,8 +176,20 @@ export class AuthService {
         }
     }
 
-    async requestPasswordReset({ email }: { email: string }) {
-        return await this.emailAndPasswordService.requestPasswordReset({ email })
+    async requestPasswordReset({ email }: { email: string }): Promise<AuthResult> {
+        // first we check if the email exists. if not, return an error that eventually bubbles to the controller as 'user does not exist'
+        // then we create a token and set its expiry to 10 minutes
+        // we save the token to the user's email and password table
+        // ps user/pw entity needs to have a passwordResetToken field (and maybe an expiry field, but the token could have expiry encoded if its a jwt.)
+        //done// we send the token back as a url `${process.env.SITE_URL}/reset-password/?token=${token}&email=${email}`        
+        try {
+            const token = 'totally-legit-token';
+            const passwordResetEmail = await this.mailgunService.sendPasswordResetEmail({ email, token })
+            return {apiCallResult: true, result: {}}
+        }
+        catch (e) {
+            return {apiCallResult: false, result: { error: e }}
+        }
     }
 
 }

@@ -67,7 +67,7 @@ export class AuthService {
 
     requestPasswordReset({ email }: { email: string }) {
         this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
-            .take(1).subscribe(() => console.log('password reset has been requested.'))
+            .take(1).subscribe(() => console.log('password reset has been requested.'), error => this.handleError(error))
     }
 
     logout(): void {

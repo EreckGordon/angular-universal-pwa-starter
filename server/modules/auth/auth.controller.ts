@@ -81,8 +81,14 @@ export class AuthController {
 
     @Post('request-password-reset')
     async requestPasswordReset( @Req() req: Request, @Res() res: Response, @Body() body: { email: string }) {
-        // to do: implement
-        this.authService.requestPasswordReset(body)
+        const requestPasswordResetResult = await this.authService.requestPasswordReset(body);
+        if (requestPasswordResetResult.apiCallResult) {
+            console.log('woo success')
+        }
+        else {
+            console.log('womp womp', requestPasswordResetResult.result.error)
+        }
+
     }
 
     @Post('reauthenticate')
