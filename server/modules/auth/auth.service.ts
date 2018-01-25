@@ -7,6 +7,7 @@ import { EmailAndPasswordService } from './email-and-password/email-and-password
 import { AnonymousService } from './anonymous/anonymous.service';
 import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
 import { MailgunService } from '../common/mailgun.service';
+import { SecurityService } from '../common/security/security.service';
 
 interface AuthResult {
     apiCallResult: boolean;
@@ -25,7 +26,8 @@ export class AuthService {
         private readonly emailAndPasswordService: EmailAndPasswordService,
         private readonly anonymousService: AnonymousService,
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        private readonly mailgunService: MailgunService
+        private readonly mailgunService: MailgunService,
+        private readonly securityService: SecurityService
     ) { }
 
     async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
@@ -178,12 +180,12 @@ export class AuthService {
 
     async requestPasswordReset({ email }: { email: string }): Promise<AuthResult> {
         // first we check if the email exists. if not, return an error that eventually bubbles to the controller as 'user does not exist'
-        // then we create a token and set its expiry to 10 minutes
+        //done// then we create a token and set its expiry to 10 minutes
         // we save the token to the user's email and password table
         // ps user/pw entity needs to have a passwordResetToken field (and maybe an expiry field, but the token could have expiry encoded if its a jwt.)
         //done// we send the token back as a url `${process.env.SITE_URL}/reset-password/?token=${token}&email=${email}`        
         try {
-            const token = 'totally-legit-token';
+            const token = await this.securityService.createPasswordResetToken();
             const passwordResetEmail = await this.mailgunService.sendPasswordResetEmail({ email, token })
             return {apiCallResult: true, result: {}}
         }
