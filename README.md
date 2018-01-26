@@ -90,13 +90,22 @@ pm2 restart dist/server
 	- password reset
 		- component
 		- server functionality
-- refactor backend auth to handle multiple types of logins.
-	- ~email and password~
-	- ~anonymous~
-	- social: google
-	- social: facebook
-	- social: twitter
-	- social: github
+	- account management component
+		- delete user modal
+		- change password
+	- auth service refactor: use the handleError function rather than setting the it to null.
+		- only when the function is working properly, as a mark that i have refactored.
+- refactor backend auth 
+	- to handle multiple types of logins.
+		- ~email and password~
+		- ~anonymous~
+		- social: google
+		- social: facebook
+		- social: twitter
+		- social: github
+	- to email users
+		- upon account creation
+		- ~to reset their password upon forgetting it~
 - ~baseUrl as a part of environment~
 - database migrations
 - websocket
@@ -119,6 +128,7 @@ pm2 restart dist/server
 		- logout
 		- login user(2)
 		- create user(3) rapidly. first time success, subsequent fails -- to verify not caching something we shouldn't
+		- forgotten password reset
 	- anonymous auth
 		- create anonymous user(1)
 		- logout attempt (fail, insufficient permission)
