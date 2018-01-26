@@ -83,10 +83,10 @@ export class AuthController {
     async requestPasswordReset( @Req() req: Request, @Res() res: Response, @Body() body: { email: string }) {
         const requestPasswordResetResult = await this.authService.requestPasswordReset(body);
         if (requestPasswordResetResult.apiCallResult) {
-            console.log('woo success')
+            res.sendStatus(200)
         }
         else {
-            console.log('womp womp', requestPasswordResetResult.result.error)
+            res.status(401).json(requestPasswordResetResult.result.error)
         }
 
     }

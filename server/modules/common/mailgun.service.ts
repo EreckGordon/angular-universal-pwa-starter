@@ -5,7 +5,7 @@ import * as mg from 'nodemailer-mailgun-transport';
 
 @Component()
 export class MailgunService {
-	
+
     private nodemailerMailgun = nodemailer.createTransport(
         mg({
             auth: {
@@ -15,8 +15,8 @@ export class MailgunService {
         })
     );
 
-    async sendPasswordResetEmail({email, token}: {email: string; token:string;}): Promise<any> {
-    	const html = `
+    async sendPasswordResetEmail({ email, token }: { email: string; token: string; }): Promise<any> {
+        const html = `
     		<div>To reset your password for ${process.env.SITENAME_BASE}, please follow this link:
     		<a href="${process.env.SITE_URL}/reset-password/?token=${token}&email=${email}">
     			${process.env.SITE_URL}/reset-password/?email=${email}&token=${token}

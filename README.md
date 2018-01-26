@@ -27,6 +27,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 	MAILGUN_API_KEY=yourAPIKey
 	MAILGUN_EMAIL_DOMAIN=mail.yourwebsite.com
 	SITENAME_BASE=yourwebsite.com	
+	SITE_URL=http://localhost:4200
 	```
 - create another `.env` file in your deploy folder, it will have the same variable names, but with values suited for a production environment.
 
@@ -35,7 +36,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 
 ## Useful Commands
 - `ng serve --aot` - Run in frontend aot development mode on port 4200.
-- `npm run dev-server` - Runs server on port 8000 via ts-node, assumes no frontend changes.
+- `npm run dev-server` - Runs server on port 8000 via ts-node, assumes no frontend changes in regards to rendering with universal. 
 - `npm run prep-dev-server` - Full build of frontend, then serves frontend and backend on port 8000 via ts-node.
 - `npm run deploy` - Build and push server & frontend assets to github deployment repo.
 - `npm run analyze-aot` - Bundle analysis of non-tree shaken bundle. lets you see the individual angular module pieces.
@@ -83,6 +84,12 @@ pm2 restart dist/server
 - ~frontend auth module~
 	- ~observable auth service~
 	- ~guards~
+	- request password reset
+		- component
+		- ~server functionality~
+	- password reset
+		- component
+		- server functionality
 - refactor backend auth to handle multiple types of logins.
 	- ~email and password~
 	- ~anonymous~

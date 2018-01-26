@@ -44,11 +44,11 @@ export class SecurityService {
     }
 
     async createPasswordResetToken() {
-        return await signJwt({}, RSA_PRIVATE_KEY, {algorithm: 'RS256', expiresIn: '10m', subject: 'password-reset-token'})
+        return await signJwt({}, RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: '10m', subject: 'password-reset-token' })
     }
 
     async decodePasswordResetToken(token: string) {
-        return await jwt.verify(token, RSA_PUBLIC_KEY, {subject: 'password-reset-token'});
+        return await jwt.verify(token, RSA_PUBLIC_KEY, { subject: 'password-reset-token' });
     }
 
     async createPasswordHash({ password }) {

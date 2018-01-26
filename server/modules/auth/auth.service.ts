@@ -30,14 +30,14 @@ export class AuthService {
         private readonly securityService: SecurityService
     ) { }
 
+
     async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
 
         const user = await this.emailAndPasswordService.findUserByEmail(body.email);
         const userExists = user === undefined ? false : true;
 
         if (!userExists) {
-            const result: AuthResult = { apiCallResult: false, result: { error: 'user does not exist' } }
-            return result
+            return { apiCallResult: false, result: { error: 'user does not exist' } }
         }
 
         else {
@@ -179,18 +179,20 @@ export class AuthService {
     }
 
     async requestPasswordReset({ email }: { email: string }): Promise<AuthResult> {
-        // first we check if the email exists. if not, return an error that eventually bubbles to the controller as 'user does not exist'
-        //done// then we create a token and set its expiry to 10 minutes
-        // we save the token to the user's email and password table
-        // ps user/pw entity needs to have a passwordResetToken field (and maybe an expiry field, but the token could have expiry encoded if its a jwt.)
-        //done// we send the token back as a url `${process.env.SITE_URL}/reset-password/?token=${token}&email=${email}`        
         try {
+            const user = await this.emailAndPasswordService.findUserByEmail(email);
+            const userExists = user === undefined ? false : true;
+            if (!userExists) return { apiCallResult: false, result: { error: 'user does not exist' } }
             const token = await this.securityService.createPasswordResetToken();
-            const passwordResetEmail = await this.mailgunService.sendPasswordResetEmail({ email, token })
-            return {apiCallResult: true, result: {}}
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
+            user.emailAndPasswordProvider = emailAndPasswordProvider;
+            user.emailAndPasswordProvider.passwordResetToken = token;
+            await this.userRepository.save(user);
+            const passwordResetEmail = await this.mailgunService.sendPasswordResetEmail({ email, token });
+            return { apiCallResult: true, result: {} }
         }
         catch (e) {
-            return {apiCallResult: false, result: { error: e }}
+            return { apiCallResult: false, result: { error: 'error requesting password reset' } }
         }
     }
 

@@ -12,4 +12,7 @@ export class EmailAndPasswordProvider {
     @Column()
     passwordHash: string;
 
+    @Column({ nullable: true })
+    passwordResetToken: string;
+
 }
