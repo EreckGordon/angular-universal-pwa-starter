@@ -70,6 +70,10 @@ export class AuthService {
             .take(1).subscribe(() => console.log('password reset has been requested.'), error => this.handleError(error))
     }
 
+    resetPassword({ password, token }: { password: string; token: string; }) {
+        // to do:implement
+    }
+
     logout(): void {
         this.http.post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(null), error => console.log(error));
