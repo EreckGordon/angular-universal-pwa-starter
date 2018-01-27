@@ -10,7 +10,7 @@ export class MailgunService {
 
         const html = `
             <div>To reset your password for ${process.env.SITENAME_BASE}, please follow this link:
-            <a href="${process.env.SITE_URL}/reset-password/?token=${token}&email=${email}">
+            <a href="${process.env.SITE_URL}/reset-password/?token=${token}">
                 ${process.env.SITE_URL}/reset-password/?token=${token}
             </a></div><br>
 
