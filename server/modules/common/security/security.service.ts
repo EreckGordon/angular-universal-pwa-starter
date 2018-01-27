@@ -43,8 +43,8 @@ export class SecurityService {
         return await jwt.verify(token, RSA_PUBLIC_KEY, { ignoreExpiration: true });
     }
 
-    async createPasswordResetToken() {
-        return await signJwt({}, RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: '10m', subject: 'password-reset-token' })
+    async createPasswordResetToken(email: string) {
+        return await signJwt({ email }, RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: '10m', subject: 'password-reset-token' })
     }
 
     async decodePasswordResetToken(token: string) {

@@ -1,17 +1,17 @@
 import { Component } from '@nestjs/common';
 
-const mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_EMAIL_DOMAIN});
+const mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_EMAIL_DOMAIN });
 
 
 @Component()
 export class MailgunService {
 
     async sendPasswordResetEmail({ email, token }: { email: string; token: string; }): Promise<any> {
-        
+
         const html = `
             <div>To reset your password for ${process.env.SITENAME_BASE}, please follow this link:
             <a href="${process.env.SITE_URL}/reset-password/?token=${token}&email=${email}">
-                ${process.env.SITE_URL}/reset-password/?email=${email}&token=${token}
+                ${process.env.SITE_URL}/reset-password/?token=${token}
             </a></div><br>
 
             <div>
@@ -23,7 +23,7 @@ export class MailgunService {
             from: `noreply@${process.env.MAILGUN_EMAIL_DOMAIN}`,
             subject: `Password Reset Request for ${process.env.SITENAME_BASE}`,
             html
-        })        
+        })
     }
 
 

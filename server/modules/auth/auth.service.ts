@@ -183,7 +183,7 @@ export class AuthService {
             const user = await this.emailAndPasswordService.findUserByEmail(email);
             const userExists = user === undefined ? false : true;
             if (!userExists) return { apiCallResult: false, result: { error: 'user does not exist' } }
-            const token = await this.securityService.createPasswordResetToken();
+            const token = await this.securityService.createPasswordResetToken(email);
             const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
             user.emailAndPasswordProvider = emailAndPasswordProvider;
             user.emailAndPasswordProvider.passwordResetToken = token;
