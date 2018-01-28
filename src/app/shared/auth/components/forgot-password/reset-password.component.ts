@@ -18,6 +18,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
     encodedToken: string;
     decodedToken: Object;
+    showPassword: boolean = false;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private route: ActivatedRoute) { }
 
@@ -28,6 +29,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if (user === null) { } // null check so it doesn't break the component
+            else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) { }
             else if (this.auth.isAuthenticatedUser(user) && user.email === this.decodedToken["email"]) {
                 this.router.navigate(['/account'])
             }
@@ -43,6 +45,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         this.auth.resetPassword({ password: this.form.value, token: this.encodedToken });
         this.form.disable()
         // to do: snackbar that informs that password reset has been sent.
+    }
+
+    toggleShowPassword() {
+        this.showPassword = !this.showPassword;
     }
 
     ngOnDestroy() {

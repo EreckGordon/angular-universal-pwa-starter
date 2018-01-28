@@ -15,6 +15,7 @@ export class SignInComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
+    showPassword: boolean = false;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router) { }
 
@@ -40,6 +41,10 @@ export class SignInComponent implements OnInit, OnDestroy {
 
     signIn(): void {
         this.auth.loginWithEmailAndPassword(this.form.value);
+    }
+
+    toggleShowPassword() {
+        this.showPassword = !this.showPassword;
     }
 
     ngOnDestroy() {

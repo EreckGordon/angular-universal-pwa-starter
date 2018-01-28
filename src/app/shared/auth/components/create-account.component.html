@@ -11,11 +11,19 @@
             </mat-input-container>
         </div>
 
-        <div style="margin: 1em">
+        <div style="margin: 1em; display: flex; flex-direction: row;" *ngIf="!showPassword">
             <mat-input-container floatPlaceholder="always" style="width: 100%">
                 <input matInput type="password" placeholder="Password:" formControlName="password">
             </mat-input-container>
+            <span> <button mat-icon-button (click)="toggleShowPassword()"><mat-icon>visibility</mat-icon></button> </span>
         </div>
+
+        <div style="margin: 1em; display: flex; flex-direction: row;" *ngIf="showPassword">
+            <mat-input-container floatPlaceholder="always" style="width: 100%">
+                <input matInput placeholder="Password:" formControlName="password">
+            </mat-input-container>
+            <span> <button mat-icon-button (click)="toggleShowPassword()"><mat-icon>visibility_off</mat-icon></button> </span>
+        </div>            
 
         <div class="center-everything" style="margin: 1em">
             <button mat-raised-button color="primary" (click)="createUserWithEmailAndPassword()">Create Account</button>

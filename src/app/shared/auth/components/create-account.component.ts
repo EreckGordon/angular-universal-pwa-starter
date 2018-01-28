@@ -15,6 +15,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
+    showPassword: boolean = false;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router) { }
 
@@ -38,6 +39,10 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
 
     createUserWithEmailAndPassword(): void {
         this.auth.createEmailAndPasswordUser(this.form.value);
+    }
+
+    toggleShowPassword() {
+        this.showPassword = !this.showPassword;
     }
 
     ngOnDestroy() {
