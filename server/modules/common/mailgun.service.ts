@@ -9,9 +9,9 @@ export class MailgunService {
     async sendPasswordResetEmail({ email, token }: { email: string; token: string; }): Promise<any> {
 
         const html = `
-            <div>To reset your password for ${process.env.SITENAME_BASE}, please follow this link:
+            <div>To reset your password for ${process.env.SITENAME_BASE}, please follow
             <a href="${process.env.SITE_URL}/reset-password/?token=${token}">
-                ${process.env.SITE_URL}/reset-password/?token=${token}
+                this link
             </a></div><br>
 
             <div>
@@ -23,8 +23,8 @@ export class MailgunService {
             from: `noreply@${process.env.MAILGUN_EMAIL_DOMAIN}`,
             subject: `Password Reset Request for ${process.env.SITENAME_BASE}`,
             html
-        })
-    }
+        });
 
+    }
 
 }
