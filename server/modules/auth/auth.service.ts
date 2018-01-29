@@ -196,4 +196,27 @@ export class AuthService {
         }
     }
 
+    async resetPassword({ password, token }: { password: string; token: string; }): Promise<AuthResult> {
+        try {
+            const decodedTokenOrError = await this.securityService.decodePasswordResetToken(token)
+            if (decodedTokenOrError === 'jwt expired') return { apiCallResult: false, result: { error: 'jwt expired' } }
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderByEmail(decodedTokenOrError.email);
+            if (token !== emailAndPasswordProvider.passwordResetToken) return { apiCallResult: false, result: { error: 'jwt does not match database' } }
+            emailAndPasswordProvider.passwordResetToken = null;
+            const passwordErrors = this.emailAndPasswordService.validatePassword(password);
+            if (passwordErrors.length > 0) return { apiCallResult: false, result: { error: passwordErrors } }
+            const passwordHash = await this.securityService.createPasswordHash({ password });
+            emailAndPasswordProvider.passwordHash = passwordHash;
+            const user = await this.emailAndPasswordService.findUserAccountByEmailAndPasswordProviderId(emailAndPasswordProvider.id);
+            user.emailAndPasswordProvider = emailAndPasswordProvider;
+            await this.userRepository.save(user);
+            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id, loginProvider: 'emailAndPassword' });
+            const csrfToken = await this.securityService.createCsrfToken();
+            return { apiCallResult: true, result: { user, sessionToken, csrfToken } }
+        }
+        catch (e) {
+            return { apiCallResult: false, result: { error: 'error resetting password' } }
+        }
+    }
+
 }

@@ -42,7 +42,7 @@ export class AuthController {
                     break;
 
                 default:
-                    res.status(400).json(createUserResult.result.error);
+                    res.status(401).json(createUserResult.result.error);
                     break;
             }
         }
@@ -88,7 +88,17 @@ export class AuthController {
         else {
             res.status(401).json(requestPasswordResetResult.result.error);
         }
+    }
 
+    @Post('reset-password')
+    async resetPassword( @Req() req: Request, @Res() res: Response, @Body() body: { password: string; token: string; }) {
+        const resetPasswordResult = await this.authService.resetPassword(body);
+        if (resetPasswordResult.apiCallResult) {
+            this.sendSuccessfulUserResult(res, resetPasswordResult.result);
+        }
+        else {
+            res.status(401).json(resetPasswordResult.result.error);
+        }
     }
 
     @Post('reauthenticate')

@@ -71,7 +71,8 @@ export class AuthService {
     }
 
     resetPassword({ password, token }: { password: string; token: string; }) {
-        // to do:implement
+        this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error))
     }
 
     logout(): void {

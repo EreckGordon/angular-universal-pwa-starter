@@ -48,10 +48,18 @@ export class SecurityService {
     }
 
     async decodePasswordResetToken(token: string) {
-        return await jwt.verify(token, RSA_PUBLIC_KEY, { subject: 'password-reset-token' });
+        try {
+            return await jwt.verify(token, RSA_PUBLIC_KEY, { subject: 'password-reset-token' });
+        }
+        catch (e) {
+            if (e.message === 'jwt expired') return e.message
+            else {
+                return e
+            }
+        }
     }
 
-    async createPasswordHash({ password }) {
+    async createPasswordHash({ password }: { password: string; }) {
         return await argon2.hash(password);
     }
 

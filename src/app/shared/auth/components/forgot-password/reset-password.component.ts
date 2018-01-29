@@ -17,7 +17,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     encodedToken: string;
-    decodedToken: Object;
+    decodedToken: Object = {};
     showPassword: boolean = false;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private route: ActivatedRoute) { }
@@ -25,6 +25,17 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.form = this.fb.group({
             password: ['', Validators.required]
+        });
+
+        this.route.queryParams.take(1).subscribe(params => {
+            if (!!params.token) {
+                this.encodedToken = params.token;
+                this.decodedToken = jwt.decode(params.token);
+            }
+            else {
+                this.encodedToken = 'does not exist';
+                this.decodedToken["email"] = 'does not exist';
+            }
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
@@ -35,16 +46,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.route.queryParams.take(1).subscribe(params => {
-            this.encodedToken = params.token
-            this.decodedToken = jwt.decode(params.token)
-        })
     }
 
     resetPassword(): void {
-        this.auth.resetPassword({ password: this.form.value, token: this.encodedToken });
-        this.form.disable()
+        this.auth.resetPassword({ password: this.form.value.password, token: this.encodedToken });
         // to do: snackbar that informs that password reset has been sent.
+        //to do: disable button after request sent.
     }
 
     toggleShowPassword() {
