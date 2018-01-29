@@ -84,17 +84,22 @@ pm2 restart dist/server
 - ~frontend auth module~
 	- ~observable auth service~
 	- ~guards~
-	- request password reset
-		- component
+	- ~request password reset~
+		- ~component~
 		- ~server functionality~
-	- password reset
-		- component
-		- server functionality
+	- ~password reset~
+		- ~component~
+		- ~server functionality~
 	- account management component
 		- delete user modal
-		- change password
+		- change password inline (\*ngIf)
+		- logout
 	- auth service refactor: use the handleError function rather than setting the it to null.
 		- only when the function is working properly, as a mark that i have refactored.
+	- add recaptchaV2
+		- create account
+		- login
+		- request password reset
 - refactor backend auth 
 	- to handle multiple types of logins.
 		- ~email and password~
