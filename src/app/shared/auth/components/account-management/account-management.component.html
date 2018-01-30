@@ -1,3 +1,13 @@
 <div class="center-everything">
     <h3> Account Management </h3>
 </div>
+
+<div class="center-everything">
+	<button mat-raised-button color="warn" (click)="logout()"> Log Out </button>
+</div>
+
+<div class="center-everything" style="margin: 2em;">
+	Email: {{user.email}}<br>
+	User ID: {{user.id}}<br>
+	Roles: {{user.roles}}<br>
+</div>
