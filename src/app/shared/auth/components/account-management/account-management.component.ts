@@ -18,7 +18,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
 
     destroy: Subject<any> = new Subject();
     user: AuthenticatedUser;
-    removeItemFromCartDialogRef: MatDialogRef<ConfirmDeleteOwnAccountDialog>;
+    deleteOwnAccountDialogRef: MatDialogRef<ConfirmDeleteOwnAccountDialog>;
 
     constructor (public auth: AuthService, private router: Router, public dialog: MatDialog, ) { }
 
@@ -36,11 +36,11 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
     }
 
     deleteOwnAccountDialog() {
-        this.removeItemFromCartDialogRef = this.dialog.open(ConfirmDeleteOwnAccountDialog, {
+        this.deleteOwnAccountDialogRef = this.dialog.open(ConfirmDeleteOwnAccountDialog, {
             disableClose: false
         });
 
-        this.removeItemFromCartDialogRef.afterClosed().take(1).subscribe(result => {
+        this.deleteOwnAccountDialogRef.afterClosed().take(1).subscribe(result => {
 
             if (result === 'Deleting Account') {
                 this.deleteOwnAccount();
