@@ -19,6 +19,13 @@ interface AuthResult {
     }
 }
 
+interface UserJWT {
+    roles: string[];
+    loginProvider: string;
+    iat: number;
+    exp: number;
+    sub: string;
+}
 
 @Component()
 export class AuthService {
@@ -216,6 +223,15 @@ export class AuthService {
         }
         catch (e) {
             return { apiCallResult: false, result: { error: 'error resetting password' } }
+        }
+    }
+
+    async deleteOwnAccount(jwt: UserJWT): Promise<AuthResult> {
+        try {
+            await this.emailAndPasswordService.deleteAccount(jwt.sub)
+        }
+        catch (e) {
+            return { apiCallResult: false, result: { error: 'error deleting account' } }
         }
     }
 

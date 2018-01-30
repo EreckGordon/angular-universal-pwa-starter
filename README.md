@@ -93,7 +93,7 @@ pm2 restart dist/server
 	- account management component
 		- delete user modal
 		- change password inline (\*ngIf)
-		- logout
+		- ~logout~
 	- auth service refactor: use the handleError function rather than setting the it to null.
 		- only when the function is working properly, as a mark that i have refactored.
 	- add recaptchaV2

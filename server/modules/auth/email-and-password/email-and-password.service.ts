@@ -131,6 +131,10 @@ export class EmailAndPasswordService {
         return await this.userRepository.save(user);
     }
 
+    async deleteAccount(uuid: string) {
+        console.log(uuid)
+    }
+
     validatePassword(password: string) {
         const schema = new passwordValidator();
         schema

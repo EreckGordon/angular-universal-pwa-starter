@@ -80,6 +80,11 @@ export class AuthService {
             .take(1).subscribe(user => this.userSubject.next(null), error => console.log(error));
     }
 
+    deleteOwnAccount() {
+        this.http.post(`${environment.baseUrl}/api/auth/delete-own-account`, {}, this.jsonOptions)
+            .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error))
+    }
+
     private handleError(error: HttpErrorResponse) {
         this.userSubject.next(error);
     }

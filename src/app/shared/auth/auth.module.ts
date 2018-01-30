@@ -10,6 +10,7 @@ import { CreateAccountComponent } from './components/create-account.component';
 import { RequestPasswordResetComponent } from './components/forgot-password/request-password-reset.component';
 import { ResetPasswordComponent } from './components/forgot-password/reset-password.component';
 import { AccountManagementComponent } from './components/account-management/account-management.component';
+import { ConfirmDeleteOwnAccountDialog } from './components/account-management/confirm-delete-own-account.dialog';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './auth.service';
 import { routes } from './auth.routing';
@@ -21,7 +22,8 @@ import { routes } from './auth.routing';
         CreateAccountComponent,
         RequestPasswordResetComponent,
         ResetPasswordComponent,
-        AccountManagementComponent
+        AccountManagementComponent,
+        ConfirmDeleteOwnAccountDialog
     ],
     imports: [
         CommonModule,
@@ -32,7 +34,8 @@ import { routes } from './auth.routing';
     providers: [
         AuthGuard,
         AuthService
-    ]
+    ],
+    entryComponents: [ConfirmDeleteOwnAccountDialog]
 })
 
 export class AuthModule { }
