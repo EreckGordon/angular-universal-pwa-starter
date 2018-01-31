@@ -131,8 +131,8 @@ export class EmailAndPasswordService {
         return await this.userRepository.save(user);
     }
 
-    async deleteAccount(uuid: string) {
-        console.log(uuid)
+    async removeEmailAndPasswordProvider(provider) {
+        await this.emailAndPasswordProviderRepository.remove(provider)
     }
 
     validatePassword(password: string) {

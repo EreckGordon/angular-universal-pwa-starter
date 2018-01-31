@@ -228,7 +228,17 @@ export class AuthService {
 
     async deleteOwnAccount(jwt: UserJWT): Promise<AuthResult> {
         try {
-            await this.emailAndPasswordService.deleteAccount(jwt.sub)
+            const userToBeDeleted = await this.userRepository.findOne(jwt.sub);
+            const providerToBeDeleted = async () => {
+                switch (jwt.loginProvider) {
+                    case "emailAndPassword":
+                        return await this.emailAndPasswordService.findEmailAndPasswordProviderById(userToBeDeleted.emailAndPasswordProviderId)
+                }
+            }
+            await this.userRepository.remove(userToBeDeleted);
+            await this.emailAndPasswordService.removeEmailAndPasswordProvider(await providerToBeDeleted());
+
+            return { apiCallResult: true, result: {} }
         }
         catch (e) {
             return { apiCallResult: false, result: { error: 'error deleting account' } }
