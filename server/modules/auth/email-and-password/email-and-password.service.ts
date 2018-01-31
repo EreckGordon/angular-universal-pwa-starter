@@ -132,7 +132,11 @@ export class EmailAndPasswordService {
     }
 
     async removeEmailAndPasswordProvider(provider) {
-        await this.emailAndPasswordProviderRepository.remove(provider)
+        await this.emailAndPasswordProviderRepository.remove(provider);
+    }
+
+    async updateEmailAndPasswordProvider(provider) {
+        this.emailAndPasswordProviderRepository.save(provider);
     }
 
     validatePassword(password: string) {

@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material';
 
 
 @Component({
-    selector: 'delete-own-account-dialog',
+    selector: 'delete-account-dialog',
     template: `
         <div class="center-everything"><h4 mat-dialog-title>Permanently Delete your Account?</h4></div>
 
@@ -16,6 +16,6 @@ import { MatDialogRef } from '@angular/material';
         </mat-dialog-content>
     `
 })
-export class ConfirmDeleteOwnAccountDialog {
-    constructor (public dialogRef: MatDialogRef<ConfirmDeleteOwnAccountDialog>) { }
+export class ConfirmDeleteAccountDialog {
+    constructor (public dialogRef: MatDialogRef<ConfirmDeleteAccountDialog>) { }
 }

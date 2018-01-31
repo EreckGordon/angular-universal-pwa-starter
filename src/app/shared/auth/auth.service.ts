@@ -52,7 +52,7 @@ export class AuthService {
     // use this function when offering to create an account after entering their email
     upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http.patch<AuthenticatedUser>(`${environment.baseUrl}/api/auth/upgrade-anonymous-user-to-email-and-password`, { email, password }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
     createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
@@ -65,22 +65,26 @@ export class AuthService {
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
-    requestPasswordReset({ email }: { email: string }) {
+    requestPasswordReset({ email }: { email: string }):void {
         this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
             .take(1).subscribe(() => console.log('password reset has been requested.'), error => this.handleError(error))
     }
 
-    resetPassword({ password, token }: { password: string; token: string; }) {
+    resetPassword({ password, token }: { password: string; token: string; }):void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error))
     }
 
-    logout(): void {
-        this.http.post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(null), error => console.log(error));
+    changePassword({ oldPassword, newPassword }: { oldPassword: string; newPassword: string; }): Observable<Object> {
+        return this.http.post(`${environment.baseUrl}/api/auth/change-password`, { oldPassword, newPassword }, this.jsonOptions)
     }
 
-    deleteOwnAccount() {
+    logout(): void {
+        this.http.post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
+            .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error));
+    }
+
+    deleteAccount() {
         this.http.post(`${environment.baseUrl}/api/auth/delete-own-account`, {}, this.jsonOptions)
             .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error))
     }

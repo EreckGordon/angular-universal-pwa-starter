@@ -226,6 +226,24 @@ export class AuthService {
         }
     }
 
+    async changePassword(body: { oldPassword: string; newPassword: string; }, jwt: UserJWT): Promise<AuthResult> {
+        try {
+            const user:User = await this.userRepository.findOne(jwt.sub);
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
+            const isPasswordValid = await this.securityService.verifyPasswordHash({ passwordHash: emailAndPasswordProvider.passwordHash, password: body.oldPassword });
+            if (!isPasswordValid) return { apiCallResult: false, result: { error: 'Password Invalid' } }
+            const passwordErrors = this.emailAndPasswordService.validatePassword(body.newPassword);
+            if (passwordErrors.length > 0) return { apiCallResult: false, result: { error: passwordErrors } }
+            const newPasswordHash = await this.securityService.createPasswordHash({ password: body.newPassword });
+            emailAndPasswordProvider.passwordHash = newPasswordHash
+            await this.emailAndPasswordService.updateEmailAndPasswordProvider(emailAndPasswordProvider)
+            return { apiCallResult: true, result: {} }
+        }
+        catch (e) {
+            return { apiCallResult: false, result: { error: 'error changing password' } }
+        }
+    }
+
     async deleteOwnAccount(jwt: UserJWT): Promise<AuthResult> {
         try {
             const userToBeDeleted = await this.userRepository.findOne(jwt.sub);

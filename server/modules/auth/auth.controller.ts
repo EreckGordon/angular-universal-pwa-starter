@@ -101,6 +101,19 @@ export class AuthController {
         }
     }
 
+    @Post('change-password')
+    @Roles('user')
+    async changePassword( @Req() req: Request, @Res() res: Response, @Body() body ){
+        const jwt = await req["user"];
+        const changePasswordResult = await this.authService.changePassword(body, jwt);
+        if (changePasswordResult.apiCallResult) {
+            res.status(200).json(changePasswordResult.result);
+        }
+        else {
+            res.status(401).json(changePasswordResult.result.error)
+        }
+    }
+
     @Post('reauthenticate')
     async reauthenticateUser( @Req() req: Request, @Res() res: Response) {
         const jwt = await req["user"];
@@ -116,6 +129,7 @@ export class AuthController {
     }
 
     @Post('delete-own-account')
+    @Roles('user')
     async deleteOwnAccount( @Req() req: Request, @Res() res: Response) {
         const jwt = await req["user"]
         const deleteOwnAccountResult = await this.authService.deleteOwnAccount(jwt);

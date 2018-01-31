@@ -2,16 +2,24 @@
     <h3> Account Management </h3>
 </div>
 
+<h5 class="center-everything">Log Out:</h5>
 <div class="center-everything">
 	<button mat-raised-button color="warn" (click)="logout()"> Log Out </button>
 </div>
 
+<h5 class="center-everything">User Details:</h5>
 <div class="center-everything" style="margin: 2em;">
 	Email: {{user.email}}<br>
 	User ID: {{user.id}}<br>
 	Roles: {{user.roles}}<br>
 </div>
 
+<h5 class="center-everything"> Change Password: </h5>
+<div *ngIf="!showChangePassword" class="center-everything"><button mat-button color="accent" (click)="toggleShowChangePassword()">Change Password</button></div>
+<div *ngIf="showChangePassword" class="center-everything"><button mat-button color="warn" (click)="toggleShowChangePassword()">Cancel</button></div>
+<app-change-password *ngIf="showChangePassword" (passwordChanged)="toggleShowChangePassword()"></app-change-password>
+
+<h5 class="center-everything">Delete Account:</h5>
 <div class="center-everything">
-	<button mat-raised-button color="warn" (click)="deleteOwnAccountDialog()"> Delete Account </button>
+	<button mat-button color="warn" routerLink='/delete-account'> Delete Account </button>
 </div>

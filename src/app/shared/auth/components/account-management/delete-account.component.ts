@@ -3,37 +3,30 @@ import { Router } from '@angular/router';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 
-import { AuthService, AuthenticatedUser } from '../../auth.service';
+import { AuthService } from '../../auth.service';
 import { ConfirmDeleteAccountDialog } from './confirm-delete-account.dialog';
 
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
 @Component({
-    selector: 'app-account-management',
-    templateUrl: './account-management.component.html'
+    selector: 'app-delete-account',
+    templateUrl: './delete-account.component.html'
 })
 
-export class AccountManagementComponent implements OnInit, OnDestroy {
+export class DeleteAccountComponent implements OnInit, OnDestroy {
 
     destroy: Subject<any> = new Subject();
-    user: AuthenticatedUser;
     deleteAccountDialogRef: MatDialogRef<ConfirmDeleteAccountDialog>;
-    showChangePassword: boolean = false;
 
-    constructor (public auth: AuthService, public router: Router, public dialog: MatDialog, ) { }
+    constructor (public auth: AuthService, private router: Router, public dialog: MatDialog ) { }
 
     ngOnInit() {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if ((user === null) || (this.auth.isAuthenticatedUser(user) && !user.email)) {
                 return this.router.navigate(['/']);
             }
-            if (this.auth.isAuthenticatedUser(user)) this.user = user;
         })
-    }
-
-    logout() {
-        this.auth.logout();
     }
 
     deleteAccountDialog() {
@@ -52,10 +45,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
 
     deleteAccount() {
         this.auth.deleteAccount();
-    }
-
-    toggleShowChangePassword() {
-        this.showChangePassword = !this.showChangePassword;
     }
 
     ngOnDestroy() {

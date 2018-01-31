@@ -91,11 +91,9 @@ pm2 restart dist/server
 		- ~component~
 		- ~server functionality~
 	- account management component
-		- delete user modal
-		- change password inline (\*ngIf)
-		- ~logout~
-	- auth service refactor: use the handleError function rather than setting the it to null.
-		- only when the function is working properly, as a mark that i have refactored.
+		- ~delete user modal~
+		- ~change password inline (\*ngIf)~
+	- logout component
 	- add recaptchaV2
 		- create account
 		- login
@@ -108,8 +106,7 @@ pm2 restart dist/server
 		- social: facebook
 		- social: twitter
 		- social: github
-	- to email users
-		- upon account creation
+	- ~to email users~
 		- ~to reset their password upon forgetting it~
 - ~baseUrl as a part of environment~
 - database migrations
