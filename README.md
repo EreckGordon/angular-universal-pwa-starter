@@ -90,10 +90,10 @@ pm2 restart dist/server
 	- ~password reset~
 		- ~component~
 		- ~server functionality~
-	- account management component
+	- ~account management component~
 		- ~delete user modal~
 		- ~change password inline (\*ngIf)~
-	- logout component
+	- ~logout component
 	- add recaptchaV2
 		- create account
 		- login

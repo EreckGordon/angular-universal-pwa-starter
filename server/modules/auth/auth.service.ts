@@ -228,7 +228,7 @@ export class AuthService {
 
     async changePassword(body: { oldPassword: string; newPassword: string; }, jwt: UserJWT): Promise<AuthResult> {
         try {
-            const user:User = await this.userRepository.findOne(jwt.sub);
+            const user: User = await this.userRepository.findOne(jwt.sub);
             const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
             const isPasswordValid = await this.securityService.verifyPasswordHash({ passwordHash: emailAndPasswordProvider.passwordHash, password: body.oldPassword });
             if (!isPasswordValid) return { apiCallResult: false, result: { error: 'Password Invalid' } }

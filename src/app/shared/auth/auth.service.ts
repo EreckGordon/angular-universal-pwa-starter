@@ -65,12 +65,12 @@ export class AuthService {
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
     }
 
-    requestPasswordReset({ email }: { email: string }):void {
+    requestPasswordReset({ email }: { email: string }): void {
         this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
             .take(1).subscribe(() => console.log('password reset has been requested.'), error => this.handleError(error))
     }
 
-    resetPassword({ password, token }: { password: string; token: string; }):void {
+    resetPassword({ password, token }: { password: string; token: string; }): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
             .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error))
     }

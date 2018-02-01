@@ -19,7 +19,7 @@ export class DeleteAccountComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
     deleteAccountDialogRef: MatDialogRef<ConfirmDeleteAccountDialog>;
 
-    constructor (public auth: AuthService, private router: Router, public dialog: MatDialog ) { }
+    constructor (public auth: AuthService, private router: Router, public dialog: MatDialog) { }
 
     ngOnInit() {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {

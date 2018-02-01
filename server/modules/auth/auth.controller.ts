@@ -103,7 +103,7 @@ export class AuthController {
 
     @Post('change-password')
     @Roles('user')
-    async changePassword( @Req() req: Request, @Res() res: Response, @Body() body ){
+    async changePassword( @Req() req: Request, @Res() res: Response, @Body() body) {
         const jwt = await req["user"];
         const changePasswordResult = await this.authService.changePassword(body, jwt);
         if (changePasswordResult.apiCallResult) {
