@@ -244,7 +244,7 @@ export class AuthService {
         }
     }
 
-    async deleteOwnAccount(jwt: UserJWT): Promise<AuthResult> {
+    async deleteAccount(jwt: UserJWT): Promise<AuthResult> {
         try {
             const userToBeDeleted = await this.userRepository.findOne(jwt.sub);
             const providerToBeDeleted = async () => {

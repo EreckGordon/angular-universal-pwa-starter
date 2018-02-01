@@ -85,7 +85,7 @@ export class AuthService {
     }
 
     deleteAccount() {
-        this.http.post(`${environment.baseUrl}/api/auth/delete-own-account`, {}, this.jsonOptions)
+        this.http.post(`${environment.baseUrl}/api/auth/delete-account`, {}, this.jsonOptions)
             .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error))
     }
 

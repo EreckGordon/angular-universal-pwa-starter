@@ -128,24 +128,23 @@ export class AuthController {
         }
     }
 
-    @Post('delete-own-account')
+    @Post('delete-account')
     @Roles('user')
-    async deleteOwnAccount( @Req() req: Request, @Res() res: Response) {
+    async deleteAccount( @Req() req: Request, @Res() res: Response) {
         const jwt = await req["user"]
-        const deleteOwnAccountResult = await this.authService.deleteOwnAccount(jwt);
-        if (deleteOwnAccountResult.apiCallResult) {
+        const deleteAccountResult = await this.authService.deleteAccount(jwt);
+        if (deleteAccountResult.apiCallResult) {
             res.clearCookie("SESSIONID");
             await res.clearCookie("XSRF-TOKEN");
             return res.status(200).json({ result: "account permanently deleted" });
         }
         else {
-            res.status(401).json(deleteOwnAccountResult.result.error)
+            res.status(401).json(deleteAccountResult.result.error)
         }
 
     }
 
     @Post('logout')
-    @Roles('user')
     async logout( @Res() res: Response) {
         res.clearCookie("SESSIONID");
         await res.clearCookie("XSRF-TOKEN");
