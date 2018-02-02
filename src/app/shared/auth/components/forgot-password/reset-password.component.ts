@@ -2,7 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
+import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as jwt from 'jsonwebtoken';
@@ -19,8 +21,9 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     encodedToken: string;
     decodedToken: Object = {};
     showPassword: boolean = false;
+    requestSent: boolean = false;
 
-    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private route: ActivatedRoute) { }
+    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private route: ActivatedRoute, private snackbar: MatSnackBar) { }
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -41,6 +44,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if (user === null) { } // null check so it doesn't break the component
             else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) { }
+            else if (this.auth.isHttpErrorResponse(user)) this.handlePasswordError(user);
             else if (this.auth.isAuthenticatedUser(user) && user.email === this.decodedToken["email"]) {
                 this.router.navigate(['/account'])
             }
@@ -48,10 +52,28 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
     }
 
+    handlePasswordError(error: HttpErrorResponse) {
+        this.requestSent = false;
+        this.auth.errorHandled();
+        this.form.patchValue({ password: '' });
+        if (Array.isArray(error.error)) {
+            switch (error.error[0]) {
+                case "min":
+                    return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
+
+                case "oneOf":
+                    return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
+
+                default:
+                    return this.snackbar.open(`${error.error[0]}`, `OK`, { duration: 5000 });
+            }
+        }
+        return this.snackbar.open(`${error.error}`, `OK`, { duration: 5000 });
+    }
+
     resetPassword(): void {
+        this.requestSent = true;
         this.auth.resetPassword({ password: this.form.value.password, token: this.encodedToken });
-        // to do: snackbar that informs that password reset has been sent.
-        //to do: disable button after request sent.
     }
 
     toggleShowPassword() {

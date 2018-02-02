@@ -94,6 +94,7 @@ pm2 restart dist/server
 		- ~delete user modal~
 		- ~change password inline (\*ngIf)~
 	- ~logout component
+	- ~inform user of errors with snackbar~
 	- add recaptchaV2
 		- create account
 		- login

@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { MatSnackBar } from '@angular/material';
 
 import { environment } from '../../../environments/environment';
 
@@ -29,7 +30,7 @@ export class AuthService {
     private jsonHeaders: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     private jsonOptions = { headers: this.jsonHeaders, withCredentials: true };
 
-    constructor (private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
+    constructor (private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private snackbar: MatSnackBar) {
         if (isPlatformBrowser(this.platformId)) {
             document.cookie.length > 0 ? this.reauthenticate() : this.userSubject.next(null);
         }
@@ -67,7 +68,7 @@ export class AuthService {
 
     requestPasswordReset({ email }: { email: string }): void {
         this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
-            .take(1).subscribe(() => console.log('password reset has been requested.'), error => this.handleError(error))
+            .take(1).subscribe(() => this.snackbar.open(`Password Reset Requested`, `OK`, { duration: 20000 }), error => this.handleError(error))
     }
 
     resetPassword({ password, token }: { password: string; token: string; }): void {
@@ -87,6 +88,10 @@ export class AuthService {
     deleteAccount() {
         this.http.post(`${environment.baseUrl}/api/auth/delete-account`, {}, this.jsonOptions)
             .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error))
+    }
+
+    errorHandled() {
+        this.userSubject.next(null)
     }
 
     private handleError(error: HttpErrorResponse) {

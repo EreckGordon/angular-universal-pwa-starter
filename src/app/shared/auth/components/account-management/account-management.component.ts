@@ -1,10 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { MatDialog, MatDialogRef } from '@angular/material';
-
 import { AuthService, AuthenticatedUser } from '../../auth.service';
-import { ConfirmDeleteAccountDialog } from './confirm-delete-account.dialog';
 
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -18,10 +15,9 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
 
     destroy: Subject<any> = new Subject();
     user: AuthenticatedUser;
-    deleteAccountDialogRef: MatDialogRef<ConfirmDeleteAccountDialog>;
     showChangePassword: boolean = false;
 
-    constructor (public auth: AuthService, public router: Router, public dialog: MatDialog, ) { }
+    constructor (public auth: AuthService, public router: Router, ) { }
 
     ngOnInit() {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
@@ -34,24 +30,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
 
     logout() {
         this.auth.logout();
-    }
-
-    deleteAccountDialog() {
-        this.deleteAccountDialogRef = this.dialog.open(ConfirmDeleteAccountDialog, {
-            disableClose: false
-        });
-
-        this.deleteAccountDialogRef.afterClosed().take(1).subscribe(result => {
-
-            if (result === 'Deleting Account') {
-                this.deleteAccount();
-            };
-
-        });
-    }
-
-    deleteAccount() {
-        this.auth.deleteAccount();
     }
 
     toggleShowChangePassword() {

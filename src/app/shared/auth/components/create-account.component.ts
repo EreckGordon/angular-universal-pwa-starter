@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
+import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
@@ -17,11 +18,11 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
     showPassword: boolean = false;
 
-    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router) { }
+    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
 
     ngOnInit() {
         this.form = this.fb.group({
-            email: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required]
         });
 
@@ -29,16 +30,27 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
             if (user === null) { } // null check so it doesn't break the component
             else if (this.auth.isAuthenticatedUser(user) && !user.isAnonymous) this.router.navigate(['/account']);
             else if (this.auth.isHttpErrorResponse(user) && user.error === 'Email already in use') {
-                this.form.patchValue({ email: '' })
+                this.auth.errorHandled();
+                this.form.patchValue({ email: '' });
+                return this.snackbar.open(`Email is already in use.`, `OK`, { duration: 5000 });
             }
-            else if (this.auth.isHttpErrorResponse(user) && Array.isArray(user.error)) { // password validation errors. to do: handle the specifics in snackbar
-                this.form.patchValue({ password: '' })
+            else if (this.auth.isHttpErrorResponse(user) && Array.isArray(user.error)) { // password validation errors. 
+                this.auth.errorHandled();
+                this.form.patchValue({ password: '' });
+                switch (user.error[0]) {
+                    case "min":
+                        return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
+
+                    case "oneOf":
+                        return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
+                }
             }
         })
     }
 
     createUserWithEmailAndPassword(): void {
-        this.auth.createEmailAndPasswordUser(this.form.value);
+        if (this.form.valid) this.auth.createEmailAndPasswordUser(this.form.value);
+        else this.snackbar.open(`Please enter a valid email address`, `OK`, { duration: 5000 });
     }
 
     toggleShowPassword() {

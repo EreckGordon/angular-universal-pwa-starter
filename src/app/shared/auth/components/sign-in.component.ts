@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
+import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
@@ -17,7 +18,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
     showPassword: boolean = false;
 
-    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router) { }
+    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -29,12 +30,14 @@ export class SignInComponent implements OnInit, OnDestroy {
             if (user === null) { } // null check so it doesn't break the component
             else if (this.auth.isAuthenticatedUser(user) && !user.isAnonymous) this.router.navigate(['/account']);
             else if (this.auth.isHttpErrorResponse(user) && user.error === 'user does not exist') {
-                // to do: snackbar: email does not exist
-                this.form.patchValue({ email: '', password: '' })
+                this.auth.errorHandled();
+                this.form.patchValue({ email: '', password: '' });
+                this.snackbar.open(`User does not exist`, `OK`, { duration: 5000 });
             }
             else if (this.auth.isHttpErrorResponse(user) && user.error === 'Password Invalid') {
-                // to do: snackbar: invalid password
-                this.form.patchValue({ password: '' })
+                this.auth.errorHandled();
+                this.snackbar.open(`Invalid Password`, `OK`, { duration: 5000 });
+                this.form.patchValue({ password: '' });
             }
         })
     }

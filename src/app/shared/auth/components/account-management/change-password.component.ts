@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-import { MatSnackBar } from '@angular/material'
+import { MatSnackBar } from '@angular/material';
 
 import { AuthService, AuthenticatedUser } from '../../auth.service';
 
@@ -40,23 +40,26 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     }
 
     changePassword(): void {
-        this.auth.changePassword({ ...this.form.value }).take(1).subscribe(res => this.passwordChanged.emit(), error => this.handlePasswordError(error));
+        this.auth.changePassword({ ...this.form.value }).take(1).subscribe(() => this.passwordChanged.emit(), error => this.handlePasswordError(error));
     }
 
     handlePasswordError(error: HttpErrorResponse) {
+        this.auth.errorHandled();
         if (Array.isArray(error.error)) {
+            this.form.patchValue({ newPassword: '' });
             switch (error.error[0]) {
                 case "min":
-                    return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 })
+                    return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
 
                 case "oneOf":
-                    return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 })
+                    return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
 
                 default:
-                    return this.snackbar.open(`${error.error[0]}`, `OK`, { duration: 5000 })
+                    return this.snackbar.open(`${error.error[0]}`, `OK`, { duration: 5000 });
             }
         }
-        return this.snackbar.open(`${error.error}`, `OK`, { duration: 5000 })
+        this.form.patchValue({ oldPassword: '' });
+        return this.snackbar.open(`${error.error}`, `OK`, { duration: 5000 });
     }
 
     ngOnDestroy() {
