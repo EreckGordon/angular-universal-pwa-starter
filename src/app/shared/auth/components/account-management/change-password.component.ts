@@ -44,7 +44,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     }
 
     handlePasswordError(error: HttpErrorResponse) {
-        this.auth.errorHandled();
         if (Array.isArray(error.error)) {
             this.form.patchValue({ newPassword: '' });
             switch (error.error[0]) {
