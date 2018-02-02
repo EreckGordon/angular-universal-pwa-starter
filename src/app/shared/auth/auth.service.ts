@@ -53,27 +53,27 @@ export class AuthService {
     // use this function when offering to create an account after entering their email
     upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http.patch<AuthenticatedUser>(`${environment.baseUrl}/api/auth/upgrade-anonymous-user-to-email-and-password`, { email, password }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-email-and-password-user`, { email, password }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     loginWithEmailAndPassword({ email, password }: EmailAndPassword): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/login-email-and-password-user`, { email, password }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error));
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     requestPasswordReset({ email }: { email: string }): void {
         this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
-            .take(1).subscribe(() => this.snackbar.open(`Password Reset Requested`, `OK`, { duration: 20000 }), error => this.handleError(error))
+            .take(1).subscribe(() => this.snackbar.open(`Password Reset Requested`, `OK`, { duration: 20000 }), error => this.assignErrorToUserSubject(error))
     }
 
     resetPassword({ password, token }: { password: string; token: string; }): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.handleError(error))
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error))
     }
 
     changePassword({ oldPassword, newPassword }: { oldPassword: string; newPassword: string; }): Observable<Object> {
@@ -90,11 +90,12 @@ export class AuthService {
             .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error))
     }
 
+    // used to clear error message manually after the component has performed its localized error logic
     errorHandled() {
-        this.userSubject.next(null)
+        this.userSubject.next(null);
     }
 
-    private handleError(error: HttpErrorResponse) {
+    private assignErrorToUserSubject(error: HttpErrorResponse) {
         this.userSubject.next(error);
     }
 
