@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -6,7 +6,7 @@ import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms'
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { MatSnackBar } from '@angular/material';
-
+import { RecaptchaComponent } from 'ng-recaptcha';
 
 @Component({
     selector: 'app-request-password-reset',
@@ -18,21 +18,24 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     requestSent: boolean = false;
+    @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
 
     ngOnInit() {
         this.form = this.fb.group({
-            email: ['', Validators.required]
+            email: ['', [Validators.required, Validators.email]],
+            recaptcha: [null, Validators.required]
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if (user === null) { } // null check so it doesn't break the component
             else if (this.auth.isHttpErrorResponse(user) && user.error === 'user does not exist') {
                 this.requestSent = false;
-                this.auth.errorHandled();
-                this.snackbar.open(`User does not exist in our database`, `OK`, { duration: 10000 });
                 this.form.patchValue({ email: '' });
+                this.recaptcha.reset();
+                this.auth.errorHandled();
+                this.snackbar.open(`User does not exist`, `OK`, { duration: 10000 });
             }
         })
     }

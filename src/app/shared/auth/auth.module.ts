@@ -3,8 +3,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CustomMaterialModule } from '../custom-material-module/index';
+import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
+import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 
+import { CustomMaterialModule } from '../custom-material-module/index';
 import { SignInComponent } from './components/sign-in.component';
 import { CreateAccountComponent } from './components/create-account.component';
 import { RequestPasswordResetComponent } from './components/forgot-password/request-password-reset.component';
@@ -16,7 +18,9 @@ import { ConfirmDeleteAccountDialog } from './components/account-management/conf
 import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './auth.service';
 import { routes } from './auth.routing';
+import { environment } from '../../../environments/environment';
 
+const globalRecaptchaSettings: RecaptchaSettings = { siteKey: environment.recaptchaSiteKey }
 
 @NgModule({
     declarations: [
@@ -33,11 +37,17 @@ import { routes } from './auth.routing';
         CommonModule,
         CustomMaterialModule,
         ReactiveFormsModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        RecaptchaModule.forRoot(),
+        RecaptchaFormsModule
     ],
     providers: [
         AuthGuard,
-        AuthService
+        AuthService,
+        {
+            provide: RECAPTCHA_SETTINGS,
+            useValue: globalRecaptchaSettings
+        }
     ],
     entryComponents: [ConfirmDeleteAccountDialog]
 })

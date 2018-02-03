@@ -3,7 +3,7 @@
 </div>
 
 <div class="center-everything">
-    <form class="create-account-form" [formGroup]="form" style="min-width: 80%" autocomplete="off">
+    <form class="create-account-form" [formGroup]="form" style="min-width: 80%" autocomplete="off" (ngSubmit)="createUserWithEmailAndPassword()">
 
         <div style="margin: 1em">
             <mat-input-container floatPlaceholder="always" style="width: 100%">
@@ -11,22 +11,26 @@
             </mat-input-container>
         </div>
 
-        <div style="margin: 1em; display: flex; flex-direction: row;" *ngIf="!showPassword">
+        <div style="margin: 1em; display: flex; flex-direction: row; align-items: center;" *ngIf="!showPassword">
             <mat-input-container floatPlaceholder="always" style="width: 100%">
                 <input matInput type="password" placeholder="Password:" formControlName="password">
             </mat-input-container>
-            <span> <button mat-icon-button (click)="toggleShowPassword()"><mat-icon>visibility</mat-icon></button> </span>
+            <mat-icon (click)="toggleShowPassword()" style="margin-left: .5em;">visibility</mat-icon>
         </div>
 
-        <div style="margin: 1em; display: flex; flex-direction: row;" *ngIf="showPassword">
+        <div style="margin: 1em; display: flex; flex-direction: row; align-items: center;" *ngIf="showPassword">
             <mat-input-container floatPlaceholder="always" style="width: 100%">
                 <input matInput placeholder="Password:" formControlName="password">
             </mat-input-container>
-            <span> <button mat-icon-button (click)="toggleShowPassword()"><mat-icon>visibility_off</mat-icon></button> </span>
-        </div>            
+            <mat-icon (click)="toggleShowPassword()" style="margin-left: .5em;">visibility_off</mat-icon>
+        </div>     
+
+        <div class="center-everything" style="margin: 1em; margin-bottom: 2em;">
+            <re-captcha formControlName="recaptcha" #recaptcha></re-captcha> 
+        </div>      
 
         <div class="center-everything" style="margin: 1em">
-            <button mat-raised-button color="primary" (click)="createUserWithEmailAndPassword()">Create Account</button>
+            <button mat-raised-button color="primary" [disabled]="form.invalid">Create Account</button>
         </div>
 
     </form>
