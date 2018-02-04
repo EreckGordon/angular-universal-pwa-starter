@@ -124,10 +124,9 @@ pm2 restart dist/server
 - ~auth controller: delete user~
 - auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
 
-- test prerequisite: wipe out testing database.
 - needed tests
 	- username / password auth
-		- login non-existent user (fails)
+		- ~login non-existent user (fails)~
 		- create new user(1)
 		- create same user (fails)
 		- logout

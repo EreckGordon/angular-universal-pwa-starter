@@ -1,7 +1,7 @@
-import { browser, by, element, $$ } from 'protractor';
+import { browser, by, element, $$, ExpectedConditions } from 'protractor';
 
 export class SignInPage {
-    navigateTo() {
+    navigateToSignIn() {
         return browser.get('/sign-in');
     }
 
@@ -18,6 +18,19 @@ export class SignInPage {
     }
 
     getRecaptcha() {
-        return element(by.className('rc-anchor'));
+        return element(by.css('re-captcha'));
     }
+
+    getLoginButton() {
+        return $$('button').filter(button => button.getText().then(text => text === 'Login'))
+    }
+
+    waitForLoginToBeClickable() {
+        return browser.wait(ExpectedConditions.elementToBeClickable(this.getLoginButton().get(0)))
+    }    
+
+    getCurrentUrl() {
+        return browser.getCurrentUrl()
+    }
+
 }
