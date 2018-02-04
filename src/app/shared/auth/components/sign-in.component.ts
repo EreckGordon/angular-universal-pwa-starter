@@ -18,7 +18,7 @@ export class SignInComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
-    showPassword: boolean = false;
+    showPassword = false;
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
@@ -45,7 +45,7 @@ export class SignInComponent implements OnInit, OnDestroy {
                 this.recaptcha.reset();
                 this.snackbar.open(`Your password is invalid`, `OK`, { duration: 5000 });
             }
-        })
+        });
     }
 
     signIn(): void {

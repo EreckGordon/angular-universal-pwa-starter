@@ -18,7 +18,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
-    showPassword: boolean = false;
+    showPassword = false;
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
@@ -39,19 +39,19 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
                 this.recaptcha.reset();
                 return this.snackbar.open(`Email is already in use.`, `OK`, { duration: 5000 });
             }
-            else if (this.auth.isHttpErrorResponse(user) && Array.isArray(user.error)) { // password validation errors. 
+            else if (this.auth.isHttpErrorResponse(user) && Array.isArray(user.error)) { // password validation errors.
                 this.auth.errorHandled();
                 this.form.patchValue({ password: '' });
                 this.recaptcha.reset();
                 switch (user.error[0]) {
-                    case "min":
+                    case 'min':
                         return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
 
-                    case "oneOf":
+                    case 'oneOf':
                         return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
                 }
             }
-        })
+        });
     }
 
     createUserWithEmailAndPassword(): void {

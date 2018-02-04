@@ -25,7 +25,7 @@ export class AppComponent {
         if (isPlatformBrowser(this.platformId) && environment.production) {
             this.worker = this.injector.get(NGSWUpdateService);
         }
-        this.user$ = auth.user$
+        this.user$ = auth.user$;
     }
 
 }

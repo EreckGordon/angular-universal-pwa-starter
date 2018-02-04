@@ -17,7 +17,7 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     destroy: Subject<any> = new Subject();
-    requestSent: boolean = false;
+    requestSent = false;
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) { }
@@ -37,7 +37,7 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
                 this.auth.errorHandled();
                 this.snackbar.open(`User does not exist`, `OK`, { duration: 10000 });
             }
-        })
+        });
     }
 
     requestPasswordReset(): void {

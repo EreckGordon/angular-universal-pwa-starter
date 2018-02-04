@@ -20,7 +20,7 @@ import { AuthService } from './auth.service';
 import { routes } from './auth.routing';
 import { environment } from '../../../environments/environment';
 
-const globalRecaptchaSettings: RecaptchaSettings = { siteKey: environment.recaptchaSiteKey }
+const globalRecaptchaSettings: RecaptchaSettings = { siteKey: environment.recaptchaSiteKey };
 
 @NgModule({
     declarations: [

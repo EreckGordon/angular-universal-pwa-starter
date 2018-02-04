@@ -18,8 +18,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
     destroy: Subject<any> = new Subject();
     form: FormGroup;
-    showOldPassword: boolean = false;
-    showNewPassword: boolean = false;
+    showOldPassword = false;
+    showNewPassword = false;
     @Output() passwordChanged: EventEmitter<any> = new EventEmitter<any>();
 
     constructor (public auth: AuthService, private fb: FormBuilder, private snackbar: MatSnackBar) { }
@@ -47,10 +47,10 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         if (Array.isArray(error.error)) {
             this.form.patchValue({ newPassword: '' });
             switch (error.error[0]) {
-                case "min":
+                case 'min':
                     return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
 
-                case "oneOf":
+                case 'oneOf':
                     return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
 
                 default:

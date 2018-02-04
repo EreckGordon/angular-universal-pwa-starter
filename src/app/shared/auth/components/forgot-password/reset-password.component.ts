@@ -20,8 +20,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
     encodedToken: string;
     decodedToken: Object = {};
-    showPassword: boolean = false;
-    requestSent: boolean = false;
+    showPassword = false;
+    requestSent = false;
 
     constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private route: ActivatedRoute, private snackbar: MatSnackBar) { }
 
@@ -37,7 +37,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             }
             else {
                 this.encodedToken = 'does not exist';
-                this.decodedToken["email"] = 'does not exist';
+                this.decodedToken['email'] = 'does not exist';
             }
         });
 
@@ -45,8 +45,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             if (user === null) { } // null check so it doesn't break the component
             else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) { }
             else if (this.auth.isHttpErrorResponse(user)) this.handlePasswordError(user);
-            else if (this.auth.isAuthenticatedUser(user) && user.email === this.decodedToken["email"]) {
-                this.router.navigate(['/account'])
+            else if (this.auth.isAuthenticatedUser(user) && user.email === this.decodedToken['email']) {
+                this.router.navigate(['/account']);
             }
         });
 
@@ -58,10 +58,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         this.form.patchValue({ password: '' });
         if (Array.isArray(error.error)) {
             switch (error.error[0]) {
-                case "min":
+                case 'min':
                     return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
 
-                case "oneOf":
+                case 'oneOf':
                     return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
 
                 default:

@@ -95,10 +95,10 @@ pm2 restart dist/server
 		- ~change password inline (\*ngIf)~
 	- ~logout component
 	- ~inform user of errors with snackbar~
-	- add recaptchaV2
-		- create account
-		- login
-		- request password reset
+	- ~add recaptchaV2~
+		- ~create account~
+		- ~login~
+		- ~request password reset~
 - refactor backend auth 
 	- to handle multiple types of logins.
 		- ~email and password~
@@ -115,7 +115,7 @@ pm2 restart dist/server
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
-- auth controller: delete user
+- ~auth controller: delete user~
 - auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
 
 - test prerequisite: wipe out testing database.

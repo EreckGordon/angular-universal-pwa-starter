@@ -26,7 +26,7 @@ export class DeleteAccountComponent implements OnInit, OnDestroy {
             if ((user === null) || (this.auth.isAuthenticatedUser(user) && !user.email)) {
                 return this.router.navigate(['/']);
             }
-        })
+        });
     }
 
     deleteAccountDialog() {
@@ -38,7 +38,7 @@ export class DeleteAccountComponent implements OnInit, OnDestroy {
 
             if (result === 'Deleting Account') {
                 this.deleteAccount();
-            };
+            }
 
         });
     }

@@ -15,7 +15,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
 
     destroy: Subject<any> = new Subject();
     user: AuthenticatedUser;
-    showChangePassword: boolean = false;
+    showChangePassword = false;
 
     constructor (public auth: AuthService, public router: Router, ) { }
 
@@ -25,7 +25,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
                 return this.router.navigate(['/']);
             }
             if (this.auth.isAuthenticatedUser(user)) this.user = user;
-        })
+        });
     }
 
     logout() {

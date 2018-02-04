@@ -2,7 +2,7 @@
 import { Routes } from '@angular/router';
 import { NotFound404Component } from './features/not-found404.component';
 
-// routes not seen here include: 
+// routes not seen here include:
 //     auth module routes
 
 export const routes: Routes = [

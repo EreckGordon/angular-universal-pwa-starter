@@ -20,7 +20,7 @@ interface EmailAndPassword {
     password: string;
 }
 
-export type UserOrError = AuthenticatedUser | HttpErrorResponse | null
+export type UserOrError = AuthenticatedUser | HttpErrorResponse | null;
 
 
 @Injectable()
@@ -35,7 +35,7 @@ export class AuthService {
             document.cookie.length > 0 ? this.reauthenticate() : this.userSubject.next(null);
         }
         else {
-            this.userSubject.next(null)
+            this.userSubject.next(null);
         }
     }
 
@@ -68,16 +68,16 @@ export class AuthService {
 
     requestPasswordReset({ email }: { email: string }): void {
         this.http.post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
-            .take(1).subscribe(() => this.snackbar.open(`Password Reset Requested`, `OK`, { duration: 20000 }), error => this.assignErrorToUserSubject(error))
+            .take(1).subscribe(() => this.snackbar.open(`Password Reset Requested`, `OK`, { duration: 20000 }), error => this.assignErrorToUserSubject(error));
     }
 
     resetPassword({ password, token }: { password: string; token: string; }): void {
         this.http.post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
-            .take(1).subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error))
+            .take(1).subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     changePassword({ oldPassword, newPassword }: { oldPassword: string; newPassword: string; }): Observable<Object> {
-        return this.http.post(`${environment.baseUrl}/api/auth/change-password`, { oldPassword, newPassword }, this.jsonOptions)
+        return this.http.post(`${environment.baseUrl}/api/auth/change-password`, { oldPassword, newPassword }, this.jsonOptions);
     }
 
     logout(): void {
@@ -87,7 +87,7 @@ export class AuthService {
 
     deleteAccount() {
         this.http.post(`${environment.baseUrl}/api/auth/delete-account`, {}, this.jsonOptions)
-            .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error))
+            .take(1).subscribe(() => this.userSubject.next(null), error => console.log(error));
     }
 
     // used to clear error message manually after the component has performed its localized error logic
