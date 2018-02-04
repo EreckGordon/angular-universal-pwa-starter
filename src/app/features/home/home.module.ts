@@ -8,19 +8,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home.component';
 import { HomeService } from './home.service';
 
-
 @NgModule({
     imports: [
         CommonModule,
         RouterModule.forChild(routes),
         CustomMaterialModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
-    declarations: [
-        HomeComponent
-    ],
-    providers: [HomeService]
+    declarations: [HomeComponent],
+    providers: [HomeService],
 })
-
-export class HomeModule { }
-
+export class HomeModule {}

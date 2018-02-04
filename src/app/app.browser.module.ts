@@ -11,22 +11,18 @@ import { SEOService } from './shared/seo.service';
 import { NGSWUpdateService } from './shared/ngsw-update.service';
 import { environment } from '../environments/environment';
 
-
 @NgModule({
     bootstrap: [AppComponent],
-    declarations: [
-        AppComponent
-    ],
+    declarations: [AppComponent],
     imports: [
         BrowserAnimationsModule,
         AppCommonModule,
         BrowserTransferStateModule,
         TransferHttpCacheModule,
-        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
+        ServiceWorkerModule.register('/ngsw-worker.js', {
+            enabled: environment.production,
+        }),
     ],
-    providers: [
-        SEOService,
-        NGSWUpdateService
-    ]
+    providers: [SEOService, NGSWUpdateService],
 })
-export class AppBrowserModule { }
+export class AppBrowserModule {}

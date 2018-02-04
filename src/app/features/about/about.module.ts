@@ -6,17 +6,9 @@ import { routes } from './about.routing';
 import { AboutComponent } from './about.component';
 import { AboutService } from './about.service';
 
-
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    declarations: [
-        AboutComponent
-    ],
-    providers: [AboutService]
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    declarations: [AboutComponent],
+    providers: [AboutService],
 })
-
-export class AboutModule { }
-
+export class AboutModule {}

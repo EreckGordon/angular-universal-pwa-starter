@@ -6,17 +6,9 @@ import { routes } from './blog.routing';
 import { BlogComponent } from './blog.component';
 import { BlogService } from './blog.service';
 
-
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    declarations: [
-        BlogComponent
-    ],
-    providers: [BlogService]
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    declarations: [BlogComponent],
+    providers: [BlogService],
 })
-
-export class BlogModule { }
-
+export class BlogModule {}

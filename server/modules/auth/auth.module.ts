@@ -8,27 +8,22 @@ import { EmailAndPasswordService } from './email-and-password/email-and-password
 import { AnonymousService } from './anonymous/anonymous.service';
 
 import { CommonModule } from '../common/common.module';
-import { checkCSRFTokenMiddleware, checkIfAuthenticatedMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
-
+import {
+    checkCSRFTokenMiddleware,
+    checkIfAuthenticatedMiddleware,
+    RetrieveUserIdFromRequestMiddleware,
+} from '../common/middlewares';
 
 @Module({
-    modules: [
-        CommonModule,
-        DatabaseModule
-    ],
-    components: [
-        ...authProviders,
-        AuthService,
-        EmailAndPasswordService,
-        AnonymousService
-    ],
+    modules: [CommonModule, DatabaseModule],
+    components: [...authProviders, AuthService, EmailAndPasswordService, AnonymousService],
     controllers: [AuthController],
 })
 export class AuthModule implements NestModule {
     configure(consumer: MiddlewaresConsumer): void {
         consumer.apply([RetrieveUserIdFromRequestMiddleware]).forRoutes(AuthController);
-        consumer.apply([checkIfAuthenticatedMiddleware, checkCSRFTokenMiddleware]).forRoutes(
-            { path: '/logout', method: RequestMethod.ALL }
-        );
+        consumer
+            .apply([checkIfAuthenticatedMiddleware, checkCSRFTokenMiddleware])
+            .forRoutes({ path: '/logout', method: RequestMethod.ALL });
     }
 }

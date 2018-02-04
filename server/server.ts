@@ -20,29 +20,39 @@ import * as compression from 'compression';
 import { ApplicationModule } from './modules/app.module';
 const DIST_FOLDER = path.join(process.cwd(), 'dist');
 const DIST_BROWSER_FOLDER = path.join(DIST_FOLDER, 'dist-browser');
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOLDER, 'dist-bridge', 'main.bundle'));
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(
+    DIST_FOLDER,
+    'dist-bridge',
+    'main.bundle'
+));
 
 enableProdMode();
 const configuredNgExpressEngine = ngExpressEngine({
     bootstrap: AppServerModuleNgFactory,
-    providers: [
-        provideModuleMap(LAZY_MODULE_MAP)
-    ]
+    providers: [provideModuleMap(LAZY_MODULE_MAP)],
 });
 
 const server = express();
 
-server.engine('html', configuredNgExpressEngine)
+server.engine('html', configuredNgExpressEngine);
 server.set('view engine', 'html');
 server.set('views', DIST_BROWSER_FOLDER);
 
 const options: cors.CorsOptions = {
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token", "Authorization", "x-xsrf-token"],
+    allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'X-Access-Token',
+        'Authorization',
+        'x-xsrf-token',
+    ],
     credentials: true,
-    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     origin: ['http://localhost:4200', 'http://localhost:8000'],
     preflightContinue: false,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
 };
 
 server.use(compression());
@@ -51,7 +61,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cookieParser());
 server.use(cors(options));
-server.options("*", cors(options));
+server.options('*', cors(options));
 
 async function bootstrap() {
     const app = await NestFactory.create(ApplicationModule, server);

@@ -8,8 +8,8 @@ export const routes: Routes = [
         children: [
             {
                 path: '',
-                component: BlogComponent
-            }
-        ]
-    }
+                component: BlogComponent,
+            },
+        ],
+    },
 ];

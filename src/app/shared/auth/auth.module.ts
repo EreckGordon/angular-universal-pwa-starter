@@ -20,7 +20,9 @@ import { AuthService } from './auth.service';
 import { routes } from './auth.routing';
 import { environment } from '../../../environments/environment';
 
-const globalRecaptchaSettings: RecaptchaSettings = { siteKey: environment.recaptchaSiteKey };
+const globalRecaptchaSettings: RecaptchaSettings = {
+    siteKey: environment.recaptchaSiteKey,
+};
 
 @NgModule({
     declarations: [
@@ -31,7 +33,7 @@ const globalRecaptchaSettings: RecaptchaSettings = { siteKey: environment.recapt
         AccountManagementComponent,
         ChangePasswordComponent,
         DeleteAccountComponent,
-        ConfirmDeleteAccountDialog
+        ConfirmDeleteAccountDialog,
     ],
     imports: [
         CommonModule,
@@ -39,17 +41,16 @@ const globalRecaptchaSettings: RecaptchaSettings = { siteKey: environment.recapt
         ReactiveFormsModule,
         RouterModule.forChild(routes),
         RecaptchaModule.forRoot(),
-        RecaptchaFormsModule
+        RecaptchaFormsModule,
     ],
     providers: [
         AuthGuard,
         AuthService,
         {
             provide: RECAPTCHA_SETTINGS,
-            useValue: globalRecaptchaSettings
-        }
+            useValue: globalRecaptchaSettings,
+        },
     ],
-    entryComponents: [ConfirmDeleteAccountDialog]
+    entryComponents: [ConfirmDeleteAccountDialog],
 })
-
-export class AuthModule { }
+export class AuthModule {}

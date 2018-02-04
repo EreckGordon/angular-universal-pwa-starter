@@ -5,7 +5,7 @@ import { Meta, Title } from '@angular/platform-browser';
 export class SEOService {
     private author: Object;
 
-    constructor (private meta: Meta, private title: Title) {
+    constructor(private meta: Meta, private title: Title) {
         this.author = { name: 'author', content: 'Ereck Gordon' };
     }
 
@@ -19,10 +19,10 @@ export class SEOService {
         const tagsToCheck: any[] = [this.author, keywordsObject, descriptionObject];
         const unfilteredTags = this.meta.getTags('name');
         tagsToCheck.forEach(tag => {
-            const filteredTag = unfilteredTags.filter(unfilteredTag => unfilteredTag.name === tag.name);
+            const filteredTag = unfilteredTags.filter(
+                unfilteredTag => unfilteredTag.name === tag.name
+            );
             filteredTag.length > 0 ? this.meta.updateTag(tag) : this.meta.addTag(tag);
         });
-
     }
-
 }

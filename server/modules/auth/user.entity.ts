@@ -1,20 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    OneToOne,
+    JoinColumn,
+} from 'typeorm';
 import { EmailAndPasswordProvider } from './email-and-password/email-and-password-provider.entity';
 
 @Entity()
 export class User {
+    @PrimaryGeneratedColumn('uuid') id: string;
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @CreateDateColumn() createdDate: Date;
 
-    @CreateDateColumn()
-    createdDate: Date;
+    @Column() isAnonymous: boolean;
 
-    @Column()
-    isAnonymous: boolean;
-
-    @Column('simple-array')
-    roles: string[];
+    @Column('simple-array') roles: string[];
 
     @Column({ nullable: true })
     emailAndPasswordProviderId: number;
@@ -22,5 +24,4 @@ export class User {
     @OneToOne(type => EmailAndPasswordProvider, { cascade: true })
     @JoinColumn()
     emailAndPasswordProvider: EmailAndPasswordProvider;
-
 }

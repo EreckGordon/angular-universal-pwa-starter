@@ -11,7 +11,7 @@ import 'rxjs/add/operator/take';
 
 @Component({
     selector: 'app-home',
-    templateUrl: './home.component.html'
+    templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
     loginForm: FormGroup;
@@ -21,7 +21,12 @@ export class HomeComponent implements OnInit {
     description = 'Angular Universal PWA, built with nestjs and typeorm.';
     user$: Observable<UserOrError>;
 
-    constructor (public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
+    constructor(
+        public seoService: SEOService,
+        private http: HttpClient,
+        public fb: FormBuilder,
+        public authService: AuthService
+    ) {
         this.seoService.setPageTitle('angular universal pwa - home');
         this.seoService.setKeywordsAndDescription(this.keywords, this.description);
         this.user$ = authService.user$;
@@ -30,17 +35,17 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.loginForm = this.fb.group({
             email: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', Validators.required],
         });
 
         this.createUserForm = this.fb.group({
             email: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', Validators.required],
         });
 
         this.upgradeAnonymousUserForm = this.fb.group({
             email: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', Validators.required],
         });
     }
 
@@ -48,12 +53,16 @@ export class HomeComponent implements OnInit {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const options = { headers, withCredentials: true };
         const body = { hello: 'world' };
-        const helloWorld = this.http.post('http://localhost:8000/hello-world', body, options)
-            .take(1).subscribe(result => {
-                console.log(result);
-            }, (error) => console.log(error));
+        const helloWorld = this.http
+            .post('http://localhost:8000/hello-world', body, options)
+            .take(1)
+            .subscribe(
+                result => {
+                    console.log(result);
+                },
+                error => console.log(error)
+            );
     }
-
 
     loginWithEmailAndPassword() {
         const email = this.loginForm.value.email;
@@ -78,7 +87,9 @@ export class HomeComponent implements OnInit {
     upgradeAnonymousUserToEmailAndPasswordUser() {
         const email = this.upgradeAnonymousUserForm.value.email;
         const password = this.upgradeAnonymousUserForm.value.password;
-        this.authService.upgradeAnonymousUserToEmailAndPasswordUser({ email, password });
+        this.authService.upgradeAnonymousUserToEmailAndPasswordUser({
+            email,
+            password,
+        });
     }
-
 }

@@ -8,23 +8,23 @@ import 'rxjs/add/operator/takeUntil';
 
 @Component({
     selector: 'app-account-management',
-    templateUrl: './account-management.component.html'
+    templateUrl: './account-management.component.html',
 })
-
 export class AccountManagementComponent implements OnInit, OnDestroy {
-
     destroy: Subject<any> = new Subject();
     user: AuthenticatedUser;
     showChangePassword = false;
 
-    constructor (public auth: AuthService, public router: Router, ) { }
+    constructor(public auth: AuthService, public router: Router) {}
 
     ngOnInit() {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if ((user === null) || (this.auth.isAuthenticatedUser(user) && !user.email)) {
+            if (user === null || (this.auth.isAuthenticatedUser(user) && !user.email)) {
                 return this.router.navigate(['/']);
             }
-            if (this.auth.isAuthenticatedUser(user)) this.user = user;
+            if (this.auth.isAuthenticatedUser(user)) {
+                this.user = user;
+            }
         });
     }
 

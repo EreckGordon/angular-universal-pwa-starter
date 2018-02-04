@@ -7,12 +7,11 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/take';
 
-
 @Injectable()
 export class NGSWUpdateService {
     private checkForUpdateSubj = new Subject();
-    private checkInterval = 1000 * 60 * 60 * 6;   // 6 hours
-    constructor (private swUpdate: SwUpdate, private snackBar: MatSnackBar) {
+    private checkInterval = 1000 * 60 * 60 * 6; // 6 hours
+    constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar) {
         this.swUpdate.available.subscribe(event => this.reloadPrompt());
         this.checkForUpdateSubj
             .debounceTime(this.checkInterval)
@@ -21,13 +20,15 @@ export class NGSWUpdateService {
     }
 
     private checkForUpdate() {
-        this.swUpdate.checkForUpdate()
+        this.swUpdate
+            .checkForUpdate()
             .then(() => this.scheduleCheckForUpdate())
             .catch(err => console.error(err));
     }
 
     private activateUpdate() {
-        this.swUpdate.activateUpdate()
+        this.swUpdate
+            .activateUpdate()
             .then(() => this.reloadPrompt())
             .catch(err => console.error(err));
     }
@@ -37,8 +38,10 @@ export class NGSWUpdateService {
     }
 
     private reloadPrompt() {
-        this.snackBar.open('Updated Content Available, Press OK to Reload', 'OK')
-            .afterDismissed().take(1).subscribe(() => window.location.reload());
+        this.snackBar
+            .open('Updated Content Available, Press OK to Reload', 'OK')
+            .afterDismissed()
+            .take(1)
+            .subscribe(() => window.location.reload());
     }
-
 }

@@ -18,7 +18,7 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatCommonModule
+    MatCommonModule,
 } from '@angular/material';
 
 import { BidiModule } from '@angular/cdk/bidi';
@@ -51,11 +51,11 @@ const MaterialModules = [
     BidiModule,
     A11yModule,
     PlatformModule,
-    MatCommonModule
+    MatCommonModule,
 ];
 
 @NgModule({
     imports: [MaterialModules],
     exports: [MaterialModules],
 })
-export class CustomMaterialModule { }
+export class CustomMaterialModule {}

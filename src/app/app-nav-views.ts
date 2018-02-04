@@ -2,11 +2,11 @@ export const views: Object[] = [
     {
         name: 'About',
         icon: 'important_devices',
-        link: ['about']
+        link: ['about'],
     },
     {
         name: 'Blog',
         icon: 'trending_up',
-        link: ['blog']
-    }
+        link: ['blog'],
+    },
 ];

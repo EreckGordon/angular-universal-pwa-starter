@@ -11,11 +11,9 @@ import * as jwt from 'jsonwebtoken';
 
 @Component({
     selector: 'app-reset-password',
-    templateUrl: './reset-password.component.html'
+    templateUrl: './reset-password.component.html',
 })
-
 export class ResetPasswordComponent implements OnInit, OnDestroy {
-
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     encodedToken: string;
@@ -23,33 +21,41 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     showPassword = false;
     requestSent = false;
 
-    constructor (private fb: FormBuilder, public auth: AuthService, private router: Router, private route: ActivatedRoute, private snackbar: MatSnackBar) { }
+    constructor(
+        private fb: FormBuilder,
+        public auth: AuthService,
+        private router: Router,
+        private route: ActivatedRoute,
+        private snackbar: MatSnackBar
+    ) {}
 
     ngOnInit() {
         this.form = this.fb.group({
-            password: ['', Validators.required]
+            password: ['', Validators.required],
         });
 
         this.route.queryParams.take(1).subscribe(params => {
             if (!!params.token) {
                 this.encodedToken = params.token;
                 this.decodedToken = jwt.decode(params.token);
-            }
-            else {
+            } else {
                 this.encodedToken = 'does not exist';
                 this.decodedToken['email'] = 'does not exist';
             }
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if (user === null) { } // null check so it doesn't break the component
-            else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) { }
-            else if (this.auth.isHttpErrorResponse(user)) this.handlePasswordError(user);
-            else if (this.auth.isAuthenticatedUser(user) && user.email === this.decodedToken['email']) {
+            if (user === null) {
+            } else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) {
+            } else if (this.auth.isHttpErrorResponse(user)) {
+                this.handlePasswordError(user);
+            } else if (
+                this.auth.isAuthenticatedUser(user) &&
+                user.email === this.decodedToken['email']
+            ) {
                 this.router.navigate(['/account']);
             }
         });
-
     }
 
     handlePasswordError(error: HttpErrorResponse) {
@@ -59,13 +65,19 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         if (Array.isArray(error.error)) {
             switch (error.error[0]) {
                 case 'min':
-                    return this.snackbar.open(`Password is too short`, `OK`, { duration: 5000 });
+                    return this.snackbar.open(`Password is too short`, `OK`, {
+                        duration: 5000,
+                    });
 
                 case 'oneOf':
-                    return this.snackbar.open(`Pick a better password`, `OK`, { duration: 5000 });
+                    return this.snackbar.open(`Pick a better password`, `OK`, {
+                        duration: 5000,
+                    });
 
                 default:
-                    return this.snackbar.open(`${error.error[0]}`, `OK`, { duration: 5000 });
+                    return this.snackbar.open(`${error.error[0]}`, `OK`, {
+                        duration: 5000,
+                    });
             }
         }
         return this.snackbar.open(`${error.error}`, `OK`, { duration: 5000 });
@@ -73,7 +85,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
     resetPassword(): void {
         this.requestSent = true;
-        this.auth.resetPassword({ password: this.form.value.password, token: this.encodedToken });
+        this.auth.resetPassword({
+            password: this.form.value.password,
+            token: this.encodedToken,
+        });
     }
 
     toggleShowPassword() {

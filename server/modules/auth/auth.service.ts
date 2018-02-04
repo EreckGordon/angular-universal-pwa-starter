@@ -16,7 +16,7 @@ interface AuthResult {
         sessionToken?: string;
         csrfToken?: string;
         error?: any;
-    }
+    };
 }
 
 interface UserJWT {
@@ -29,91 +29,102 @@ interface UserJWT {
 
 @Component()
 export class AuthService {
-    constructor (
+    constructor(
         private readonly emailAndPasswordService: EmailAndPasswordService,
         private readonly anonymousService: AnonymousService,
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
         private readonly mailgunService: MailgunService,
         private readonly securityService: SecurityService
-    ) { }
-
+    ) {}
 
     async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
-
         const user = await this.emailAndPasswordService.findUserByEmail(body.email);
         const userExists = user === undefined ? false : true;
 
         if (!userExists) {
-            return { apiCallResult: false, result: { error: 'user does not exist' } }
-        }
-
-        else {
+            return {
+                apiCallResult: false,
+                result: { error: 'user does not exist' },
+            };
+        } else {
             try {
-                const loginResult = await this.emailAndPasswordService.loginAndCreateSession(body, user);
-                if (loginResult["message"] === 'Password Invalid') throw new Error('Password Invalid');
+                const loginResult = await this.emailAndPasswordService.loginAndCreateSession(
+                    body,
+                    user
+                );
+                if (loginResult['message'] === 'Password Invalid')
+                    throw new Error('Password Invalid');
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
                         user,
                         sessionToken: loginResult.sessionToken,
-                        csrfToken: loginResult.csrfToken
-                    }
+                        csrfToken: loginResult.csrfToken,
+                    },
                 };
-                return result
-            }
-            catch (error) {
-                const result: AuthResult = { apiCallResult: false, result: { error: 'Password Invalid' } }
-                return result
+                return result;
+            } catch (error) {
+                const result: AuthResult = {
+                    apiCallResult: false,
+                    result: { error: 'Password Invalid' },
+                };
+                return result;
             }
         }
-
     }
 
     private async verifyEmailAndPasswordValidity(body: EmailAndPasswordLoginInterface) {
-
-        const usernameTaken = await this.emailAndPasswordService.emailTaken(body.email)
+        const usernameTaken = await this.emailAndPasswordService.emailTaken(body.email);
 
         if (usernameTaken) {
-            const result: AuthResult = { apiCallResult: false, result: { error: 'Email already in use' } }
-            return result
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'Email already in use' },
+            };
+            return result;
         }
 
         const passwordErrors = this.emailAndPasswordService.validatePassword(body.password);
 
         if (passwordErrors.length > 0) {
-            const result: AuthResult = { apiCallResult: false, result: { error: passwordErrors } }
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: passwordErrors },
+            };
             return result;
         }
 
         return 'success';
-
     }
 
     async createEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
-
-        const verifyResult = await this.verifyEmailAndPasswordValidity(body)
+        const verifyResult = await this.verifyEmailAndPasswordValidity(body);
 
         if (verifyResult !== 'success') return verifyResult;
-
         else {
             try {
-                const createUserResult = await this.emailAndPasswordService.createEmailAndPasswordUserAndSession(body);
+                const createUserResult = await this.emailAndPasswordService.createEmailAndPasswordUserAndSession(
+                    body
+                );
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
                         user: createUserResult.user,
                         sessionToken: createUserResult.sessionToken,
-                        csrfToken: createUserResult.csrfToken
-                    }
+                        csrfToken: createUserResult.csrfToken,
+                    },
                 };
-                return result
-            }
-            catch (e) {
-                const result: AuthResult = { apiCallResult: false, result: { error: 'Error creating new email and password user' } }
-                return result
+                return result;
+            } catch (e) {
+                const result: AuthResult = {
+                    apiCallResult: false,
+                    result: {
+                        error: 'Error creating new email and password user',
+                    },
+                };
+                return result;
             }
         }
-
     }
 
     async createAnonymousUser(): Promise<AuthResult> {
@@ -124,43 +135,56 @@ export class AuthService {
                 result: {
                     user: createAnonymousUserResult.user,
                     sessionToken: createAnonymousUserResult.sessionToken,
-                    csrfToken: createAnonymousUserResult.csrfToken
-                }
+                    csrfToken: createAnonymousUserResult.csrfToken,
+                },
             };
-            return result
-        }
-        catch (e) {
-            const result: AuthResult = { apiCallResult: false, result: { error: 'Error creating new anonymous user' } }
-            return result
+            return result;
+        } catch (e) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'Error creating new anonymous user' },
+            };
+            return result;
         }
     }
 
-    async upgradeAnonymousUserToEmailAndPassword(req: Request, body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
-
-        const verifyResult = await this.verifyEmailAndPasswordValidity(body)
+    async upgradeAnonymousUserToEmailAndPassword(
+        req: Request,
+        body: EmailAndPasswordLoginInterface
+    ): Promise<AuthResult> {
+        const verifyResult = await this.verifyEmailAndPasswordValidity(body);
 
         if (verifyResult !== 'success') return verifyResult;
-
         else {
             try {
-                const userId = req["user"]["sub"];
-                const upgradeAnonymousUserToEmailAndPasswordResult = await this.emailAndPasswordService.upgradeAnonymousUserToEmailAndPassword({ email: body.email, password: body.password, userId });
-                if (upgradeAnonymousUserToEmailAndPasswordResult["message"] === 'User is not anonymous') return <AuthResult>{ apiCallResult: false, result: { error: 'User is not anonymous' } };
+                const userId = req['user']['sub'];
+                const upgradeAnonymousUserToEmailAndPasswordResult = await this.emailAndPasswordService.upgradeAnonymousUserToEmailAndPassword(
+                    { email: body.email, password: body.password, userId }
+                );
+                if (
+                    upgradeAnonymousUserToEmailAndPasswordResult['message'] ===
+                    'User is not anonymous'
+                )
+                    return <AuthResult>{
+                        apiCallResult: false,
+                        result: { error: 'User is not anonymous' },
+                    };
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
                         user: upgradeAnonymousUserToEmailAndPasswordResult.user,
                         sessionToken: upgradeAnonymousUserToEmailAndPasswordResult.sessionToken,
-                        csrfToken: upgradeAnonymousUserToEmailAndPasswordResult.csrfToken
-                    }
+                        csrfToken: upgradeAnonymousUserToEmailAndPasswordResult.csrfToken,
+                    },
                 };
-                return result
-            }
-            catch (e) {
-                return <AuthResult>{ apiCallResult: false, result: { error: 'Not logged in' } }
+                return result;
+            } catch (e) {
+                return <AuthResult>{
+                    apiCallResult: false,
+                    result: { error: 'Not logged in' },
+                };
             }
         }
-
     }
 
     async findUserByUuid(uuid: string) {
@@ -169,19 +193,23 @@ export class AuthService {
 
     async reauthenticateUser(jwt): Promise<AuthResult> {
         try {
-            const user = await this.findUserByUuid(jwt["sub"]);
+            const user = await this.findUserByUuid(jwt['sub']);
             if (user.isAnonymous) {
-                return { apiCallResult: true, result: { user } }
+                return { apiCallResult: true, result: { user } };
             }
-            switch (jwt["loginProvider"]) {
-                case "emailAndPassword":
-                    const emailProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId)
-                    user.emailAndPasswordProvider = emailProvider
-                    return { apiCallResult: true, result: { user } }
+            switch (jwt['loginProvider']) {
+                case 'emailAndPassword':
+                    const emailProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(
+                        user.emailAndPasswordProviderId
+                    );
+                    user.emailAndPasswordProvider = emailProvider;
+                    return { apiCallResult: true, result: { user } };
             }
-        }
-        catch (e) {
-            return { apiCallResult: false, result: { error: 'could not reauthenticate' } }
+        } catch (e) {
+            return {
+                apiCallResult: false,
+                result: { error: 'could not reauthenticate' },
+            };
         }
     }
 
@@ -189,58 +217,124 @@ export class AuthService {
         try {
             const user = await this.emailAndPasswordService.findUserByEmail(email);
             const userExists = user === undefined ? false : true;
-            if (!userExists) return { apiCallResult: false, result: { error: 'user does not exist' } }
+            if (!userExists)
+                return {
+                    apiCallResult: false,
+                    result: { error: 'user does not exist' },
+                };
             const token = await this.securityService.createPasswordResetToken(email);
-            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(
+                user.emailAndPasswordProviderId
+            );
             user.emailAndPasswordProvider = emailAndPasswordProvider;
             user.emailAndPasswordProvider.passwordResetToken = token;
             await this.userRepository.save(user);
-            const passwordResetEmail = await this.mailgunService.sendPasswordResetEmail({ email, token });
-            return { apiCallResult: true, result: {} }
-        }
-        catch (e) {
-            return { apiCallResult: false, result: { error: 'error requesting password reset' } }
+            const passwordResetEmail = await this.mailgunService.sendPasswordResetEmail({
+                email,
+                token,
+            });
+            return { apiCallResult: true, result: {} };
+        } catch (e) {
+            return {
+                apiCallResult: false,
+                result: { error: 'error requesting password reset' },
+            };
         }
     }
 
-    async resetPassword({ password, token }: { password: string; token: string; }): Promise<AuthResult> {
+    async resetPassword({
+        password,
+        token,
+    }: {
+        password: string;
+        token: string;
+    }): Promise<AuthResult> {
         try {
-            const decodedTokenOrError = await this.securityService.decodePasswordResetToken(token)
-            if (decodedTokenOrError === 'jwt expired') return { apiCallResult: false, result: { error: 'jwt expired' } }
-            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderByEmail(decodedTokenOrError.email);
-            if (token !== emailAndPasswordProvider.passwordResetToken) return { apiCallResult: false, result: { error: 'jwt does not match database' } }
+            const decodedTokenOrError = await this.securityService.decodePasswordResetToken(token);
+            if (decodedTokenOrError === 'jwt expired')
+                return {
+                    apiCallResult: false,
+                    result: { error: 'jwt expired' },
+                };
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderByEmail(
+                decodedTokenOrError.email
+            );
+            if (token !== emailAndPasswordProvider.passwordResetToken)
+                return {
+                    apiCallResult: false,
+                    result: { error: 'jwt does not match database' },
+                };
             emailAndPasswordProvider.passwordResetToken = null;
             const passwordErrors = this.emailAndPasswordService.validatePassword(password);
-            if (passwordErrors.length > 0) return { apiCallResult: false, result: { error: passwordErrors } }
-            const passwordHash = await this.securityService.createPasswordHash({ password });
+            if (passwordErrors.length > 0)
+                return {
+                    apiCallResult: false,
+                    result: { error: passwordErrors },
+                };
+            const passwordHash = await this.securityService.createPasswordHash({
+                password,
+            });
             emailAndPasswordProvider.passwordHash = passwordHash;
-            const user = await this.emailAndPasswordService.findUserAccountByEmailAndPasswordProviderId(emailAndPasswordProvider.id);
+            const user = await this.emailAndPasswordService.findUserAccountByEmailAndPasswordProviderId(
+                emailAndPasswordProvider.id
+            );
             user.emailAndPasswordProvider = emailAndPasswordProvider;
             await this.userRepository.save(user);
-            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id, loginProvider: 'emailAndPassword' });
+            const sessionToken = await this.securityService.createSessionToken({
+                roles: user.roles,
+                id: user.id,
+                loginProvider: 'emailAndPassword',
+            });
             const csrfToken = await this.securityService.createCsrfToken();
-            return { apiCallResult: true, result: { user, sessionToken, csrfToken } }
-        }
-        catch (e) {
-            return { apiCallResult: false, result: { error: 'error resetting password' } }
+            return {
+                apiCallResult: true,
+                result: { user, sessionToken, csrfToken },
+            };
+        } catch (e) {
+            return {
+                apiCallResult: false,
+                result: { error: 'error resetting password' },
+            };
         }
     }
 
-    async changePassword(body: { oldPassword: string; newPassword: string; }, jwt: UserJWT): Promise<AuthResult> {
+    async changePassword(
+        body: { oldPassword: string; newPassword: string },
+        jwt: UserJWT
+    ): Promise<AuthResult> {
         try {
             const user: User = await this.userRepository.findOne(jwt.sub);
-            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
-            const isPasswordValid = await this.securityService.verifyPasswordHash({ passwordHash: emailAndPasswordProvider.passwordHash, password: body.oldPassword });
-            if (!isPasswordValid) return { apiCallResult: false, result: { error: 'Password Invalid' } }
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(
+                user.emailAndPasswordProviderId
+            );
+            const isPasswordValid = await this.securityService.verifyPasswordHash({
+                passwordHash: emailAndPasswordProvider.passwordHash,
+                password: body.oldPassword,
+            });
+            if (!isPasswordValid)
+                return {
+                    apiCallResult: false,
+                    result: { error: 'Password Invalid' },
+                };
             const passwordErrors = this.emailAndPasswordService.validatePassword(body.newPassword);
-            if (passwordErrors.length > 0) return { apiCallResult: false, result: { error: passwordErrors } }
-            const newPasswordHash = await this.securityService.createPasswordHash({ password: body.newPassword });
-            emailAndPasswordProvider.passwordHash = newPasswordHash
-            await this.emailAndPasswordService.updateEmailAndPasswordProvider(emailAndPasswordProvider)
-            return { apiCallResult: true, result: {} }
-        }
-        catch (e) {
-            return { apiCallResult: false, result: { error: 'error changing password' } }
+            if (passwordErrors.length > 0)
+                return {
+                    apiCallResult: false,
+                    result: { error: passwordErrors },
+                };
+            const newPasswordHash = await this.securityService.createPasswordHash({
+                password: body.newPassword,
+            });
+            emailAndPasswordProvider.passwordHash = newPasswordHash;
+            await this.emailAndPasswordService.updateEmailAndPasswordProvider(
+                emailAndPasswordProvider
+            );
+            return { apiCallResult: true, result: {} };
+        } catch (e) {
+            return {
+                apiCallResult: false,
+                result: { error: 'error changing password' },
+            };
         }
     }
 
@@ -249,18 +343,23 @@ export class AuthService {
             const userToBeDeleted = await this.userRepository.findOne(jwt.sub);
             const providerToBeDeleted = async () => {
                 switch (jwt.loginProvider) {
-                    case "emailAndPassword":
-                        return await this.emailAndPasswordService.findEmailAndPasswordProviderById(userToBeDeleted.emailAndPasswordProviderId)
+                    case 'emailAndPassword':
+                        return await this.emailAndPasswordService.findEmailAndPasswordProviderById(
+                            userToBeDeleted.emailAndPasswordProviderId
+                        );
                 }
-            }
+            };
             await this.userRepository.remove(userToBeDeleted);
-            await this.emailAndPasswordService.removeEmailAndPasswordProvider(await providerToBeDeleted());
+            await this.emailAndPasswordService.removeEmailAndPasswordProvider(
+                await providerToBeDeleted()
+            );
 
-            return { apiCallResult: true, result: {} }
-        }
-        catch (e) {
-            return { apiCallResult: false, result: { error: 'error deleting account' } }
+            return { apiCallResult: true, result: {} };
+        } catch (e) {
+            return {
+                apiCallResult: false,
+                result: { error: 'error deleting account' },
+            };
         }
     }
-
 }

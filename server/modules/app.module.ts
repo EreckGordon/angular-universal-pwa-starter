@@ -7,9 +7,6 @@ import { HelloWorldController } from './hello-world.controller';
 
 @Module({
     modules: [AuthModule],
-    controllers: [
-        AppController,
-        HelloWorldController
-    ]
+    controllers: [AppController, HelloWorldController],
 })
-export class ApplicationModule { }
+export class ApplicationModule {}

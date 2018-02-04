@@ -7,7 +7,7 @@ import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor (public authService: AuthService, public router: Router) { }
+    constructor(public authService: AuthService, public router: Router) {}
 
     canActivate(): Observable<boolean> {
         return this.authService.user$.take(1).pipe(

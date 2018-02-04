@@ -19,7 +19,7 @@
     "prep-dev-server": "npm run format && npm run prep-front-end && npm run dev-server",
     "analyze-deploy": "ng build --prod --stats-json --build-optimizer && npm run analyze-bundle",
     "analyze-aot": "ng build --aot --stats-json && npm run analyze-bundle",
-    "format": "tsfmt -r",
+    "format": "./node_modules/.bin/prettier --write **/*.ts",
     "analyze-bundle": "./node_modules/.bin/webpack-bundle-analyzer dist/dist-browser/stats.json"
   },
   "private": true,
@@ -93,12 +93,12 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "prettier": "^1.10.2",
     "protractor": "~5.1.2",
     "ts-helpers": "^1.1.2",
     "ts-node": "^3.3.0",
     "tslint": "~5.3.2",
     "typescript": "~2.5.0",
-    "typescript-formatter": "^7.0.0",
     "webpack-bundle-analyzer": "^2.9.2"
   }
 }

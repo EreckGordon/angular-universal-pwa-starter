@@ -6,7 +6,6 @@ import { User } from '../user.entity';
 import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
 import { SecurityService } from '../../common/security/security.service';
 
-
 interface SessionAndCSRFToken {
     sessionToken: string;
     csrfToken: string;
@@ -15,48 +14,49 @@ interface SessionAndCSRFToken {
 interface UserSessionAndCSRFToken {
     user: User;
     sessionToken: string;
-    csrfToken: string
+    csrfToken: string;
 }
-
 
 @Component()
 export class EmailAndPasswordService {
-    constructor (
+    constructor(
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('EmailAndPasswordProviderRepositoryToken') private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>,
-        private readonly securityService: SecurityService,
-    ) { }
+        @Inject('EmailAndPasswordProviderRepositoryToken')
+        private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>,
+        private readonly securityService: SecurityService
+    ) {}
 
     async findUserByEmail(email: string): Promise<User> {
-        let currentProvider: EmailAndPasswordProvider = await this.findEmailAndPasswordProviderByEmail(email);
+        let currentProvider: EmailAndPasswordProvider = await this.findEmailAndPasswordProviderByEmail(
+            email
+        );
         if (currentProvider === undefined) return Promise.resolve(undefined);
-        return this.findUserAccountByEmailAndPasswordProviderId(currentProvider.id)
+        return this.findUserAccountByEmailAndPasswordProviderId(currentProvider.id);
     }
 
     async findEmailAndPasswordProviderById(providerId: number) {
         return await this.emailAndPasswordProviderRepository.findOne({
             where: { id: providerId },
-            cache: true
+            cache: true,
         });
     }
 
     async findEmailAndPasswordProviderByEmail(email: string) {
         return await this.emailAndPasswordProviderRepository.findOne({
-            where: { email }
+            where: { email },
         });
     }
 
     async findUserAccountByEmailAndPasswordProviderId(id) {
         return await this.userRepository.findOne({
             where: { emailAndPasswordProviderId: id },
-            relations: ["emailAndPasswordProvider"],
-            cache: true
+            relations: ['emailAndPasswordProvider'],
+            cache: true,
         });
     }
 
     async emailTaken(email: string): Promise<boolean> {
-        return await this.findUserByEmail(email) === undefined ? false : true;
-
+        return (await this.findUserByEmail(email)) === undefined ? false : true;
     }
 
     async addEmailAndPasswordUserToDatabase(email: string, passwordHash: string): Promise<User> {
@@ -72,15 +72,23 @@ export class EmailAndPasswordService {
 
     async createEmailAndPasswordUserAndSession(credentials): Promise<UserSessionAndCSRFToken> {
         try {
-            const passwordHash = await this.securityService.createPasswordHash({ password: credentials.password });
-            const user: User = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
-            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id.toString(), loginProvider: 'emailAndPassword' });
+            const passwordHash = await this.securityService.createPasswordHash({
+                password: credentials.password,
+            });
+            const user: User = await this.addEmailAndPasswordUserToDatabase(
+                credentials.email,
+                passwordHash
+            );
+            const sessionToken = await this.securityService.createSessionToken({
+                roles: user.roles,
+                id: user.id.toString(),
+                loginProvider: 'emailAndPassword',
+            });
             const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
             return result;
-        }
-        catch (err) {
-            return err
+        } catch (err) {
+            return err;
         }
     }
 
@@ -88,34 +96,59 @@ export class EmailAndPasswordService {
         try {
             const sessionToken = await this.attemptLoginWithEmailAndPassword(credentials, user);
             const csrfToken = await this.securityService.createCsrfToken();
-            const result: SessionAndCSRFToken = { sessionToken, csrfToken }
-            return result
-        }
-        catch (err) {
-            return err
+            const result: SessionAndCSRFToken = { sessionToken, csrfToken };
+            return result;
+        } catch (err) {
+            return err;
         }
     }
 
     async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
-        let emailProvider = await this.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId)
-        const isPasswordValid = await this.securityService.verifyPasswordHash({ passwordHash: emailProvider.passwordHash, password: credentials.password });
+        let emailProvider = await this.findEmailAndPasswordProviderById(
+            user.emailAndPasswordProviderId
+        );
+        const isPasswordValid = await this.securityService.verifyPasswordHash({
+            passwordHash: emailProvider.passwordHash,
+            password: credentials.password,
+        });
         if (!isPasswordValid) {
-            throw new Error("Password Invalid");
+            throw new Error('Password Invalid');
         }
-        return this.securityService.createSessionToken({ roles: user.roles, id: user.id, loginProvider: 'emailAndPassword' });
+        return this.securityService.createSessionToken({
+            roles: user.roles,
+            id: user.id,
+            loginProvider: 'emailAndPassword',
+        });
     }
 
-    async upgradeAnonymousUserToEmailAndPassword({ email, password, userId }: { email: string, password: string, userId: string }) {
+    async upgradeAnonymousUserToEmailAndPassword({
+        email,
+        password,
+        userId,
+    }: {
+        email: string;
+        password: string;
+        userId: string;
+    }) {
         try {
-            const passwordHash = await this.securityService.createPasswordHash({ password });
-            const user = await this.upgradeAnonymousUserInDatabase({ email, passwordHash, userId });
-            const sessionToken = await this.securityService.createSessionToken({ roles: user.roles, id: user.id, loginProvider: 'emailAndPassword' });
+            const passwordHash = await this.securityService.createPasswordHash({
+                password,
+            });
+            const user = await this.upgradeAnonymousUserInDatabase({
+                email,
+                passwordHash,
+                userId,
+            });
+            const sessionToken = await this.securityService.createSessionToken({
+                roles: user.roles,
+                id: user.id,
+                loginProvider: 'emailAndPassword',
+            });
             const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };
             return result;
-        }
-        catch (err) {
-            return err
+        } catch (err) {
+            return err;
         }
     }
 
@@ -142,9 +175,11 @@ export class EmailAndPasswordService {
     validatePassword(password: string) {
         const schema = new passwordValidator();
         schema
-            .is().min(10)
-            .is().not().oneOf(['Passw0rd', 'Password123']);
+            .is()
+            .min(10)
+            .is()
+            .not()
+            .oneOf(['Passw0rd', 'Password123']);
         return schema.validate(password, { list: true });
     }
-
 }

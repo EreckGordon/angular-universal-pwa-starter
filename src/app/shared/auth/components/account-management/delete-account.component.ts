@@ -11,19 +11,17 @@ import 'rxjs/add/operator/takeUntil';
 
 @Component({
     selector: 'app-delete-account',
-    templateUrl: './delete-account.component.html'
+    templateUrl: './delete-account.component.html',
 })
-
 export class DeleteAccountComponent implements OnInit, OnDestroy {
-
     destroy: Subject<any> = new Subject();
     deleteAccountDialogRef: MatDialogRef<ConfirmDeleteAccountDialog>;
 
-    constructor (public auth: AuthService, private router: Router, public dialog: MatDialog) { }
+    constructor(public auth: AuthService, private router: Router, public dialog: MatDialog) {}
 
     ngOnInit() {
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if ((user === null) || (this.auth.isAuthenticatedUser(user) && !user.email)) {
+            if (user === null || (this.auth.isAuthenticatedUser(user) && !user.email)) {
                 return this.router.navigate(['/']);
             }
         });
@@ -31,16 +29,17 @@ export class DeleteAccountComponent implements OnInit, OnDestroy {
 
     deleteAccountDialog() {
         this.deleteAccountDialogRef = this.dialog.open(ConfirmDeleteAccountDialog, {
-            disableClose: false
+            disableClose: false,
         });
 
-        this.deleteAccountDialogRef.afterClosed().take(1).subscribe(result => {
-
-            if (result === 'Deleting Account') {
-                this.deleteAccount();
-            }
-
-        });
+        this.deleteAccountDialogRef
+            .afterClosed()
+            .take(1)
+            .subscribe(result => {
+                if (result === 'Deleting Account') {
+                    this.deleteAccount();
+                }
+            });
     }
 
     deleteAccount() {

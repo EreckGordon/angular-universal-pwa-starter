@@ -4,16 +4,16 @@ import { Article } from './article.entity';
 
 @Component()
 export class ArticleService {
-    constructor (
+    constructor(
         @Inject('ArticleRepositoryToken') private readonly articleRepository: Repository<Article>
-    ) { }
+    ) {}
 
     async findAllArticles(): Promise<Article[]> {
         return await this.articleRepository.find();
     }
 
     async findArticleById(id: string) {
-        return await this.articleRepository.findOne(id)
+        return await this.articleRepository.findOne(id);
     }
 
     async createArticle(title: string, slug: string, content: string) {
@@ -21,7 +21,6 @@ export class ArticleService {
         article.title = title;
         article.slug = slug;
         article.content = content;
-        return await this.articleRepository.save(article)
+        return await this.articleRepository.save(article);
     }
-
 }

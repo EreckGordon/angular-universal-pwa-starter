@@ -10,28 +10,27 @@ import { AuthModule } from './shared/auth/auth.module';
 import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
 
-
 @NgModule({
-    declarations: [
-        NotFound404Component
-    ],
+    declarations: [NotFound404Component],
     imports: [
-        BrowserModule.withServerTransition({ appId: 'angular-universal-pwa-starter' }),
+        BrowserModule.withServerTransition({
+            appId: 'angular-universal-pwa-starter',
+        }),
         CustomMaterialModule,
         ReactiveFormsModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'XSRF-TOKEN',
-            headerName: 'x-xsrf-token'
+            headerName: 'x-xsrf-token',
         }),
-        RouterModule.forRoot(routes, { useHash: false, initialNavigation: 'enabled' }),
-        AuthModule
+        RouterModule.forRoot(routes, {
+            useHash: false,
+            initialNavigation: 'enabled',
+        }),
+        AuthModule,
     ],
     providers: [],
     bootstrap: [],
-    exports: [
-        CustomMaterialModule,
-        RouterModule
-    ]
+    exports: [CustomMaterialModule, RouterModule],
 })
-export class AppCommonModule { }
+export class AppCommonModule {}
