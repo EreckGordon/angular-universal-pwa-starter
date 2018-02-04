@@ -5,10 +5,10 @@ describe('Angular Universal PWA Starter App', () => {
 
     beforeEach(() => {
         page = new AppPage();
+        page.navigateTo();
     });
 
     it('should have a top nav', () => {
-        page.navigateTo();
         expect(page.getTopNav().getTagName()).toMatch('nav');
     });
 });

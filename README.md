@@ -34,6 +34,12 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 ## Thoughts
 - why bother with a depoyment repo? precompile everything on your dev environment, it is probably a beefier machine.
 
+## e2e testing in watch mode
+- 3 terminals: 
+	- `npm run dev-server` to run the api
+	- `ng serve --aot --env=e2e` to run the frontend which protracter will use in watch mode
+	- `npm run e2e:watch` e2e tests which rerun upon file save.
+
 ## Useful Commands
 - `ng serve --aot` - Run in frontend aot development mode on port 4200.
 - `npm run dev-server` - Runs server on port 8000 via ts-node, assumes no frontend changes in regards to rendering with universal. 
