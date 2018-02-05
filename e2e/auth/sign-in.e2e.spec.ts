@@ -1,5 +1,4 @@
-import { SignInPage } from './sign-in.po';
-
+import { SignInPage } from './page-objects/sign-in.po';
 
 describe('Sign In Page', () => {
     let page: SignInPage;
@@ -13,27 +12,30 @@ describe('Sign In Page', () => {
         expect(page.getHeaderText()).toBe('Sign in');
     });
 
-    const enterEmailPasswordAndCaptcha = (email:string, password:string) => {
+    const enterEmailPasswordAndCaptcha = (email: string, password: string) => {
         page.getEmailInput().sendKeys(email);
         page.getPasswordInput().sendKeys(password);
         page.getRecaptcha().click();
-        page.waitForLoginToBeClickable();    
-    }
+        page.waitForLoginToBeClickable();
+    };
 
     it('should enable login button after filling out login form', () => {
-        enterEmailPasswordAndCaptcha('test-user@fake-email.com', 'superRealPassword')        
-        page.getLoginButton().getAttribute('ng-reflect-disabled').then(isDisabled => expect(isDisabled[0]).toBe('false'))
-    })
+        enterEmailPasswordAndCaptcha('test-user@fake-email.com', 'superRealPassword');
+        page
+            .getLoginButton()
+            .getAttribute('ng-reflect-disabled')
+            .then(isDisabled => expect(isDisabled[0]).toBe('false'));
+    });
 
     it('should disable login button after failing to log in', () => {
-        enterEmailPasswordAndCaptcha('test-user@fake-email.com', 'superRealPassword')  
-        page.getLoginButton().click();     
-        page.getLoginButton().getAttribute('ng-reflect-disabled').then(isDisabled => expect(isDisabled[0]).toBe('true'))
-    })
+        enterEmailPasswordAndCaptcha('test-user@fake-email.com', 'superRealPassword');
+        page.getLoginButton().click();
+        page
+            .getLoginButton()
+            .getAttribute('ng-reflect-disabled')
+            .then(isDisabled => expect(isDisabled[0]).toBe('true'));
+    });
 
     // upon successful login, check via:
-    //page.getCurrentUrl().then(url => expect(url).toBe('http://localhost:4200/account')) 
-
-
-
+    //page.getCurrentUrl().then(url => expect(url).toBe('http://localhost:4200/account'))
 });
