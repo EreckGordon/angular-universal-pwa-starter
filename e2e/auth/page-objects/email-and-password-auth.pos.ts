@@ -27,4 +27,8 @@ export class EmailAndPasswordAuthPages {
     getCurrentUrl() {
         return browser.getCurrentUrl();
     }
+
+    sleep(ms: number) {
+    	return browser.sleep(ms)
+    }
 }

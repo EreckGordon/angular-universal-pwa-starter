@@ -12,10 +12,4 @@ export class DeleteAccountPage {
     getConfirmDeleteAccountButton() {
         return $$('button').filter(button => button.getText().then(text => text === 'Yes'));
     }
-
-    waitForDeleteAccountToBeClickable() {
-        return browser.wait(
-            ExpectedConditions.elementToBeClickable(this.getConfirmDeleteAccountButton().get(0))
-        );
-    }
 }

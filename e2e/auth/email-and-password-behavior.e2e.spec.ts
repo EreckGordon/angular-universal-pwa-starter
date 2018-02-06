@@ -60,8 +60,8 @@ describe('Email and Password User Behavior', () => {
         auth.accountManagementPage.navigateToAccountManagement();
         auth.accountManagementPage.getDeleteAccountButton().click();
         auth.deleteAccountPage.getDeleteAccountButton().click();
-        auth.deleteAccountPage.waitForDeleteAccountToBeClickable();
         auth.deleteAccountPage.getConfirmDeleteAccountButton().click();
+        auth.sleep(500);
         auth.getCurrentUrl().then(url => expect(url).toBe('http://localhost:4200/'));
     });
 
