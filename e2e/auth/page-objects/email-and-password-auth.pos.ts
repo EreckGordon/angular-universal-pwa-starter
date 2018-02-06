@@ -20,6 +20,14 @@ export class EmailAndPasswordAuthPages {
         return $('input[formcontrolname=password]');
     }
 
+    getOldPasswordInput() {
+        return $('input[formcontrolname=oldPassword]');
+    }
+
+    getNewPasswordInput() {
+        return $('input[formcontrolname=newPassword]');
+    }
+
     getRecaptcha() {
         return $('re-captcha');
     }
@@ -29,6 +37,6 @@ export class EmailAndPasswordAuthPages {
     }
 
     sleep(ms: number) {
-    	return browser.sleep(ms)
+        return browser.sleep(ms);
     }
 }

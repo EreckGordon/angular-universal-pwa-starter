@@ -79,10 +79,10 @@ pm2 restart dist/server
 ```
 
 ## To Do List
-- ~linting + standardize code formatting~ <-- tsfmt
-- testing
+- ~linting + standardize code formatting~ <-- ~tsfmt~ prettier
+- ~testing~
 	- ~frontend~ <-- angular-cli has working tests now.
-	- backend
+	- ~backend~ <-- e2e is only coverage currently.
 - ~configure environment variable for server like cli. This would allow insecure cookies during dev and secure during prod without fiddling by hand.~ <-- dotenv
 - ~`Error: Could not extract user from request: jwt expired` need to deal with expired JWT.~
 	- ~attempt to renew token, if user no longer exists on db flush cookies~
@@ -126,20 +126,9 @@ pm2 restart dist/server
 
 - needed tests
 	- username / password auth
-		- ~login non-existent user (fails)~
-		- create new user(1)
-		- create same user (fails)
-		- logout
-		- login user(1)
-		- logout
-		- create user(2)
-		- logout
-		- login user(2)
-		- create user(3) rapidly. first time success, subsequent fails -- to verify not caching something we shouldn't
 		- forgotten password reset
 	- anonymous auth
 		- create anonymous user(1)
-		- logout attempt (fail, insufficient permission)
 		- upgrade user to username / password, user id stays same
 		- upgrade anonymous user when not logged in (fails)
 		- upgrade anonymous user when account already has associated email (fails)

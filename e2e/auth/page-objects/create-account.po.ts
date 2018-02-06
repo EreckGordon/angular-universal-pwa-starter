@@ -3,7 +3,7 @@ import { browser, by, element, $, $$, ExpectedConditions } from 'protractor';
 // $$ = element.all(by.css())
 
 export class CreateAccountPage {
-    navigateToSignIn() {
+    navigateToCreateAccount() {
         return browser.get('/create-account');
     }
 
