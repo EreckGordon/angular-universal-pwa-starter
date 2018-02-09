@@ -99,7 +99,7 @@ pm2 restart dist/server
 	- ~account management component~
 		- ~delete user modal~
 		- ~change password inline (\*ngIf)~
-	- ~logout component
+	- ~logout component~
 	- ~inform user of errors with snackbar~
 	- ~add recaptchaV2~
 		- ~create account~

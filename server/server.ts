@@ -39,15 +39,7 @@ server.set('view engine', 'html');
 server.set('views', DIST_BROWSER_FOLDER);
 
 const options: cors.CorsOptions = {
-    allowedHeaders: [
-        'Origin',
-        'X-Requested-With',
-        'Content-Type',
-        'Accept',
-        'X-Access-Token',
-        'Authorization',
-        'x-xsrf-token',
-    ],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'x-xsrf-token'],
     credentials: true,
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     origin: ['http://localhost:4200', 'http://localhost:8000'],
