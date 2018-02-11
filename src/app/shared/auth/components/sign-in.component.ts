@@ -65,6 +65,10 @@ export class SignInComponent implements OnInit, OnDestroy {
         this.showPassword = !this.showPassword;
     }
 
+    signInWithSocialProvider(provider: string) {
+        this.auth.signInWithSocialProvider(provider)
+    }
+
     ngOnDestroy() {
         this.destroy.next();
     }

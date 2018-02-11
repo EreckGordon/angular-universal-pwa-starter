@@ -154,6 +154,10 @@ export class AuthService {
         );
     }
 
+    signInWithSocialProvider(provider: string) {
+        console.log(provider)
+    }
+
     logout(): void {
         this.http
             .post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
