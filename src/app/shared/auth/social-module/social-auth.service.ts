@@ -17,12 +17,6 @@ import { GoogleLoginProvider } from './providers/google-login-provider';
 export class SocialAuthService {
     private static readonly ERR_LOGIN_PROVIDER_NOT_FOUND = 'Login provider not found';
     private static readonly ERR_NOT_LOGGED_IN = 'Not logged in';
-
-    private providers: Map<string, LoginProvider>;
-
-    private _user: SocialUser = null;
-    private _authState: BehaviorSubject<SocialUser> = new BehaviorSubject(null);
-
     private config = new SocialAuthServiceConfig([
         {
             id: GoogleLoginProvider.PROVIDER_ID,
@@ -33,29 +27,11 @@ export class SocialAuthService {
             provider: new FacebookLoginProvider(environment.facebookLoginProvider),
         },
     ]);
-
-    get authState(): Observable<SocialUser> {
-        return this._authState.asObservable();
-    }
+    private providers: Map<string, LoginProvider> = this.config.providers;
 
     constructor(public authService: AuthService) {
         this.providers = this.config.providers;
-
-        this.providers.forEach((provider: LoginProvider, key: string) => {
-            provider
-                .initialize()
-                .then((user: SocialUser) => {
-                    console.log('then initialized block');
-                    user.provider = key;
-
-                    this._user = user;
-                    this._authState.next(user);
-                })
-                .catch(err => {
-                    console.log('error in initialize block')
-                    // this._authState.next(null);
-                });
-        });
+        this.providers.forEach((provider: LoginProvider, key: string) => provider.initialize());
     }
 
     signIn(providerId: string, opt?: LoginOptions): Promise<SocialUser> {
@@ -64,10 +40,7 @@ export class SocialAuthService {
             if (providerObject) {
                 providerObject.signIn().then((user: SocialUser) => {
                     user.provider = providerId;
-                    resolve(user);
-
-                    this._user = user;
-                    this._authState.next(user);
+                    this.authService.authenticateSocialUser(user);
                 });
             } else {
                 reject(SocialAuthService.ERR_LOGIN_PROVIDER_NOT_FOUND);
@@ -77,22 +50,21 @@ export class SocialAuthService {
 
     signOut(): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (!this._user) {
-                reject(SocialAuthService.ERR_NOT_LOGGED_IN);
-            } else {
-                let providerId = this._user.provider;
-                let providerObject = this.providers.get(providerId);
-                if (providerObject) {
-                    providerObject.signOut().then(() => {
-                        resolve();
-
-                        this._user = null;
-                        this._authState.next(null);
-                    });
+            this.authService.user$.take(1).subscribe(user => {
+                if (user['providerId'] !== ('google' || 'facebook')) {
+                    reject(SocialAuthService.ERR_NOT_LOGGED_IN);
                 } else {
-                    reject(SocialAuthService.ERR_LOGIN_PROVIDER_NOT_FOUND);
+                    let providerId = user['providerId'];
+                    let providerObject = this.providers.get(providerId);
+                    if (providerObject) {
+                        providerObject.signOut().then(() => {
+                            resolve();
+                        });
+                    } else {
+                        reject(SocialAuthService.ERR_LOGIN_PROVIDER_NOT_FOUND);
+                    }
                 }
-            }
+            });
         });
     }
 }

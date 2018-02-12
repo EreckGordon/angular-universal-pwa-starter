@@ -7,16 +7,13 @@ import { SocialAuthService } from '../social-auth.service';
     templateUrl: 'social-auth-sign-in.component.html',
 })
 export class SocialAuthSignInComponent {
-    constructor(private socialAuthService: SocialAuthService) {
-        socialAuthService.authState.subscribe(res => console.log(res));
-    }
+    constructor(private socialAuthService: SocialAuthService) {}
 
     signInWithGoogle() {
-        this.socialAuthService.signIn("google")
+        this.socialAuthService.signIn('google');
     }
 
     signInWithFacebook() {
-        this.socialAuthService.signIn("facebook")
+        this.socialAuthService.signIn('facebook');
     }
-
 }

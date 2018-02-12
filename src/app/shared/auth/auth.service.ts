@@ -37,7 +37,7 @@ export class AuthService {
         private snackbar: MatSnackBar
     ) {
         if (isPlatformBrowser(this.platformId)) {
-            document.cookie.length > 0 ? this.reauthenticate() : this.userSubject.next(null);
+            document.cookie.includes("XSRF-TOKEN") ? this.reauthenticate() : this.userSubject.next(null);
         } else {
             this.userSubject.next(null);
         }
@@ -169,9 +169,9 @@ export class AuthService {
     }
 
     // update user subject with social provider info
-    createSocialUser(socialInfo) {
+    authenticateSocialUser(socialInfo) {
         // once i figure out what kind of info to pass from socialInfo, the function is written.
-        console.log(socialInfo);
+        console.log('from auth service', socialInfo);
         /*this.http
             .post<AuthenticatedUser>(
                 `${environment.baseUrl}/api/auth/create-social-user`,

@@ -6,14 +6,14 @@ export const routes: Routes = [
     {
         path: '',
         children: [
-        	{
-        		path: '',
-        		component: SocialAuthSignInComponent
-        	},
             {
-            	path: '**',
-            	redirectTo: ''
-            },         
+                path: '',
+                component: SocialAuthSignInComponent,
+            },
+            {
+                path: '**',
+                redirectTo: '',
+            },
         ],
     },
 ];
