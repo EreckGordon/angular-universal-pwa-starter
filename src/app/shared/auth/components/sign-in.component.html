@@ -45,6 +45,6 @@
 </div>
 
 <div class="center-everything" style="margin: 1em; flex-wrap: wrap;">
-    <button mat-raised-button style="margin: 1em;" [disabled]="!form.value.recaptcha" (click)="signInWithSocialProvider('google')">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
-    <button mat-raised-button style="margin: 1em;" [disabled]="!form.value.recaptcha" (click)="signInWithSocialProvider('facebook')">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+    <a color="primary" mat-button style="margin: 1em;" routerLink="/social-sign-in/google">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
+    <a color="primary" mat-button style="margin: 1em;" routerLink="/social-sign-in/facebook">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
 </div>

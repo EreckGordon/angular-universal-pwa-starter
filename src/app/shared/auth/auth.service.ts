@@ -154,10 +154,6 @@ export class AuthService {
         );
     }
 
-    signInWithSocialProvider(provider: string) {
-        console.log(provider)
-    }
-
     logout(): void {
         this.http
             .post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
@@ -170,6 +166,23 @@ export class AuthService {
             .post(`${environment.baseUrl}/api/auth/delete-account`, {}, this.jsonOptions)
             .take(1)
             .subscribe(() => this.userSubject.next(null), error => console.log(error));
+    }
+
+    // update user subject with social provider info
+    createSocialUser(socialInfo) {
+        // once i figure out what kind of info to pass from socialInfo, the function is written.
+        console.log(socialInfo);
+        /*this.http
+            .post<AuthenticatedUser>(
+                `${environment.baseUrl}/api/auth/create-social-user`,
+                { socialInfo },
+                this.jsonOptions
+            )
+            .take(1)
+            .subscribe(
+                user => this.userSubject.next(user),
+                error => this.assignErrorToUserSubject(error)
+            );*/
     }
 
     // used to clear error message manually after the component has performed its localized error logic

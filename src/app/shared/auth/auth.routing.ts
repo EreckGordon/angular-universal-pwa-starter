@@ -22,4 +22,8 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
     },
     { path: 'delete-account', component: DeleteAccountComponent },
+    {
+        path: 'social-sign-in',
+        loadChildren: './social-module/social-auth.module#SocialAuthModule',
+    },
 ];

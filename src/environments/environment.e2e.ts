@@ -7,4 +7,6 @@ export const environment = {
     production: false,
     baseUrl: 'http://localhost:8000',
     recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+    googleLoginProvider: '396587592203-pgdtob9ekkj9p083pbt6iorktco8o0d8.apps.googleusercontent.com',
+    facebookLoginProvider: '342274942940528',
 };
