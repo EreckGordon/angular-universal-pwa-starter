@@ -52,13 +52,11 @@ export class SocialAuthService {
                     this._authState.next(user);
                 })
                 .catch(err => {
+                    console.log('error in initialize block')
                     // this._authState.next(null);
                 });
         });
     }
-
-    // to do: initialize only the needed provider than all at once as is currently done.
-    //initializeProvider(){}
 
     signIn(providerId: string, opt?: LoginOptions): Promise<SocialUser> {
         return new Promise((resolve, reject) => {

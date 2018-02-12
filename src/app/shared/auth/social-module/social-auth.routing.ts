@@ -1,15 +1,19 @@
 /* tslint:disable: variable-name */
 import { Routes } from '@angular/router';
-import { SocialAuthSignInComponent } from './social-auth-sign-in.component';
+import { SocialAuthSignInComponent } from './components/social-auth-sign-in.component';
 
 export const routes: Routes = [
     {
         path: '',
         children: [
+        	{
+        		path: '',
+        		component: SocialAuthSignInComponent
+        	},
             {
-                path: ':socialProvider',
-                component: SocialAuthSignInComponent,
-            },
+            	path: '**',
+            	redirectTo: ''
+            },         
         ],
     },
 ];

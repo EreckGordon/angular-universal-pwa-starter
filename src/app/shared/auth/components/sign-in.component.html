@@ -2,6 +2,14 @@
     <h3> Sign in </h3>
 </div>
 
+<div class="center-everything" style="margin: 1em; flex-wrap: wrap;">
+    <a color="primary" mat-button style="margin: 1em;" routerLink="/social-sign-in">
+        Social Sign In Options
+        <img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" />
+        <img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" />
+    </a>
+</div>
+
 <div class="center-everything">
     <form class="sign-in-form" [formGroup]="form" style="min-width: 80%" autocomplete="off" (ngSubmit)="signIn()">
 
@@ -44,7 +52,3 @@
     </form>
 </div>
 
-<div class="center-everything" style="margin: 1em; flex-wrap: wrap;">
-    <a color="primary" mat-button style="margin: 1em;" routerLink="/social-sign-in/google">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
-    <a color="primary" mat-button style="margin: 1em;" routerLink="/social-sign-in/facebook">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
-</div>
