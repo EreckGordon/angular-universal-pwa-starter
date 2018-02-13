@@ -14,7 +14,6 @@ export class GoogleLoginProvider extends BaseLoginProvider {
     }
 
     initialize(): Promise<SocialUser> {
-        console.log('initialize: google');
         return new Promise((resolve, reject) => {
             this.loadScript(
                 GoogleLoginProvider.PROVIDER_ID,
@@ -36,7 +35,7 @@ export class GoogleLoginProvider extends BaseLoginProvider {
                                     .get()
                                     .getAuthResponse(true).id_token;
 
-                                user.id = profile.getId();
+                                user.socialId = profile.getId();
                                 user.name = profile.getName();
                                 user.email = profile.getEmail();
                                 user.photoUrl = profile.getImageUrl();
@@ -63,7 +62,7 @@ export class GoogleLoginProvider extends BaseLoginProvider {
                 let token = this.auth2.currentUser.get().getAuthResponse(true).access_token;
                 let backendToken = this.auth2.currentUser.get().getAuthResponse(true).id_token;
 
-                user.id = profile.getId();
+                user.socialId = profile.getId();
                 user.name = profile.getName();
                 user.email = profile.getEmail();
                 user.photoUrl = profile.getImageUrl();

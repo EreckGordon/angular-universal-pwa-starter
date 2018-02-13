@@ -16,7 +16,6 @@ export class FacebookLoginProvider extends BaseLoginProvider {
     }
 
     initialize(): Promise<SocialUser> {
-        console.log('initialize: facebook');
         return new Promise((resolve, reject) => {
             this.loadScript(
                 FacebookLoginProvider.PROVIDER_ID,
@@ -39,7 +38,7 @@ export class FacebookLoginProvider extends BaseLoginProvider {
                                 (fbUser: any) => {
                                     let user: SocialUser = new SocialUser();
 
-                                    user.id = fbUser.id;
+                                    user.socialId = fbUser.id;
                                     user.name = fbUser.name;
                                     user.email = fbUser.email;
                                     user.photoUrl =
@@ -68,7 +67,7 @@ export class FacebookLoginProvider extends BaseLoginProvider {
                     FB.api('/me?fields=name,email,picture,first_name,last_name', (fbUser: any) => {
                         let user: SocialUser = new SocialUser();
 
-                        user.id = fbUser.id;
+                        user.socialId = fbUser.id;
                         user.name = fbUser.name;
                         user.email = fbUser.email;
                         user.photoUrl =
