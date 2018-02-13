@@ -2,12 +2,15 @@ import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 
+import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/social-user.class';
+
 import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
 import { AnonymousService } from './anonymous/anonymous.service';
 import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
 import { MailgunService } from '../common/mailgun.service';
 import { SecurityService } from '../common/security/security.service';
+
 
 interface AuthResult {
     apiCallResult: boolean;
@@ -70,6 +73,20 @@ export class AuthService {
                 };
                 return result;
             }
+        }
+    }
+
+    async authenticateSocialUser(socialUser: SocialUser): Promise<AuthResult> {
+        //console.log(socialUser)
+        try {
+            const result: AuthResult = {apiCallResult: false, result: {error: 'function still being built'}}
+            return result;
+        } catch (e) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'Error authenticating social user' },
+            };
+            return result;
         }
     }
 

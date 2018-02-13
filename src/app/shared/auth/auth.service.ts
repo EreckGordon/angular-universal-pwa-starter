@@ -172,17 +172,16 @@ export class AuthService {
     authenticateSocialUser(socialInfo) {
         // once i figure out what kind of info to pass from socialInfo, the function is written.
         console.log('from auth service', socialInfo);
-        /*this.http
+        this.http
             .post<AuthenticatedUser>(
-                `${environment.baseUrl}/api/auth/create-social-user`,
-                { socialInfo },
-                this.jsonOptions
+                `${environment.baseUrl}/api/auth/authenticate-social-user`,
+                { ...socialInfo }
             )
             .take(1)
             .subscribe(
                 user => this.userSubject.next(user),
                 error => this.assignErrorToUserSubject(error)
-            );*/
+            );
     }
 
     // used to clear error message manually after the component has performed its localized error logic
@@ -191,6 +190,7 @@ export class AuthService {
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
+        console.log(error)
         this.userSubject.next(error);
     }
 
