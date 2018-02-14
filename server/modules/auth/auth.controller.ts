@@ -21,7 +21,6 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
 
-
 @Controller('api/auth')
 @UseGuards(RolesGuard)
 export class AuthController {
@@ -48,14 +47,13 @@ export class AuthController {
         @Res() res: Response,
         @Body() body: SocialUser
     ) {
-        console.log(req.cookies)
         const authenticateSocialUserResult = await this.authService.authenticateSocialUser(body);
         if (authenticateSocialUserResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, authenticateSocialUserResult.result);
         } else {
             res.status(401).json(authenticateSocialUserResult.result.error);
         }
-    }    
+    }
 
     @Post('create-email-and-password-user')
     async createEmailAndPasswordUser(

@@ -11,7 +11,6 @@ import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-p
 import { MailgunService } from '../common/mailgun.service';
 import { SecurityService } from '../common/security/security.service';
 
-
 interface AuthResult {
     apiCallResult: boolean;
     result: {
@@ -77,9 +76,18 @@ export class AuthService {
     }
 
     async authenticateSocialUser(socialUser: SocialUser): Promise<AuthResult> {
-        //console.log(socialUser)
+        console.log(socialUser);
         try {
-            const result: AuthResult = {apiCallResult: false, result: {error: 'function still being built'}}
+            // switch case depending on social provider 'google' 'facebook'
+            // verify that the info sent to us is an actual good token by hitting social provider's api
+            // look up user by socialUid in relevant social provider db slice
+            // if exists, log in as them.
+            // if does not exist, create new user and then log in as them.
+
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'function still being built' },
+            };
             return result;
         } catch (e) {
             const result: AuthResult = {

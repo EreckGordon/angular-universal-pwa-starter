@@ -35,13 +35,13 @@ export class GoogleLoginProvider extends BaseLoginProvider {
                                     .get()
                                     .getAuthResponse(true).id_token;
 
-                                user.socialId = profile.getId();
+                                user.socialUid = profile.getId();
                                 user.name = profile.getName();
                                 user.email = profile.getEmail();
                                 user.photoUrl = profile.getImageUrl();
                                 user.firstName = profile.getGivenName();
                                 user.lastName = profile.getFamilyName();
-                                user.authToken = token;
+                                user.accessToken = token;
                                 user.idToken = backendToken;
                                 resolve(user);
                             }
@@ -62,11 +62,11 @@ export class GoogleLoginProvider extends BaseLoginProvider {
                 let token = this.auth2.currentUser.get().getAuthResponse(true).access_token;
                 let backendToken = this.auth2.currentUser.get().getAuthResponse(true).id_token;
 
-                user.socialId = profile.getId();
+                user.socialUid = profile.getId();
                 user.name = profile.getName();
                 user.email = profile.getEmail();
                 user.photoUrl = profile.getImageUrl();
-                user.authToken = token;
+                user.accessToken = token;
                 user.idToken = backendToken;
                 resolve(user);
             });

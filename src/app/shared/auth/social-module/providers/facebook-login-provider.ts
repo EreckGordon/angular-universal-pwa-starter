@@ -38,7 +38,7 @@ export class FacebookLoginProvider extends BaseLoginProvider {
                                 (fbUser: any) => {
                                     let user: SocialUser = new SocialUser();
 
-                                    user.socialId = fbUser.id;
+                                    user.socialUid = fbUser.id;
                                     user.name = fbUser.name;
                                     user.email = fbUser.email;
                                     user.photoUrl =
@@ -47,7 +47,7 @@ export class FacebookLoginProvider extends BaseLoginProvider {
                                         '/picture?type=normal';
                                     user.firstName = fbUser.first_name;
                                     user.lastName = fbUser.last_name;
-                                    user.authToken = authResponse.accessToken;
+                                    user.accessToken = authResponse.accessToken;
 
                                     resolve(user);
                                 }
@@ -67,14 +67,14 @@ export class FacebookLoginProvider extends BaseLoginProvider {
                     FB.api('/me?fields=name,email,picture,first_name,last_name', (fbUser: any) => {
                         let user: SocialUser = new SocialUser();
 
-                        user.socialId = fbUser.id;
+                        user.socialUid = fbUser.id;
                         user.name = fbUser.name;
                         user.email = fbUser.email;
                         user.photoUrl =
                             'https://graph.facebook.com/' + fbUser.id + '/picture?type=normal';
                         user.firstName = fbUser.first_name;
                         user.lastName = fbUser.last_name;
-                        user.authToken = authResponse.accessToken;
+                        user.accessToken = authResponse.accessToken;
 
                         resolve(user);
                     });
