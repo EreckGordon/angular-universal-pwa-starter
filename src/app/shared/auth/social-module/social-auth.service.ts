@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, Inject, Injectable } from '@angular/core';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 
@@ -29,9 +30,11 @@ export class SocialAuthService {
     ]);
     private providers: Map<string, LoginProvider> = this.config.providers;
 
-    constructor(public authService: AuthService) {
+    constructor(public authService: AuthService, @Inject(PLATFORM_ID) private platformId: Object) {
         this.providers = this.config.providers;
-        this.providers.forEach((provider: LoginProvider, key: string) => provider.initialize());
+        if (isPlatformBrowser(this.platformId)) {
+            this.providers.forEach((provider: LoginProvider, key: string) => provider.initialize());
+        }
     }
 
     signIn(providerId: string, opt?: LoginOptions): Promise<SocialUser> {

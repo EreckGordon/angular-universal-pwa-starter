@@ -10,6 +10,7 @@ export abstract class BaseLoginProvider implements LoginProvider {
 
     loadScript(id: string, src: string, onload: any): void {
         if (document.getElementById(id)) {
+            return;
         }
 
         let signInJS = document.createElement('script');
