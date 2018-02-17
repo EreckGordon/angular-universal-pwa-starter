@@ -9,7 +9,7 @@ import { SecurityService } from '../../common/security/security.service';
 export class FacebookService {
     constructor(
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('GoogleProviderRepositoryToken')
+        @Inject('FacebookProviderRepositoryToken')
         private readonly facebookProviderRepository: Repository<FacebookProvider>,
         private readonly securityService: SecurityService
     ) {}

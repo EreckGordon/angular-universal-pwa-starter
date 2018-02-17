@@ -8,6 +8,8 @@ import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
 import { AnonymousService } from './anonymous/anonymous.service';
 import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
+import { GoogleService } from './google/google.service';
+import { FacebookService } from './facebook/facebook.service';
 import { MailgunService } from '../common/mailgun.service';
 import { SecurityService } from '../common/security/security.service';
 
@@ -34,6 +36,8 @@ export class AuthService {
     constructor(
         private readonly emailAndPasswordService: EmailAndPasswordService,
         private readonly anonymousService: AnonymousService,
+        private readonly googleService: GoogleService,
+        private readonly facebookService: FacebookService,
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
         private readonly mailgunService: MailgunService,
         private readonly securityService: SecurityService
@@ -76,19 +80,13 @@ export class AuthService {
     }
 
     async authenticateSocialUser(socialUser: SocialUser): Promise<AuthResult> {
-        console.log(socialUser);
         try {
-            // switch case depending on social provider 'google' 'facebook'
-            // verify that the info sent to us is an actual good token by hitting social provider's api
-            // look up user by socialUid in relevant social provider db slice
-            // if exists, log in as them.
-            // if does not exist, create new user and then log in as them.
-
-            const result: AuthResult = {
-                apiCallResult: false,
-                result: { error: 'function still being built' },
-            };
-            return result;
+            switch (socialUser.provider) {
+                case 'google':
+                    return this.authenticateGoogleUser(socialUser);
+                case 'facebook':
+                    return this.authenticateFacebookUser(socialUser);
+            }
         } catch (e) {
             const result: AuthResult = {
                 apiCallResult: false,
@@ -96,6 +94,30 @@ export class AuthService {
             };
             return result;
         }
+    }
+
+    private async authenticateGoogleUser(socialUser: SocialUser): Promise<AuthResult> {
+        // verify that the info sent to us is an actual good token by hitting social provider's api
+        // look up user by socialUid in relevant social provider db slice
+        // if exists, log in as them.
+        // if does not exist, create new user and then log in as them.
+        const result: AuthResult = {
+            apiCallResult: false,
+            result: { error: 'authenticate google user still being built' },
+        };
+        return result;
+    }
+
+    private async authenticateFacebookUser(socialUser: SocialUser): Promise<AuthResult> {
+        // verify that the info sent to us is an actual good token by hitting social provider's api
+        // look up user by socialUid in relevant social provider db slice
+        // if exists, log in as them.
+        // if does not exist, create new user and then log in as them.
+        const result: AuthResult = {
+            apiCallResult: false,
+            result: { error: 'authenticate facebook user still being built' },
+        };
+        return result;
     }
 
     private async verifyEmailAndPasswordValidity(body: EmailAndPasswordLoginInterface) {

@@ -37,7 +37,9 @@ export class AuthService {
         private snackbar: MatSnackBar
     ) {
         if (isPlatformBrowser(this.platformId)) {
-            document.cookie.includes("XSRF-TOKEN") ? this.reauthenticate() : this.userSubject.next(null);
+            document.cookie.includes('XSRF-TOKEN')
+                ? this.reauthenticate()
+                : this.userSubject.next(null);
         } else {
             this.userSubject.next(null);
         }
@@ -173,10 +175,9 @@ export class AuthService {
         // once i figure out what kind of info to pass from socialInfo, the function is written.
         console.log('from auth service', socialInfo);
         this.http
-            .post<AuthenticatedUser>(
-                `${environment.baseUrl}/api/auth/authenticate-social-user`,
-                { ...socialInfo }
-            )
+            .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/authenticate-social-user`, {
+                ...socialInfo,
+            })
             .take(1)
             .subscribe(
                 user => this.userSubject.next(user),
@@ -190,7 +191,7 @@ export class AuthService {
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
-        console.log(error)
+        console.log(error);
         this.userSubject.next(error);
     }
 
