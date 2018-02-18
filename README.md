@@ -110,12 +110,16 @@ pm2 restart dist/server
 		- ~email and password~
 		- ~anonymous~
 		- ~social: google~
-		- social: facebook
+		- ~social: facebook~
 		- social: twitter
 		- social: github
 	- ~to email users~
 		- ~to reset their password upon forgetting it~
 - ~baseUrl as a part of environment~
+- social provider upgrades:
+	- upgrade anonymous user to social account
+	- link username/pw to social account
+	- select primary email + unique password for social account (link account)
 - database migrations
 - websocket
 - comments / chat system
@@ -128,9 +132,9 @@ pm2 restart dist/server
 	- username / password auth
 		- forgotten password reset
 	- anonymous auth
-		- create anonymous user(1)
+		- create anonymous user
 		- upgrade user to username / password, user id stays same
-		- upgrade anonymous user when not logged in (fails)
 		- upgrade anonymous user when account already has associated email (fails)
 	- social auth
 		- google
+		- facebook
