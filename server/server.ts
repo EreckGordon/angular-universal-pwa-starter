@@ -56,7 +56,7 @@ server.use(cors(options));
 server.options('*', cors(options));
 
 async function bootstrap() {
-    const app = await NestFactory.create(ApplicationModule, server);
+    const app = await NestFactory.create(ApplicationModule, server, {});
     await app.listen(8000);
 }
 
