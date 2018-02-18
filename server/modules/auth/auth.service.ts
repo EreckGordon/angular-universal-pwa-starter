@@ -34,11 +34,11 @@ interface UserJWT {
 @Component()
 export class AuthService {
     constructor(
+        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
         private readonly emailAndPasswordService: EmailAndPasswordService,
         private readonly anonymousService: AnonymousService,
         private readonly googleService: GoogleService,
         private readonly facebookService: FacebookService,
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
         private readonly mailgunService: MailgunService,
         private readonly securityService: SecurityService
     ) {}
@@ -90,32 +90,79 @@ export class AuthService {
         } catch (e) {
             const result: AuthResult = {
                 apiCallResult: false,
-                result: { error: 'Error authenticating social user' },
+                result: { error: 'Invalid Social Provider. How did you trigger this error?' },
             };
             return result;
         }
     }
 
     private async authenticateGoogleUser(socialUser: SocialUser): Promise<AuthResult> {
-        // verify that the info sent to us is an actual good token by hitting social provider's api
-        // look up user by socialUid in relevant social provider db slice
-        // if exists, log in as them.
-        // if does not exist, create new user and then log in as them.
+        const verifiedJwt = await this.googleService.verifyIdToken(socialUser.idToken);
+        if (verifiedJwt === false) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'Invalid JWT' },
+            };
+            return result;
+        }
+
+        const googleProvider = await this.googleService.findGoogleProviderBySocialUid(
+            verifiedJwt['sub']
+        );
+
+        if (googleProvider === undefined) {
+            const createGoogleUserResult = await this.googleService.createGoogleUser();
+
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'create google user still being built' },
+            };
+            return result;
+        }
+
+        const loginGoogleUserResult = await this.googleService.loginGoogleUser();
+
         const result: AuthResult = {
             apiCallResult: false,
-            result: { error: 'authenticate google user still being built' },
+            result: { error: 'login google user still being built' },
         };
         return result;
     }
 
     private async authenticateFacebookUser(socialUser: SocialUser): Promise<AuthResult> {
-        // verify that the info sent to us is an actual good token by hitting social provider's api
-        // look up user by socialUid in relevant social provider db slice
-        // if exists, log in as them.
-        // if does not exist, create new user and then log in as them.
+        const verifiedAccessToken = await this.facebookService.verifyAccessToken(
+            socialUser.accessToken
+        );
+        if (
+            verifiedAccessToken === false ||
+            socialUser.email !== verifiedAccessToken['email'] ||
+            socialUser.socialUid !== verifiedAccessToken['id']
+        ) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'Invalid Access Token' },
+            };
+            return result;
+        }
+        const facebookProvider = await this.facebookService.findFacebookProviderBySocialUid(
+            socialUser.socialUid
+        );
+
+        if (facebookProvider === undefined) {
+            const createFacebookUserResult = await this.facebookService.createFacebookUser();
+
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'create facebook user still being built' },
+            };
+            return result;
+        }
+
+        const loginFacebookUserResult = await this.facebookService.loginFacebookUser();
+
         const result: AuthResult = {
             apiCallResult: false,
-            result: { error: 'authenticate facebook user still being built' },
+            result: { error: 'login facebook user still being built' },
         };
         return result;
     }

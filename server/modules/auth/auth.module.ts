@@ -18,7 +18,14 @@ import {
 
 @Module({
     modules: [CommonModule, DatabaseModule],
-    components: [...authProviders, AuthService, EmailAndPasswordService, AnonymousService, GoogleService, FacebookService],
+    components: [
+        ...authProviders,
+        AuthService,
+        EmailAndPasswordService,
+        AnonymousService,
+        GoogleService,
+        FacebookService,
+    ],
     controllers: [AuthController],
 })
 export class AuthModule implements NestModule {
