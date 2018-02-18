@@ -97,36 +97,54 @@ export class AuthService {
     }
 
     private async authenticateGoogleUser(socialUser: SocialUser): Promise<AuthResult> {
-        const verifiedJwt = await this.googleService.verifyIdToken(socialUser.idToken);
-        if (verifiedJwt === false) {
+        try {
+            const verifiedGoogleJWT = await this.googleService.verifyIdToken(socialUser.idToken);
+            if (verifiedGoogleJWT === false) {
+                const result: AuthResult = {
+                    apiCallResult: false,
+                    result: { error: 'Invalid JWT' },
+                };
+                return result;
+            }
+
+
+            const googleProvider = await this.googleService.findGoogleProviderBySocialUid(
+                socialUser.socialUid
+            );
+
+            if (googleProvider === undefined) {
+                const createGoogleUserResult = await this.googleService.createGoogleUserSessionAndCSRF(socialUser);
+
+                const result: AuthResult = {
+                    apiCallResult: true,
+                    result: { 
+                        user: createGoogleUserResult.user,
+                        csrfToken: createGoogleUserResult.csrfToken,
+                        sessionToken: createGoogleUserResult.sessionToken
+                    },
+                };
+                return result;
+            }
+
+            const loginGoogleUserResult = await this.googleService.loginGoogleUserSessionAndCSRF(googleProvider);
+
             const result: AuthResult = {
-                apiCallResult: false,
-                result: { error: 'Invalid JWT' },
+                apiCallResult: true,
+                result: { 
+                    user: loginGoogleUserResult.user,
+                    csrfToken: loginGoogleUserResult.csrfToken,
+                    sessionToken: loginGoogleUserResult.sessionToken
+                },
             };
             return result;
         }
-
-        const googleProvider = await this.googleService.findGoogleProviderBySocialUid(
-            verifiedJwt['sub']
-        );
-
-        if (googleProvider === undefined) {
-            const createGoogleUserResult = await this.googleService.createGoogleUser();
-
+        catch(e) {
             const result: AuthResult = {
                 apiCallResult: false,
-                result: { error: 'create google user still being built' },
+                result: {error: 'unknown error authenticating google user'},
             };
-            return result;
+            return result;            
         }
-
-        const loginGoogleUserResult = await this.googleService.loginGoogleUser();
-
-        const result: AuthResult = {
-            apiCallResult: false,
-            result: { error: 'login google user still being built' },
-        };
-        return result;
     }
 
     private async authenticateFacebookUser(socialUser: SocialUser): Promise<AuthResult> {

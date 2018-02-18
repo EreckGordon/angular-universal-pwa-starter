@@ -170,10 +170,7 @@ export class AuthService {
             .subscribe(() => this.userSubject.next(null), error => console.log(error));
     }
 
-    // update user subject with social provider info
     authenticateSocialUser(socialInfo) {
-        // once i figure out what kind of info to pass from socialInfo, the function is written.
-        console.log('from auth service', socialInfo);
         this.http
             .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/authenticate-social-user`, {
                 ...socialInfo,

@@ -3,10 +3,12 @@ import { Repository } from 'typeorm';
 import * as GoogleAuthLibrary from 'google-auth-library';
 
 import { environment } from '../../../../src/environments/environment';
+import { SocialUser } from '../../../../src/app/shared/auth/social-module/classes/social-user.class';
 
 import { User } from '../user.entity';
 import { GoogleProvider } from './google-provider.entity';
 import { SecurityService } from '../../common/security/security.service';
+import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToken.interface';
 
 @Component()
 export class GoogleService {
@@ -36,11 +38,55 @@ export class GoogleService {
         });
     }
 
-    async createGoogleUser() {
-        console.log('create google user');
+    async findUserAccountByGoogleProviderId(id) {
+        return await this.userRepository.findOne({
+            where: { googleProviderId: id },
+            relations: ['googleProvider'],
+            cache: true,
+        });
     }
 
-    async loginGoogleUser() {
-        console.log('login google user');
+    async createGoogleUserSessionAndCSRF(socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
+        try {
+
+            const user: User = await this.addGoogleUserToDatabase(socialUser);
+            const sessionToken = await this.securityService.createSessionToken({
+                roles: user.roles,
+                id: user.id.toString(),
+                loginProvider: socialUser.provider,
+            });
+            const csrfToken = await this.securityService.createCsrfToken();
+            const result = { user, sessionToken, csrfToken };
+            return result;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    async addGoogleUserToDatabase(socialUser: SocialUser): Promise<User> {
+        const googleProvider = new GoogleProvider();
+        googleProvider.accessToken = socialUser.accessToken;
+        googleProvider.email = socialUser.email;
+        googleProvider.idToken = socialUser.idToken;
+        googleProvider.name = socialUser.name;
+        googleProvider.photoUrl = socialUser.photoUrl;
+        googleProvider.socialUid = socialUser.socialUid;
+        const user = new User();
+        user.isAnonymous = false;
+        user.roles = ['user'];
+        user.googleProvider = googleProvider;
+        return await this.userRepository.save(user);
+    }    
+
+    async loginGoogleUserSessionAndCSRF(googleProvider: GoogleProvider): Promise<UserSessionAndCSRFToken> {
+        const user: User = await this.findUserAccountByGoogleProviderId(googleProvider.id)
+        const sessionToken = await this.securityService.createSessionToken({
+            roles: user.roles,
+            id: user.id.toString(),
+            loginProvider: 'google',
+        });
+        const csrfToken = await this.securityService.createCsrfToken();
+        const result = { user, sessionToken, csrfToken };
+        return result;        
     }
 }

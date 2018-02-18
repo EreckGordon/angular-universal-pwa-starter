@@ -109,7 +109,7 @@ pm2 restart dist/server
 	- to handle multiple types of logins.
 		- ~email and password~
 		- ~anonymous~
-		- social: google
+		- ~social: google~
 		- social: facebook
 		- social: twitter
 		- social: github
@@ -132,3 +132,5 @@ pm2 restart dist/server
 		- upgrade user to username / password, user id stays same
 		- upgrade anonymous user when not logged in (fails)
 		- upgrade anonymous user when account already has associated email (fails)
+	- social auth
+		- google

@@ -35,7 +35,7 @@ export class AuthController {
     ) {
         const loginResult = await this.authService.loginEmailAndPasswordUser(body);
         if (loginResult.apiCallResult) {
-            this.sendSuccessfulUserResult(res, loginResult.result);
+            this.sendSuccessfulUserResult(res, loginResult.result, 'emailAndPassword');
         } else {
             res.status(401).json(loginResult.result.error);
         }
@@ -49,7 +49,7 @@ export class AuthController {
     ) {
         const authenticateSocialUserResult = await this.authService.authenticateSocialUser(body);
         if (authenticateSocialUserResult.apiCallResult) {
-            this.sendSuccessfulUserResult(res, authenticateSocialUserResult.result);
+            this.sendSuccessfulUserResult(res, authenticateSocialUserResult.result, body.provider);
         } else {
             res.status(401).json(authenticateSocialUserResult.result.error);
         }
@@ -62,7 +62,7 @@ export class AuthController {
     ) {
         const createUserResult = await this.authService.createEmailAndPasswordUser(body);
         if (createUserResult.apiCallResult) {
-            this.sendSuccessfulUserResult(res, createUserResult.result);
+            this.sendSuccessfulUserResult(res, createUserResult.result, 'emailAndPassword');
         } else {
             switch (createUserResult.result.error) {
                 case 'Email already in use':
@@ -84,7 +84,7 @@ export class AuthController {
     async createAnonymousUser(@Res() res: Response) {
         const createAnonymousUserResult = await this.authService.createAnonymousUser();
         if (createAnonymousUserResult.apiCallResult) {
-            this.sendSuccessfulUserResult(res, createAnonymousUserResult.result);
+            this.sendSuccessfulUserResult(res, createAnonymousUserResult.result, 'anonymous');
         } else {
             res.status(401).json(createAnonymousUserResult.result.error);
         }
@@ -101,7 +101,7 @@ export class AuthController {
             body
         );
         if (upgradeResult.apiCallResult) {
-            this.sendSuccessfulUserResult(res, upgradeResult.result);
+            this.sendSuccessfulUserResult(res, upgradeResult.result, 'emailAndPassword');
         } else {
             switch (upgradeResult.result.error) {
                 case 'User is not anonymous':
@@ -137,7 +137,7 @@ export class AuthController {
     ) {
         const resetPasswordResult = await this.authService.resetPassword(body);
         if (resetPasswordResult.apiCallResult) {
-            this.sendSuccessfulUserResult(res, resetPasswordResult.result);
+            this.sendSuccessfulUserResult(res, resetPasswordResult.result, 'emailAndPassword');
         } else {
             res.status(401).json(resetPasswordResult.result.error);
         }
@@ -160,7 +160,7 @@ export class AuthController {
         const jwt = await req['user'];
         const reauthenticateResult = await this.authService.reauthenticateUser(jwt);
         if (reauthenticateResult.apiCallResult) {
-            this.sendUserDetails(reauthenticateResult.result.user, res);
+            this.sendUserDetails(reauthenticateResult.result.user, res, jwt["loginProvider"]);
         } else {
             res.clearCookie('SESSIONID');
             await res.clearCookie('XSRF-TOKEN');
@@ -189,20 +189,30 @@ export class AuthController {
         return res.status(200).json({ goodbye: 'come again soon' });
     }
 
-    private sendSuccessfulUserResult(res: Response, authServiceResult) {
+    private sendSuccessfulUserResult(res: Response, authServiceResult, loginProvider: string) {
         const { user, sessionToken, csrfToken } = authServiceResult;
         res.cookie('SESSIONID', sessionToken, {
             httpOnly: true,
             secure: this.useSecure,
         });
         res.cookie('XSRF-TOKEN', csrfToken);
-        this.sendUserDetails(user, res);
+        this.sendUserDetails(user, res, loginProvider);
     }
 
-    private sendUserDetails(user, res) {
+    private sendUserDetails(user, res, loginProvider: string) {
         let email: string;
         try {
-            email = user.emailAndPasswordProvider.email;
+            switch (loginProvider) {
+                case "emailAndPassword":
+                    email = user.emailAndPasswordProvider.email;
+                    break;
+                case "google":
+                    email = user.googleProvider.email;
+                    break;
+                case "facebook":
+                    email = user.facebookProvider.email;
+                    break;                    
+            }
         } catch (e) {
             email = null;
         }
