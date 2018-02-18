@@ -5,17 +5,8 @@ import * as passwordValidator from 'password-validator';
 import { User } from '../user.entity';
 import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
 import { SecurityService } from '../../common/security/security.service';
-
-interface SessionAndCSRFToken {
-    sessionToken: string;
-    csrfToken: string;
-}
-
-interface UserSessionAndCSRFToken {
-    user: User;
-    sessionToken: string;
-    csrfToken: string;
-}
+import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToken.interface';
+import { SessionAndCSRFToken } from '../interfaces/session-and-csrfToken.interface';
 
 @Component()
 export class EmailAndPasswordService {

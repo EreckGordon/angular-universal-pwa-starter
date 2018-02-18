@@ -7,7 +7,7 @@ import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/s
 import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
 import { AnonymousService } from './anonymous/anonymous.service';
-import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
+import { EmailAndPasswordLoginInterface } from './interfaces/email-and-password-login.interface';
 import { GoogleService } from './google/google.service';
 import { FacebookService } from './facebook/facebook.service';
 import { MailgunService } from '../common/mailgun.service';

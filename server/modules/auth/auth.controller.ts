@@ -19,7 +19,7 @@ import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/s
 import { AuthService } from './auth.service';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
-import { EmailAndPasswordLoginInterface } from './email-and-password/email-and-password-login.interface';
+import { EmailAndPasswordLoginInterface } from './interfaces/email-and-password-login.interface';
 
 @Controller('api/auth')
 @UseGuards(RolesGuard)
