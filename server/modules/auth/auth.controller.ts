@@ -160,7 +160,7 @@ export class AuthController {
         const jwt = await req['user'];
         const reauthenticateResult = await this.authService.reauthenticateUser(jwt);
         if (reauthenticateResult.apiCallResult) {
-            this.sendUserDetails(reauthenticateResult.result.user, res, jwt["loginProvider"]);
+            this.sendUserDetails(reauthenticateResult.result.user, res, jwt['loginProvider']);
         } else {
             res.clearCookie('SESSIONID');
             await res.clearCookie('XSRF-TOKEN');
@@ -203,15 +203,15 @@ export class AuthController {
         let email: string;
         try {
             switch (loginProvider) {
-                case "emailAndPassword":
+                case 'emailAndPassword':
                     email = user.emailAndPasswordProvider.email;
                     break;
-                case "google":
+                case 'google':
                     email = user.googleProvider.email;
                     break;
-                case "facebook":
+                case 'facebook':
                     email = user.facebookProvider.email;
-                    break;                    
+                    break;
             }
         } catch (e) {
             email = null;

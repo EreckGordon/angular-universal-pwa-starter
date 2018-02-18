@@ -46,9 +46,15 @@ export class GoogleService {
         });
     }
 
+    async findGoogleProviderById(providerId: number) {
+        return await this.googleProviderRepository.findOne({
+            where: { id: providerId },
+            cache: true,
+        });
+    }
+
     async createGoogleUserSessionAndCSRF(socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
         try {
-
             const user: User = await this.addGoogleUserToDatabase(socialUser);
             const sessionToken = await this.securityService.createSessionToken({
                 roles: user.roles,
@@ -63,7 +69,7 @@ export class GoogleService {
         }
     }
 
-    async addGoogleUserToDatabase(socialUser: SocialUser): Promise<User> {
+    private async addGoogleUserToDatabase(socialUser: SocialUser): Promise<User> {
         const googleProvider = new GoogleProvider();
         googleProvider.accessToken = socialUser.accessToken;
         googleProvider.email = socialUser.email;
@@ -76,10 +82,12 @@ export class GoogleService {
         user.roles = ['user'];
         user.googleProvider = googleProvider;
         return await this.userRepository.save(user);
-    }    
+    }
 
-    async loginGoogleUserSessionAndCSRF(googleProvider: GoogleProvider): Promise<UserSessionAndCSRFToken> {
-        const user: User = await this.findUserAccountByGoogleProviderId(googleProvider.id)
+    async loginGoogleUserSessionAndCSRF(
+        googleProvider: GoogleProvider
+    ): Promise<UserSessionAndCSRFToken> {
+        const user: User = await this.findUserAccountByGoogleProviderId(googleProvider.id);
         const sessionToken = await this.securityService.createSessionToken({
             roles: user.roles,
             id: user.id.toString(),
@@ -87,6 +95,6 @@ export class GoogleService {
         });
         const csrfToken = await this.securityService.createCsrfToken();
         const result = { user, sessionToken, csrfToken };
-        return result;        
+        return result;
     }
 }

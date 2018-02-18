@@ -39,5 +39,5 @@ export class User {
 
     @OneToOne(type => FacebookProvider, { cascade: true })
     @JoinColumn()
-    facebookProvider: FacebookProvider;        
+    facebookProvider: FacebookProvider;
 }

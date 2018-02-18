@@ -107,82 +107,104 @@ export class AuthService {
                 return result;
             }
 
-
             const googleProvider = await this.googleService.findGoogleProviderBySocialUid(
                 socialUser.socialUid
             );
 
             if (googleProvider === undefined) {
-                const createGoogleUserResult = await this.googleService.createGoogleUserSessionAndCSRF(socialUser);
+                const createGoogleUserResult = await this.googleService.createGoogleUserSessionAndCSRF(
+                    socialUser
+                );
 
                 const result: AuthResult = {
                     apiCallResult: true,
-                    result: { 
+                    result: {
                         user: createGoogleUserResult.user,
                         csrfToken: createGoogleUserResult.csrfToken,
-                        sessionToken: createGoogleUserResult.sessionToken
+                        sessionToken: createGoogleUserResult.sessionToken,
                     },
                 };
                 return result;
             }
 
-            const loginGoogleUserResult = await this.googleService.loginGoogleUserSessionAndCSRF(googleProvider);
+            const loginGoogleUserResult = await this.googleService.loginGoogleUserSessionAndCSRF(
+                googleProvider
+            );
 
             const result: AuthResult = {
                 apiCallResult: true,
-                result: { 
+                result: {
                     user: loginGoogleUserResult.user,
                     csrfToken: loginGoogleUserResult.csrfToken,
-                    sessionToken: loginGoogleUserResult.sessionToken
+                    sessionToken: loginGoogleUserResult.sessionToken,
                 },
             };
             return result;
-        }
-        catch(e) {
+        } catch (e) {
             const result: AuthResult = {
                 apiCallResult: false,
-                result: {error: 'unknown error authenticating google user'},
+                result: { error: 'unknown error authenticating google user' },
             };
-            return result;            
+            return result;
         }
     }
 
     private async authenticateFacebookUser(socialUser: SocialUser): Promise<AuthResult> {
-        const verifiedAccessToken = await this.facebookService.verifyAccessToken(
-            socialUser.accessToken
-        );
-        if (
-            verifiedAccessToken === false ||
-            socialUser.email !== verifiedAccessToken['email'] ||
-            socialUser.socialUid !== verifiedAccessToken['id']
-        ) {
+        try {
+            const verifiedAccessToken = await this.facebookService.verifyAccessToken(
+                socialUser.accessToken
+            );
+            if (
+                verifiedAccessToken === false ||
+                socialUser.email !== verifiedAccessToken['email'] ||
+                socialUser.socialUid !== verifiedAccessToken['id']
+            ) {
+                const result: AuthResult = {
+                    apiCallResult: false,
+                    result: { error: 'Invalid Access Token' },
+                };
+                return result;
+            }
+            const facebookProvider = await this.facebookService.findFacebookProviderBySocialUid(
+                socialUser.socialUid
+            );
+
+            if (facebookProvider === undefined) {
+                const createFacebookUserResult = await this.facebookService.createFacebookUserSessionAndCSRF(
+                    socialUser
+                );
+
+                const result: AuthResult = {
+                    apiCallResult: true,
+                    result: {
+                        user: createFacebookUserResult.user,
+                        csrfToken: createFacebookUserResult.csrfToken,
+                        sessionToken: createFacebookUserResult.sessionToken,
+                    },
+                };
+                return result;
+            }
+
+            const loginFacebookUserResult = await this.facebookService.loginFacebookUserSessionAndCSRF(
+                facebookProvider
+            );
+
+            const result: AuthResult = {
+                apiCallResult: true,
+                result: {
+                    user: loginFacebookUserResult.user,
+                    csrfToken: loginFacebookUserResult.csrfToken,
+                    sessionToken: loginFacebookUserResult.sessionToken,
+                },
+            };
+            return result;
+        } catch (e) {
             const result: AuthResult = {
                 apiCallResult: false,
-                result: { error: 'Invalid Access Token' },
+                result: { error: 'unknown error authenticating facebook user' },
             };
             return result;
         }
-        const facebookProvider = await this.facebookService.findFacebookProviderBySocialUid(
-            socialUser.socialUid
-        );
-
-        if (facebookProvider === undefined) {
-            const createFacebookUserResult = await this.facebookService.createFacebookUser();
-
-            const result: AuthResult = {
-                apiCallResult: false,
-                result: { error: 'create facebook user still being built' },
-            };
-            return result;
-        }
-
-        const loginFacebookUserResult = await this.facebookService.loginFacebookUser();
-
-        const result: AuthResult = {
-            apiCallResult: false,
-            result: { error: 'login facebook user still being built' },
-        };
-        return result;
     }
 
     private async verifyEmailAndPasswordValidity(body: EmailAndPasswordLoginInterface) {
@@ -315,6 +337,18 @@ export class AuthService {
                         user.emailAndPasswordProviderId
                     );
                     user.emailAndPasswordProvider = emailProvider;
+                    return { apiCallResult: true, result: { user } };
+                case 'google':
+                    const googleProvider = await this.googleService.findGoogleProviderById(
+                        user.googleProviderId
+                    );
+                    user.googleProvider = googleProvider;
+                    return { apiCallResult: true, result: { user } };
+                case 'facebook':
+                    const facebookProvider = await this.facebookService.findFacebookProviderById(
+                        user.facebookProviderId
+                    );
+                    user.facebookProvider = facebookProvider;
                     return { apiCallResult: true, result: { user } };
             }
         } catch (e) {

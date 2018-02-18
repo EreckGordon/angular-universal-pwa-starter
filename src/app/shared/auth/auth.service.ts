@@ -172,9 +172,13 @@ export class AuthService {
 
     authenticateSocialUser(socialInfo) {
         this.http
-            .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/authenticate-social-user`, {
-                ...socialInfo,
-            })
+            .post<AuthenticatedUser>(
+                `${environment.baseUrl}/api/auth/authenticate-social-user`,
+                {
+                    ...socialInfo,
+                },
+                this.jsonOptions
+            )
             .take(1)
             .subscribe(
                 user => this.userSubject.next(user),
@@ -188,7 +192,6 @@ export class AuthService {
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
-        console.log(error);
         this.userSubject.next(error);
     }
 

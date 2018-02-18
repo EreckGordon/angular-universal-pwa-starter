@@ -3,10 +3,12 @@ import { Repository } from 'typeorm';
 import FB from 'fb';
 
 import { environment } from '../../../../src/environments/environment';
+import { SocialUser } from '../../../../src/app/shared/auth/social-module/classes/social-user.class';
 
 import { User } from '../user.entity';
 import { FacebookProvider } from './facebook-provider.entity';
 import { SecurityService } from '../../common/security/security.service';
+import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToken.interface';
 
 @Component()
 export class FacebookService {
@@ -35,11 +37,64 @@ export class FacebookService {
         });
     }
 
-    async createFacebookUser() {
-        console.log('create facebook user');
+    async findUserAccountByFacebookProviderId(id) {
+        return await this.userRepository.findOne({
+            where: { facebookProviderId: id },
+            relations: ['facebookProvider'],
+            cache: true,
+        });
     }
 
-    async loginFacebookUser() {
-        console.log('login facebook user');
+    async findFacebookProviderById(providerId: number) {
+        return await this.facebookProviderRepository.findOne({
+            where: { id: providerId },
+            cache: true,
+        });
+    }
+
+    async createFacebookUserSessionAndCSRF(
+        socialUser: SocialUser
+    ): Promise<UserSessionAndCSRFToken> {
+        try {
+            const user: User = await this.addFacebookUserToDatabase(socialUser);
+            const sessionToken = await this.securityService.createSessionToken({
+                roles: user.roles,
+                id: user.id.toString(),
+                loginProvider: socialUser.provider,
+            });
+            const csrfToken = await this.securityService.createCsrfToken();
+            const result = { user, sessionToken, csrfToken };
+            return result;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    private async addFacebookUserToDatabase(socialUser: SocialUser): Promise<User> {
+        const facebookProvider = new FacebookProvider();
+        facebookProvider.accessToken = socialUser.accessToken;
+        facebookProvider.email = socialUser.email;
+        facebookProvider.name = socialUser.name;
+        facebookProvider.photoUrl = socialUser.photoUrl;
+        facebookProvider.socialUid = socialUser.socialUid;
+        const user = new User();
+        user.isAnonymous = false;
+        user.roles = ['user'];
+        user.facebookProvider = facebookProvider;
+        return await this.userRepository.save(user);
+    }
+
+    async loginFacebookUserSessionAndCSRF(
+        facebookProvider: FacebookProvider
+    ): Promise<UserSessionAndCSRFToken> {
+        const user: User = await this.findUserAccountByFacebookProviderId(facebookProvider.id);
+        const sessionToken = await this.securityService.createSessionToken({
+            roles: user.roles,
+            id: user.id.toString(),
+            loginProvider: 'facebook',
+        });
+        const csrfToken = await this.securityService.createCsrfToken();
+        const result = { user, sessionToken, csrfToken };
+        return result;
     }
 }
