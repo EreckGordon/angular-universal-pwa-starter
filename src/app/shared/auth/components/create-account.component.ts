@@ -60,7 +60,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
 
     createUserWithEmailAndPassword(): void {
         if (this.form.valid) {
-            this.auth.createEmailAndPasswordUser(this.form.value);
+            this.auth.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword(this.form.value);
         } else {
             this.recaptcha.reset();
             this.snackbar.open(`Please enter a valid email address`, `OK`, {

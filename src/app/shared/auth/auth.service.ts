@@ -54,8 +54,17 @@ export class AuthService {
             .subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
-    // use this function when offering to create an account after entering their email
-    upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
+    createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({ email, password }: EmailAndPassword) {
+        this.user$.take(1).subscribe(user => {
+            if (user === null) {
+                return this.createEmailAndPasswordUser({email, password});
+            } else if (this.isAuthenticatedUser(user) && user.isAnonymous) {
+                return this.upgradeAnonymousUserToEmailAndPasswordUser({email, password});
+            }
+        });
+    }    
+
+    private upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http
             .patch<AuthenticatedUser>(
                 `${environment.baseUrl}/api/auth/upgrade-anonymous-user-to-email-and-password`,
@@ -66,7 +75,7 @@ export class AuthService {
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
-    createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
+    private createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http
             .post<AuthenticatedUser>(
                 `${environment.baseUrl}/api/auth/create-email-and-password-user`,
@@ -159,6 +168,7 @@ export class AuthService {
     }
 
     // used to clear error message manually after the component has performed its localized error logic
+    // avoids errors when user navigates away from page after an error.
     errorHandled() {
         this.userSubject.next(null);
     }

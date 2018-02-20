@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
     createEmailAndPasswordUser() {
         const email = this.createUserForm.value.email;
         const password = this.createUserForm.value.password;
-        this.authService.createEmailAndPasswordUser({ email, password });
+        this.authService.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({ email, password });
     }
 
     createAnonymousUser() {
@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit {
     upgradeAnonymousUserToEmailAndPasswordUser() {
         const email = this.upgradeAnonymousUserForm.value.email;
         const password = this.upgradeAnonymousUserForm.value.password;
-        this.authService.upgradeAnonymousUserToEmailAndPasswordUser({
+        this.authService.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({
             email,
             password,
         });
