@@ -6,7 +6,7 @@ export class SocialAuthServiceConfig {
 
     constructor(providers: AuthServiceConfigItem[]) {
         for (let i = 0; i < providers.length; i++) {
-            let element = providers[i];
+            const element = providers[i];
             this.providers.set(element.id, element.provider);
         }
     }

@@ -2,7 +2,7 @@ import { BaseLoginProvider } from '../classes/base-login-provider.class';
 import { SocialUser } from '../classes/social-user.class';
 import { LoginOptions } from '../interfaces/login-options.interface';
 
-declare let FB: any;
+declare const FB: any;
 
 export class FacebookLoginProvider extends BaseLoginProvider {
     public static readonly PROVIDER_ID = 'facebook';
@@ -25,9 +25,9 @@ export class FacebookLoginProvider extends BaseLoginProvider {
 
                 FB.getLoginStatus(function(response: any) {
                     if (response.status === 'connected') {
-                        let authResponse = response.authResponse;
+                        const authResponse = response.authResponse;
                         FB.api('/me?fields=name,email,picture,first_name,last_name', (fbUser: any) => {
-                            let user: SocialUser = new SocialUser();
+                            const user: SocialUser = new SocialUser();
 
                             user.socialUid = fbUser.id;
                             user.name = fbUser.name;
@@ -49,9 +49,9 @@ export class FacebookLoginProvider extends BaseLoginProvider {
         return new Promise((resolve, reject) => {
             FB.login((response: any) => {
                 if (response.authResponse) {
-                    let authResponse = response.authResponse;
+                    const authResponse = response.authResponse;
                     FB.api('/me?fields=name,email,picture,first_name,last_name', (fbUser: any) => {
-                        let user: SocialUser = new SocialUser();
+                        const user: SocialUser = new SocialUser();
 
                         user.socialUid = fbUser.id;
                         user.name = fbUser.name;

@@ -2,7 +2,7 @@ import { BaseLoginProvider } from '../classes/base-login-provider.class';
 import { SocialUser } from '../classes/social-user.class';
 import { LoginOptions } from '../interfaces/login-options.interface';
 
-declare let gapi: any;
+declare const gapi: any;
 
 export class GoogleLoginProvider extends BaseLoginProvider {
     public static readonly PROVIDER_ID: string = 'google';
@@ -24,10 +24,10 @@ export class GoogleLoginProvider extends BaseLoginProvider {
 
                     this.auth2.then(() => {
                         if (this.auth2.isSignedIn.get()) {
-                            let user: SocialUser = new SocialUser();
-                            let profile = this.auth2.currentUser.get().getBasicProfile();
-                            let token = this.auth2.currentUser.get().getAuthResponse(true).access_token;
-                            let backendToken = this.auth2.currentUser.get().getAuthResponse(true).id_token;
+                            const user: SocialUser = new SocialUser();
+                            const profile = this.auth2.currentUser.get().getBasicProfile();
+                            const token = this.auth2.currentUser.get().getAuthResponse(true).access_token;
+                            const backendToken = this.auth2.currentUser.get().getAuthResponse(true).id_token;
 
                             user.socialUid = profile.getId();
                             user.name = profile.getName();
@@ -47,13 +47,13 @@ export class GoogleLoginProvider extends BaseLoginProvider {
 
     signIn(): Promise<SocialUser> {
         return new Promise((resolve, reject) => {
-            let promise = this.auth2.signIn();
+            const promise = this.auth2.signIn();
 
             promise.then(() => {
-                let user: SocialUser = new SocialUser();
-                let profile = this.auth2.currentUser.get().getBasicProfile();
-                let token = this.auth2.currentUser.get().getAuthResponse(true).access_token;
-                let backendToken = this.auth2.currentUser.get().getAuthResponse(true).id_token;
+                const user: SocialUser = new SocialUser();
+                const profile = this.auth2.currentUser.get().getBasicProfile();
+                const token = this.auth2.currentUser.get().getAuthResponse(true).access_token;
+                const backendToken = this.auth2.currentUser.get().getAuthResponse(true).id_token;
 
                 user.socialUid = profile.getId();
                 user.name = profile.getName();

@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject, Injectable } from '@angular/core';
 
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../../environments/environment';
 
@@ -39,7 +39,7 @@ export class SocialAuthService {
 
     signIn(providerId: string, opt?: LoginOptions): Promise<SocialUser> {
         return new Promise((resolve, reject) => {
-            let providerObject = this.providers.get(providerId);
+            const providerObject = this.providers.get(providerId);
             if (providerObject) {
                 providerObject.signIn().then((user: SocialUser) => {
                     user.provider = providerId;
@@ -57,8 +57,8 @@ export class SocialAuthService {
                 if (user['providerId'] !== ('google' || 'facebook')) {
                     reject(SocialAuthService.ERR_NOT_LOGGED_IN);
                 } else {
-                    let providerId = user['providerId'];
-                    let providerObject = this.providers.get(providerId);
+                    const providerId = user['providerId'];
+                    const providerObject = this.providers.get(providerId);
                     if (providerObject) {
                         providerObject.signOut().then(() => {
                             resolve();
