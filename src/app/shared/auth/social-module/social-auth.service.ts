@@ -43,7 +43,7 @@ export class SocialAuthService {
             if (providerObject) {
                 providerObject.signIn().then((user: SocialUser) => {
                     user.provider = providerId;
-                    this.authService.authenticateSocialUser(user);
+                    this.authService.signInWithSocialUser(user);
                 });
             } else {
                 reject(SocialAuthService.ERR_LOGIN_PROVIDER_NOT_FOUND);

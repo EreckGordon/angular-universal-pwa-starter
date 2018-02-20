@@ -119,7 +119,14 @@ pm2 restart dist/server
 - social provider upgrades:
 	- upgrade anonymous user to social account
 	- link username/pw to social account
+	- fix account management page
+		- edit pw only if you can
 	- select primary email + unique password for social account (link account)
+	- merge accounts - if you have 2 accounts, login as one to merge with other.
+- delete account:
+	- make sure to clean up all login providers when deleting account.
+		- delete providers
+		- unauthorize account from provider permissions
 - database migrations
 - websocket
 - comments / chat system

@@ -170,10 +170,36 @@ export class AuthService {
             .subscribe(() => this.userSubject.next(null), error => console.log(error));
     }
 
+    signInWithSocialUser(socialInfo) {
+        this.user$.take(1).subscribe(user => {
+            if (user === null) {
+                return this.authenticateSocialUser(socialInfo);
+            } else if (this.isAuthenticatedUser(user) && user.isAnonymous) {
+                return this.upgradeAnonymousUserToSocial(socialInfo);
+            }
+        });
+    }
+
     authenticateSocialUser(socialInfo) {
         this.http
             .post<AuthenticatedUser>(
                 `${environment.baseUrl}/api/auth/authenticate-social-user`,
+                {
+                    ...socialInfo,
+                },
+                this.jsonOptions
+            )
+            .take(1)
+            .subscribe(
+                user => this.userSubject.next(user),
+                error => this.assignErrorToUserSubject(error)
+            );
+    }
+
+    upgradeAnonymousUserToSocial(socialInfo) {
+        this.http
+            .patch<AuthenticatedUser>(
+                `${environment.baseUrl}/api/auth/upgrade-anonymous-user-to-social`,
                 {
                     ...socialInfo,
                 },

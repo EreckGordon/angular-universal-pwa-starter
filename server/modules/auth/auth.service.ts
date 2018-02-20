@@ -321,6 +321,57 @@ export class AuthService {
         }
     }
 
+    async upgradeAnonymousUserToSocial(req: Request, socialUser: SocialUser): Promise<AuthResult> {
+        try {
+            const userId = req['user']['sub'];
+            const anonymousUser = await this.findUserByUuid(userId);
+            if (anonymousUser.isAnonymous) {
+                switch (socialUser.provider) {
+                    case 'google':
+                        return this.upgradeAnonymousUsertoGoogle(anonymousUser, socialUser);
+                    case 'facebook':
+                        return this.upgradeAnonymousUsertoFacebook(anonymousUser, socialUser);
+                }
+            } else {
+                return <AuthResult>{
+                    apiCallResult: false,
+                    result: { error: 'User is not anonymous' },
+                };
+            }
+        } catch (e) {
+            return <AuthResult>{
+                apiCallResult: false,
+                result: { error: 'Error determining social provider or anon uuid' },
+            };
+        }
+    }
+
+    async upgradeAnonymousUsertoGoogle(
+        anonymousUser: User,
+        socialUser: SocialUser
+    ): Promise<AuthResult> {
+        // first check if socialUser.socialUid already exists in database
+        // if exists, sign in as social user and delete this anonymous user after merging any details (ie: shopping cart contents) into main acount.
+        // if not exists, update User to be not anonymous, and attach the social provider to user details
+        return <AuthResult>{
+            apiCallResult: false,
+            result: { error: 'upgrade anonymous user to google still being built' },
+        };
+    }
+
+    async upgradeAnonymousUsertoFacebook(
+        anonymousUser: User,
+        socialUser: SocialUser
+    ): Promise<AuthResult> {
+        // first check if socialUser.socialUid already exists in database
+        // if exists, sign in as social user and delete this anonymous user after merging any details (ie: shopping cart contents) into main acount.
+        // if not exists, update User to be not anonymous, and attach the social provider to user details
+        return <AuthResult>{
+            apiCallResult: false,
+            result: { error: 'upgrade anonymous user to facebook still being built' },
+        };
+    }
+
     async findUserByUuid(uuid: string) {
         return await this.userRepository.findOne(uuid);
     }

@@ -91,7 +91,7 @@ export class AuthController {
     }
 
     @Patch('upgrade-anonymous-user-to-email-and-password')
-    async upgradeAnonymousUser(
+    async upgradeAnonymousUserToEmailAndPassword(
         @Req() req: Request,
         @Res() res: Response,
         @Body() body: EmailAndPasswordLoginInterface
@@ -102,6 +102,24 @@ export class AuthController {
         );
         if (upgradeResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, upgradeResult.result, 'emailAndPassword');
+        } else {
+            switch (upgradeResult.result.error) {
+                case 'User is not anonymous':
+                    res.status(409).json({ error: 'User is not anonymous' });
+                    break;
+
+                default:
+                    res.status(401).json(upgradeResult.result.error);
+                    break;
+            }
+        }
+    }
+
+    @Patch('upgrade-anonymous-user-to-social')
+    async upgradeAnonymousUserToSocial(@Req() req: Request, @Res() res: Response, @Body() body) {
+        const upgradeResult = await this.authService.upgradeAnonymousUserToSocial(req, body);
+        if (upgradeResult.apiCallResult) {
+            this.sendSuccessfulUserResult(res, upgradeResult.result, body.provider);
         } else {
             switch (upgradeResult.result.error) {
                 case 'User is not anonymous':
