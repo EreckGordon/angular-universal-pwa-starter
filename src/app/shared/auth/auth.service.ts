@@ -31,15 +31,9 @@ export class AuthService {
     });
     private jsonOptions = { headers: this.jsonHeaders, withCredentials: true };
 
-    constructor(
-        private http: HttpClient,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private snackbar: MatSnackBar
-    ) {
+    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private snackbar: MatSnackBar) {
         if (isPlatformBrowser(this.platformId)) {
-            document.cookie.includes('XSRF-TOKEN')
-                ? this.reauthenticate()
-                : this.userSubject.next(null);
+            document.cookie.includes('XSRF-TOKEN') ? this.reauthenticate() : this.userSubject.next(null);
         } else {
             this.userSubject.next(null);
         }
@@ -47,11 +41,7 @@ export class AuthService {
 
     private reauthenticate(): void {
         this.http
-            .post<AuthenticatedUser>(
-                `${environment.baseUrl}/api/auth/reauthenticate`,
-                {},
-                this.jsonOptions
-            )
+            .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reauthenticate`, {}, this.jsonOptions)
             .take(1)
             .subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
@@ -59,11 +49,7 @@ export class AuthService {
     // use this function when you need to pre-load their basic database access
     createAnonymousUser(): void {
         this.http
-            .post<AuthenticatedUser>(
-                `${environment.baseUrl}/api/auth/create-anonymous-user`,
-                {},
-                this.jsonOptions
-            )
+            .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-anonymous-user`, {}, this.jsonOptions)
             .take(1)
             .subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
@@ -77,10 +63,7 @@ export class AuthService {
                 this.jsonOptions
             )
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => this.assignErrorToUserSubject(error)
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     createEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
@@ -91,33 +74,19 @@ export class AuthService {
                 this.jsonOptions
             )
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => this.assignErrorToUserSubject(error)
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     loginWithEmailAndPassword({ email, password }: EmailAndPassword): void {
         this.http
-            .post<AuthenticatedUser>(
-                `${environment.baseUrl}/api/auth/login-email-and-password-user`,
-                { email, password },
-                this.jsonOptions
-            )
+            .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/login-email-and-password-user`, { email, password }, this.jsonOptions)
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => this.assignErrorToUserSubject(error)
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     requestPasswordReset({ email }: { email: string }): void {
         this.http
-            .post(
-                `${environment.baseUrl}/api/auth/request-password-reset`,
-                { email },
-                this.jsonOptions
-            )
+            .post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
             .take(1)
             .subscribe(
                 () =>
@@ -130,30 +99,13 @@ export class AuthService {
 
     resetPassword({ password, token }: { password: string; token: string }): void {
         this.http
-            .post<AuthenticatedUser>(
-                `${environment.baseUrl}/api/auth/reset-password`,
-                { password, token },
-                this.jsonOptions
-            )
+            .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => this.assignErrorToUserSubject(error)
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
-    changePassword({
-        oldPassword,
-        newPassword,
-    }: {
-        oldPassword: string;
-        newPassword: string;
-    }): Observable<Object> {
-        return this.http.post(
-            `${environment.baseUrl}/api/auth/change-password`,
-            { oldPassword, newPassword },
-            this.jsonOptions
-        );
+    changePassword({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }): Observable<Object> {
+        return this.http.post(`${environment.baseUrl}/api/auth/change-password`, { oldPassword, newPassword }, this.jsonOptions);
     }
 
     logout(): void {
@@ -190,10 +142,7 @@ export class AuthService {
                 this.jsonOptions
             )
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => this.assignErrorToUserSubject(error)
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     upgradeAnonymousUserToSocial(socialInfo) {
@@ -206,10 +155,7 @@ export class AuthService {
                 this.jsonOptions
             )
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => this.assignErrorToUserSubject(error)
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     // used to clear error message manually after the component has performed its localized error logic

@@ -9,13 +9,7 @@ import { AppCommonModule } from './app.common.module';
 import { SEOService } from './shared/seo.service';
 
 @NgModule({
-    imports: [
-        AppCommonModule,
-        NoopAnimationsModule,
-        ServerTransferStateModule,
-        ServerModule,
-        ModuleMapLoaderModule,
-    ],
+    imports: [AppCommonModule, NoopAnimationsModule, ServerTransferStateModule, ServerModule, ModuleMapLoaderModule],
     bootstrap: [AppComponent],
     providers: [SEOService],
 })

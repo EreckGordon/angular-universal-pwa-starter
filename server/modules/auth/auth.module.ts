@@ -10,22 +10,11 @@ import { FacebookService } from './facebook/facebook.service';
 import { AnonymousService } from './anonymous/anonymous.service';
 
 import { CommonModule } from '../common/common.module';
-import {
-    checkCSRFTokenMiddleware,
-    checkIfAuthenticatedMiddleware,
-    RetrieveUserIdFromRequestMiddleware,
-} from '../common/middlewares';
+import { checkCSRFTokenMiddleware, checkIfAuthenticatedMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
 
 @Module({
     modules: [CommonModule, DatabaseModule],
-    components: [
-        ...authProviders,
-        AuthService,
-        EmailAndPasswordService,
-        AnonymousService,
-        GoogleService,
-        FacebookService,
-    ],
+    components: [...authProviders, AuthService, EmailAndPasswordService, AnonymousService, GoogleService, FacebookService],
     controllers: [AuthController],
 })
 export class AuthModule implements NestModule {

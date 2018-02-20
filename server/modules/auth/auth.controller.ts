@@ -1,17 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Req,
-    Res,
-    Next,
-    HttpStatus,
-    HttpException,
-    Body,
-    ReflectMetadata,
-    UseGuards,
-    Patch,
-} from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, ReflectMetadata, UseGuards, Patch } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/social-user.class';
@@ -29,10 +16,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('login-email-and-password-user')
-    async loginEmailAndPasswordUser(
-        @Res() res: Response,
-        @Body() body: EmailAndPasswordLoginInterface
-    ) {
+    async loginEmailAndPasswordUser(@Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const loginResult = await this.authService.loginEmailAndPasswordUser(body);
         if (loginResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, loginResult.result, 'emailAndPassword');
@@ -42,11 +26,7 @@ export class AuthController {
     }
 
     @Post('authenticate-social-user')
-    async authenticateSocialUser(
-        @Req() req: Request,
-        @Res() res: Response,
-        @Body() body: SocialUser
-    ) {
+    async authenticateSocialUser(@Req() req: Request, @Res() res: Response, @Body() body: SocialUser) {
         const authenticateSocialUserResult = await this.authService.authenticateSocialUser(body);
         if (authenticateSocialUserResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, authenticateSocialUserResult.result, body.provider);
@@ -56,10 +36,7 @@ export class AuthController {
     }
 
     @Post('create-email-and-password-user')
-    async createEmailAndPasswordUser(
-        @Res() res: Response,
-        @Body() body: EmailAndPasswordLoginInterface
-    ) {
+    async createEmailAndPasswordUser(@Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const createUserResult = await this.authService.createEmailAndPasswordUser(body);
         if (createUserResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, createUserResult.result, 'emailAndPassword');
@@ -91,15 +68,8 @@ export class AuthController {
     }
 
     @Patch('upgrade-anonymous-user-to-email-and-password')
-    async upgradeAnonymousUserToEmailAndPassword(
-        @Req() req: Request,
-        @Res() res: Response,
-        @Body() body: EmailAndPasswordLoginInterface
-    ) {
-        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(
-            req,
-            body
-        );
+    async upgradeAnonymousUserToEmailAndPassword(@Req() req: Request, @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
+        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(req, body);
         if (upgradeResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, upgradeResult.result, 'emailAndPassword');
         } else {
@@ -134,11 +104,7 @@ export class AuthController {
     }
 
     @Post('request-password-reset')
-    async requestPasswordReset(
-        @Req() req: Request,
-        @Res() res: Response,
-        @Body() body: { email: string }
-    ) {
+    async requestPasswordReset(@Req() req: Request, @Res() res: Response, @Body() body: { email: string }) {
         const requestPasswordResetResult = await this.authService.requestPasswordReset(body);
         if (requestPasswordResetResult.apiCallResult) {
             res.status(200).json({ result: 'password reset email sent' });
@@ -148,11 +114,7 @@ export class AuthController {
     }
 
     @Post('reset-password')
-    async resetPassword(
-        @Req() req: Request,
-        @Res() res: Response,
-        @Body() body: { password: string; token: string }
-    ) {
+    async resetPassword(@Req() req: Request, @Res() res: Response, @Body() body: { password: string; token: string }) {
         const resetPasswordResult = await this.authService.resetPassword(body);
         if (resetPasswordResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, resetPasswordResult.result, 'emailAndPassword');

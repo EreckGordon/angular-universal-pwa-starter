@@ -11,11 +11,7 @@ describe('AppComponent', () => {
     beforeEach(
         async(() => {
             TestBed.configureTestingModule({
-                imports: [
-                    RouterTestingModule,
-                    CustomMaterialModule,
-                    ServiceWorkerModule.register('', { enabled: false }),
-                ],
+                imports: [RouterTestingModule, CustomMaterialModule, ServiceWorkerModule.register('', { enabled: false })],
                 declarations: [AppComponent],
                 providers: [NGSWUpdateService],
             }).compileComponents();

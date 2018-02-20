@@ -21,12 +21,7 @@ export class HomeComponent implements OnInit {
     description = 'Angular Universal PWA, built with nestjs and typeorm.';
     user$: Observable<UserOrError>;
 
-    constructor(
-        public seoService: SEOService,
-        private http: HttpClient,
-        public fb: FormBuilder,
-        public authService: AuthService
-    ) {
+    constructor(public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
         this.seoService.setPageTitle('angular universal pwa - home');
         this.seoService.setKeywordsAndDescription(this.keywords, this.description);
         this.user$ = authService.user$;

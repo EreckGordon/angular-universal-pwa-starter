@@ -12,9 +12,7 @@ export class AccountManagementPage {
     }
 
     getChangePasswordButton() {
-        return $$('button').filter(button =>
-            button.getText().then(text => text === 'Change Password')
-        );
+        return $$('button').filter(button => button.getText().then(text => text === 'Change Password'));
     }
 
     getCancelChangePasswordButton() {
@@ -22,8 +20,6 @@ export class AccountManagementPage {
     }
 
     getDeleteAccountButton() {
-        return $$('button').filter(button =>
-            button.getText().then(text => text === 'Delete Account')
-        );
+        return $$('button').filter(button => button.getText().then(text => text === 'Delete Account'));
     }
 }

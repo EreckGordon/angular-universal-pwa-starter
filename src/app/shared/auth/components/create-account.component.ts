@@ -18,12 +18,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
     showPassword = false;
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
-    constructor(
-        private fb: FormBuilder,
-        public auth: AuthService,
-        private router: Router,
-        private snackbar: MatSnackBar
-    ) {}
+    constructor(private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) {}
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -36,10 +31,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
             if (user === null) {
             } else if (this.auth.isAuthenticatedUser(user) && !user.isAnonymous) {
                 this.router.navigate(['/account']);
-            } else if (
-                this.auth.isHttpErrorResponse(user) &&
-                user.error === 'Email already in use'
-            ) {
+            } else if (this.auth.isHttpErrorResponse(user) && user.error === 'Email already in use') {
                 this.auth.errorHandled();
                 this.form.patchValue({ email: '' });
                 this.recaptcha.reset();

@@ -54,12 +54,8 @@ export class AuthService {
             };
         } else {
             try {
-                const loginResult = await this.emailAndPasswordService.loginAndCreateSession(
-                    body,
-                    user
-                );
-                if (loginResult['message'] === 'Password Invalid')
-                    throw new Error('Password Invalid');
+                const loginResult = await this.emailAndPasswordService.loginAndCreateSession(body, user);
+                if (loginResult['message'] === 'Password Invalid') throw new Error('Password Invalid');
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
@@ -107,14 +103,10 @@ export class AuthService {
                 return result;
             }
 
-            const googleProvider = await this.googleService.findGoogleProviderBySocialUid(
-                socialUser.socialUid
-            );
+            const googleProvider = await this.googleService.findGoogleProviderBySocialUid(socialUser.socialUid);
 
             if (googleProvider === undefined) {
-                const createGoogleUserResult = await this.googleService.createGoogleUserSessionAndCSRF(
-                    socialUser
-                );
+                const createGoogleUserResult = await this.googleService.createGoogleUserSessionAndCSRF(socialUser);
 
                 const result: AuthResult = {
                     apiCallResult: true,
@@ -127,9 +119,7 @@ export class AuthService {
                 return result;
             }
 
-            const loginGoogleUserResult = await this.googleService.loginGoogleUserSessionAndCSRF(
-                googleProvider
-            );
+            const loginGoogleUserResult = await this.googleService.loginGoogleUserSessionAndCSRF(googleProvider);
 
             const result: AuthResult = {
                 apiCallResult: true,
@@ -151,9 +141,7 @@ export class AuthService {
 
     private async authenticateFacebookUser(socialUser: SocialUser): Promise<AuthResult> {
         try {
-            const verifiedAccessToken = await this.facebookService.verifyAccessToken(
-                socialUser.accessToken
-            );
+            const verifiedAccessToken = await this.facebookService.verifyAccessToken(socialUser.accessToken);
             if (
                 verifiedAccessToken === false ||
                 socialUser.email !== verifiedAccessToken['email'] ||
@@ -165,14 +153,10 @@ export class AuthService {
                 };
                 return result;
             }
-            const facebookProvider = await this.facebookService.findFacebookProviderBySocialUid(
-                socialUser.socialUid
-            );
+            const facebookProvider = await this.facebookService.findFacebookProviderBySocialUid(socialUser.socialUid);
 
             if (facebookProvider === undefined) {
-                const createFacebookUserResult = await this.facebookService.createFacebookUserSessionAndCSRF(
-                    socialUser
-                );
+                const createFacebookUserResult = await this.facebookService.createFacebookUserSessionAndCSRF(socialUser);
 
                 const result: AuthResult = {
                     apiCallResult: true,
@@ -185,9 +169,7 @@ export class AuthService {
                 return result;
             }
 
-            const loginFacebookUserResult = await this.facebookService.loginFacebookUserSessionAndCSRF(
-                facebookProvider
-            );
+            const loginFacebookUserResult = await this.facebookService.loginFacebookUserSessionAndCSRF(facebookProvider);
 
             const result: AuthResult = {
                 apiCallResult: true,
@@ -237,9 +219,7 @@ export class AuthService {
         if (verifyResult !== 'success') return verifyResult;
         else {
             try {
-                const createUserResult = await this.emailAndPasswordService.createEmailAndPasswordUserAndSession(
-                    body
-                );
+                const createUserResult = await this.emailAndPasswordService.createEmailAndPasswordUserAndSession(body);
                 const result: AuthResult = {
                     apiCallResult: true,
                     result: {
@@ -282,10 +262,7 @@ export class AuthService {
         }
     }
 
-    async upgradeAnonymousUserToEmailAndPassword(
-        req: Request,
-        body: EmailAndPasswordLoginInterface
-    ): Promise<AuthResult> {
+    async upgradeAnonymousUserToEmailAndPassword(req: Request, body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
         const verifyResult = await this.verifyEmailAndPasswordValidity(body);
 
         if (verifyResult !== 'success') return verifyResult;
@@ -293,12 +270,13 @@ export class AuthService {
             try {
                 const userId = req['user']['sub'];
                 const upgradeAnonymousUserToEmailAndPasswordResult = await this.emailAndPasswordService.upgradeAnonymousUserToEmailAndPassword(
-                    { email: body.email, password: body.password, userId }
+                    {
+                        email: body.email,
+                        password: body.password,
+                        userId,
+                    }
                 );
-                if (
-                    upgradeAnonymousUserToEmailAndPasswordResult['message'] ===
-                    'User is not anonymous'
-                )
+                if (upgradeAnonymousUserToEmailAndPasswordResult['message'] === 'User is not anonymous')
                     return <AuthResult>{
                         apiCallResult: false,
                         result: { error: 'User is not anonymous' },
@@ -346,10 +324,7 @@ export class AuthService {
         }
     }
 
-    async upgradeAnonymousUsertoGoogle(
-        anonymousUser: User,
-        socialUser: SocialUser
-    ): Promise<AuthResult> {
+    async upgradeAnonymousUsertoGoogle(anonymousUser: User, socialUser: SocialUser): Promise<AuthResult> {
         // first check if socialUser.socialUid already exists in database
         // if exists, sign in as social user and delete this anonymous user after merging any details (ie: shopping cart contents) into main acount.
         // if not exists, update User to be not anonymous, and attach the social provider to user details
@@ -359,10 +334,7 @@ export class AuthService {
         };
     }
 
-    async upgradeAnonymousUsertoFacebook(
-        anonymousUser: User,
-        socialUser: SocialUser
-    ): Promise<AuthResult> {
+    async upgradeAnonymousUsertoFacebook(anonymousUser: User, socialUser: SocialUser): Promise<AuthResult> {
         // first check if socialUser.socialUid already exists in database
         // if exists, sign in as social user and delete this anonymous user after merging any details (ie: shopping cart contents) into main acount.
         // if not exists, update User to be not anonymous, and attach the social provider to user details
@@ -390,15 +362,11 @@ export class AuthService {
                     user.emailAndPasswordProvider = emailProvider;
                     return { apiCallResult: true, result: { user } };
                 case 'google':
-                    const googleProvider = await this.googleService.findGoogleProviderById(
-                        user.googleProviderId
-                    );
+                    const googleProvider = await this.googleService.findGoogleProviderById(user.googleProviderId);
                     user.googleProvider = googleProvider;
                     return { apiCallResult: true, result: { user } };
                 case 'facebook':
-                    const facebookProvider = await this.facebookService.findFacebookProviderById(
-                        user.facebookProviderId
-                    );
+                    const facebookProvider = await this.facebookService.findFacebookProviderById(user.facebookProviderId);
                     user.facebookProvider = facebookProvider;
                     return { apiCallResult: true, result: { user } };
             }
@@ -439,13 +407,7 @@ export class AuthService {
         }
     }
 
-    async resetPassword({
-        password,
-        token,
-    }: {
-        password: string;
-        token: string;
-    }): Promise<AuthResult> {
+    async resetPassword({ password, token }: { password: string; token: string }): Promise<AuthResult> {
         try {
             const decodedTokenOrError = await this.securityService.decodePasswordResetToken(token);
             if (decodedTokenOrError === 'jwt expired')
@@ -472,9 +434,7 @@ export class AuthService {
                 password,
             });
             emailAndPasswordProvider.passwordHash = passwordHash;
-            const user = await this.emailAndPasswordService.findUserAccountByEmailAndPasswordProviderId(
-                emailAndPasswordProvider.id
-            );
+            const user = await this.emailAndPasswordService.findUserAccountByEmailAndPasswordProviderId(emailAndPasswordProvider.id);
             user.emailAndPasswordProvider = emailAndPasswordProvider;
             await this.userRepository.save(user);
             const sessionToken = await this.securityService.createSessionToken({
@@ -495,10 +455,7 @@ export class AuthService {
         }
     }
 
-    async changePassword(
-        body: { oldPassword: string; newPassword: string },
-        jwt: UserJWT
-    ): Promise<AuthResult> {
+    async changePassword(body: { oldPassword: string; newPassword: string }, jwt: UserJWT): Promise<AuthResult> {
         try {
             const user: User = await this.userRepository.findOne(jwt.sub);
             const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(
@@ -523,9 +480,7 @@ export class AuthService {
                 password: body.newPassword,
             });
             emailAndPasswordProvider.passwordHash = newPasswordHash;
-            await this.emailAndPasswordService.updateEmailAndPasswordProvider(
-                emailAndPasswordProvider
-            );
+            await this.emailAndPasswordService.updateEmailAndPasswordProvider(emailAndPasswordProvider);
             return { apiCallResult: true, result: {} };
         } catch (e) {
             return {
@@ -547,9 +502,7 @@ export class AuthService {
                 }
             };
             await this.userRepository.remove(userToBeDeleted);
-            await this.emailAndPasswordService.removeEmailAndPasswordProvider(
-                await providerToBeDeleted()
-            );
+            await this.emailAndPasswordService.removeEmailAndPasswordProvider(await providerToBeDeleted());
 
             return { apiCallResult: true, result: {} };
         } catch (e) {

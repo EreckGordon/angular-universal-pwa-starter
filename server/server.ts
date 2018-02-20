@@ -20,11 +20,7 @@ import * as compression from 'compression';
 import { ApplicationModule } from './modules/app.module';
 const DIST_FOLDER = path.join(process.cwd(), 'dist');
 const DIST_BROWSER_FOLDER = path.join(DIST_FOLDER, 'dist-browser');
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(
-    DIST_FOLDER,
-    'dist-bridge',
-    'main.bundle'
-));
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOLDER, 'dist-bridge', 'main.bundle'));
 
 enableProdMode();
 const configuredNgExpressEngine = ngExpressEngine({

@@ -15,8 +15,7 @@ export class GoogleService {
     private googleOAuth2 = new GoogleAuthLibrary.OAuth2Client();
     constructor(
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('GoogleProviderRepositoryToken')
-        private readonly googleProviderRepository: Repository<GoogleProvider>,
+        @Inject('GoogleProviderRepositoryToken') private readonly googleProviderRepository: Repository<GoogleProvider>,
         private readonly securityService: SecurityService
     ) {}
 
@@ -84,9 +83,7 @@ export class GoogleService {
         return await this.userRepository.save(user);
     }
 
-    async loginGoogleUserSessionAndCSRF(
-        googleProvider: GoogleProvider
-    ): Promise<UserSessionAndCSRFToken> {
+    async loginGoogleUserSessionAndCSRF(googleProvider: GoogleProvider): Promise<UserSessionAndCSRFToken> {
         const user: User = await this.findUserAccountByGoogleProviderId(googleProvider.id);
         const sessionToken = await this.securityService.createSessionToken({
             roles: user.roles,

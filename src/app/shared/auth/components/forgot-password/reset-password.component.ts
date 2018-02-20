@@ -49,10 +49,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             } else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) {
             } else if (this.auth.isHttpErrorResponse(user)) {
                 this.handlePasswordError(user);
-            } else if (
-                this.auth.isAuthenticatedUser(user) &&
-                user.email === this.decodedToken['email']
-            ) {
+            } else if (this.auth.isAuthenticatedUser(user) && user.email === this.decodedToken['email']) {
                 this.router.navigate(['/account']);
             }
         });

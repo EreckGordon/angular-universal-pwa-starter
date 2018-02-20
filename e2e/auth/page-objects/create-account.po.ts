@@ -8,14 +8,10 @@ export class CreateAccountPage {
     }
 
     getCreateAccountButton() {
-        return $$('button').filter(button =>
-            button.getText().then(text => text === 'Create Account')
-        );
+        return $$('button').filter(button => button.getText().then(text => text === 'Create Account'));
     }
 
     waitForCreateAccountToBeClickable() {
-        return browser.wait(
-            ExpectedConditions.elementToBeClickable(this.getCreateAccountButton().get(0))
-        );
+        return browser.wait(ExpectedConditions.elementToBeClickable(this.getCreateAccountButton().get(0)));
     }
 }

@@ -14,8 +14,7 @@ import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToke
 export class FacebookService {
     constructor(
         @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('FacebookProviderRepositoryToken')
-        private readonly facebookProviderRepository: Repository<FacebookProvider>,
+        @Inject('FacebookProviderRepositoryToken') private readonly facebookProviderRepository: Repository<FacebookProvider>,
         private readonly securityService: SecurityService
     ) {}
 
@@ -52,9 +51,7 @@ export class FacebookService {
         });
     }
 
-    async createFacebookUserSessionAndCSRF(
-        socialUser: SocialUser
-    ): Promise<UserSessionAndCSRFToken> {
+    async createFacebookUserSessionAndCSRF(socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
         try {
             const user: User = await this.addFacebookUserToDatabase(socialUser);
             const sessionToken = await this.securityService.createSessionToken({
@@ -84,9 +81,7 @@ export class FacebookService {
         return await this.userRepository.save(user);
     }
 
-    async loginFacebookUserSessionAndCSRF(
-        facebookProvider: FacebookProvider
-    ): Promise<UserSessionAndCSRFToken> {
+    async loginFacebookUserSessionAndCSRF(facebookProvider: FacebookProvider): Promise<UserSessionAndCSRFToken> {
         const user: User = await this.findUserAccountByFacebookProviderId(facebookProvider.id);
         const sessionToken = await this.securityService.createSessionToken({
             roles: user.roles,

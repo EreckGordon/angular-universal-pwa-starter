@@ -4,9 +4,7 @@ import { Article } from './article.entity';
 
 @Component()
 export class ArticleService {
-    constructor(
-        @Inject('ArticleRepositoryToken') private readonly articleRepository: Repository<Article>
-    ) {}
+    constructor(@Inject('ArticleRepositoryToken') private readonly articleRepository: Repository<Article>) {}
 
     async findAllArticles(): Promise<Article[]> {
         return await this.articleRepository.find();

@@ -8,14 +8,10 @@ export class RequestPasswordResetPage {
     }
 
     getRequestPasswordResetButton() {
-        return $$('button').filter(button =>
-            button.getText().then(text => text === 'Request Password Reset')
-        );
+        return $$('button').filter(button => button.getText().then(text => text === 'Request Password Reset'));
     }
 
     waitForRequestPasswordResetToBeClickable() {
-        return browser.wait(
-            ExpectedConditions.elementToBeClickable(this.getRequestPasswordResetButton().get(0))
-        );
+        return browser.wait(ExpectedConditions.elementToBeClickable(this.getRequestPasswordResetButton().get(0)));
     }
 }

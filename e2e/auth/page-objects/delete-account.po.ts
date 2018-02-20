@@ -4,9 +4,7 @@ import { browser, by, element, $, $$, ExpectedConditions } from 'protractor';
 
 export class DeleteAccountPage {
     getDeleteAccountButton() {
-        return $$('button').filter(button =>
-            button.getText().then(text => text === 'Delete Account')
-        );
+        return $$('button').filter(button => button.getText().then(text => text === 'Delete Account'));
     }
 
     getConfirmDeleteAccountButton() {

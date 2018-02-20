@@ -18,9 +18,7 @@ export class EmailAndPasswordService {
     ) {}
 
     async findUserByEmail(email: string): Promise<User> {
-        let currentProvider: EmailAndPasswordProvider = await this.findEmailAndPasswordProviderByEmail(
-            email
-        );
+        let currentProvider: EmailAndPasswordProvider = await this.findEmailAndPasswordProviderByEmail(email);
         if (currentProvider === undefined) return Promise.resolve(undefined);
         return this.findUserAccountByEmailAndPasswordProviderId(currentProvider.id);
     }
@@ -66,10 +64,7 @@ export class EmailAndPasswordService {
             const passwordHash = await this.securityService.createPasswordHash({
                 password: credentials.password,
             });
-            const user: User = await this.addEmailAndPasswordUserToDatabase(
-                credentials.email,
-                passwordHash
-            );
+            const user: User = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
             const sessionToken = await this.securityService.createSessionToken({
                 roles: user.roles,
                 id: user.id.toString(),
@@ -95,9 +90,7 @@ export class EmailAndPasswordService {
     }
 
     async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
-        let emailProvider = await this.findEmailAndPasswordProviderById(
-            user.emailAndPasswordProviderId
-        );
+        let emailProvider = await this.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
         const isPasswordValid = await this.securityService.verifyPasswordHash({
             passwordHash: emailProvider.passwordHash,
             password: credentials.password,
@@ -112,15 +105,7 @@ export class EmailAndPasswordService {
         });
     }
 
-    async upgradeAnonymousUserToEmailAndPassword({
-        email,
-        password,
-        userId,
-    }: {
-        email: string;
-        password: string;
-        userId: string;
-    }) {
+    async upgradeAnonymousUserToEmailAndPassword({ email, password, userId }: { email: string; password: string; userId: string }) {
         try {
             const passwordHash = await this.securityService.createPasswordHash({
                 password,

@@ -9,12 +9,7 @@ import { HomeComponent } from './home.component';
 import { HomeService } from './home.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        CustomMaterialModule,
-        ReactiveFormsModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes), CustomMaterialModule, ReactiveFormsModule],
     declarations: [HomeComponent],
     providers: [HomeService],
 })

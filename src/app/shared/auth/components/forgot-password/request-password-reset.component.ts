@@ -18,12 +18,7 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
     requestSent = false;
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
-    constructor(
-        private fb: FormBuilder,
-        public auth: AuthService,
-        private router: Router,
-        private snackbar: MatSnackBar
-    ) {}
+    constructor(private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) {}
 
     ngOnInit() {
         this.form = this.fb.group({
@@ -33,10 +28,7 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if (user === null) {
-            } else if (
-                this.auth.isHttpErrorResponse(user) &&
-                user.error === 'user does not exist'
-            ) {
+            } else if (this.auth.isHttpErrorResponse(user) && user.error === 'user does not exist') {
                 this.requestSent = false;
                 this.form.patchValue({ email: '' });
                 this.recaptcha.reset();
