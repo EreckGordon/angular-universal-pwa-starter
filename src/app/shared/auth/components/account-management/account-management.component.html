@@ -12,12 +12,15 @@
 	<p>Email: {{user.email}}</p>
 	<p>User ID: {{user.id}}</p>
 	<p>Roles: {{user.roles}}</p>
+	<p *ngFor="let provider of user.authProviders">{{provider}}</p> 
 </div>
 
-<h5 class="center-everything"> Change Password: </h5>
-<div *ngIf="!showChangePassword" class="center-everything"><button mat-button color="accent" (click)="toggleShowChangePassword()">Change Password</button></div>
-<div *ngIf="showChangePassword" class="center-everything"><button mat-button color="warn" (click)="toggleShowChangePassword()">Cancel</button></div>
-<app-change-password *ngIf="showChangePassword" (passwordChanged)="toggleShowChangePassword()"></app-change-password>
+<ng-container *ngIf="hasEmailAndPasswordAuthProvider">
+	<h5 class="center-everything"> Change Password: </h5>
+	<div *ngIf="!showChangePassword" class="center-everything"><button mat-button color="accent" (click)="toggleShowChangePassword()">Change Password</button></div>
+	<div *ngIf="showChangePassword" class="center-everything"><button mat-button color="warn" (click)="toggleShowChangePassword()">Cancel</button></div>
+	<app-change-password *ngIf="showChangePassword" (passwordChanged)="toggleShowChangePassword()"></app-change-password>
+</ng-container>
 
 <h5 class="center-everything">Delete Account:</h5>
 <div class="center-everything">

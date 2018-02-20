@@ -120,7 +120,7 @@ pm2 restart dist/server
 	- ~upgrade anonymous user to social account~
 	- link username/pw to social account
 	- fix account management page
-		- edit pw only if you have a username/password combo for our site.
+		- ~edit pw only if you have a username/password combo for our site.~
 		- merge accounts - if you have 2 accounts, login as one to merge with other.
 	- select primary email + unique password for social account (link account)
 	- inconsistency - upgrading from anonymous to various users.

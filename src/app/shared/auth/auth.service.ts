@@ -13,6 +13,7 @@ export interface AuthenticatedUser {
     isAnonymous: boolean;
     roles: string[];
     email: string | null;
+    authProviders: string[];
 }
 
 interface EmailAndPassword {

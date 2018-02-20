@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 
 import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/social-user.class';
 
+import { User } from './user.entity';
 import { AuthService } from './auth.service';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -179,7 +180,7 @@ export class AuthController {
         this.sendUserDetails(user, res, loginProvider);
     }
 
-    private sendUserDetails(user, res, loginProvider: string) {
+    private sendUserDetails(user: User, res, loginProvider: string) {
         let email: string;
         try {
             switch (loginProvider) {
@@ -196,11 +197,21 @@ export class AuthController {
         } catch (e) {
             email = null;
         }
+
+        let authProviders: string[] = [];
+        try {        
+            user.emailAndPasswordProviderId !== null ? authProviders.push('emailAndPassword') : null;
+            user.facebookProviderId !== null ? authProviders.push('facebook') : null;
+            user.googleProviderId !== null ? authProviders.push('google') : null;
+        }
+        catch(e) {}
+
         res.status(200).json({
             id: user.id,
             isAnonymous: user.isAnonymous,
             roles: user.roles,
             email,
+            authProviders
         });
     }
 }
