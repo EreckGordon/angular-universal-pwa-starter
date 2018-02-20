@@ -117,24 +117,29 @@ pm2 restart dist/server
 		- ~to reset their password upon forgetting it~
 - ~baseUrl as a part of environment~
 - social provider upgrades:
-	- upgrade anonymous user to social account
+	- ~upgrade anonymous user to social account~
 	- link username/pw to social account
 	- fix account management page
-		- edit pw only if you can
+		- edit pw only if you have a username/password combo for our site.
+		- merge accounts - if you have 2 accounts, login as one to merge with other.
 	- select primary email + unique password for social account (link account)
-	- merge accounts - if you have 2 accounts, login as one to merge with other.
+	- inconsistency - upgrading from anonymous to various users.
+		- social users delete the old anonymous user from database after taking what they need.
+			- this is because i assume that there could be an existing user that you just forgot to sign in as, and the server takes care of the rest
+		- username/password users use the uid of the anonymous user. 
+			- it never assumes you have an existing account.
+		- i think this would be best resolved by having username / pw more closely mimic the way social providers handle it.
+			- this will take some refactoring i believe.
 - delete account:
 	- make sure to clean up all login providers when deleting account.
 		- delete providers
 		- unauthorize account from provider permissions
+		    - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.
 - database migrations
 - websocket
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
-- SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
-- ~auth controller: delete user~
 - auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
-
 - needed tests
 	- username / password auth
 		- forgotten password reset
@@ -145,3 +150,38 @@ pm2 restart dist/server
 	- social auth
 		- google
 		- facebook
+- SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
+    I believe that I need the following meta tags. There is also stuff about schema.org linked data (json-ld) that i need to read more about.
+
+	```
+	<!-- Place this data between the <head> tags of your website -->
+	<title>Page Title. Maximum length 60-70 characters</title>
+	<meta name="description" content="Page description. No longer than 155 characters." />
+
+	<!-- Schema.org markup for Google+ -->
+	<meta itemprop="name" content="The Name or Title Here">
+	<meta itemprop="description" content="This is the page description">
+	<meta itemprop="image" content="http://www.example.com/image.jpg">
+
+	<!-- Twitter Card data -->
+	<meta name="twitter:card" content="product">
+	<meta name="twitter:site" content="@publisher_handle">
+	<meta name="twitter:title" content="Page Title">
+	<meta name="twitter:description" content="Page description less than 200 characters">
+	<meta name="twitter:creator" content="@author_handle">
+	<meta name="twitter:image" content="http://www.example.com/image.jpg">
+	<meta name="twitter:data1" content="$3">
+	<meta name="twitter:label1" content="Price">
+	<meta name="twitter:data2" content="Black">
+	<meta name="twitter:label2" content="Color">
+
+	<!-- Open Graph data -->
+	<meta property="og:title" content="Title Here" />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="http://www.example.com/" />
+	<meta property="og:image" content="http://example.com/image.jpg" />
+	<meta property="og:description" content="Description Here" />
+	<meta property="og:site_name" content="Site Name, i.e. Moz" />
+	<meta property="og:price:amount" content="15.00" />
+	<meta property="og:price:currency" content="USD" />
+	```

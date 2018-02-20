@@ -57,12 +57,12 @@ export class AuthService {
     createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({ email, password }: EmailAndPassword) {
         this.user$.take(1).subscribe(user => {
             if (user === null) {
-                return this.createEmailAndPasswordUser({email, password});
+                return this.createEmailAndPasswordUser({ email, password });
             } else if (this.isAuthenticatedUser(user) && user.isAnonymous) {
-                return this.upgradeAnonymousUserToEmailAndPasswordUser({email, password});
+                return this.upgradeAnonymousUserToEmailAndPasswordUser({ email, password });
             }
         });
-    }    
+    }
 
     private upgradeAnonymousUserToEmailAndPasswordUser({ email, password }: EmailAndPassword): void {
         this.http

@@ -306,9 +306,11 @@ export class AuthService {
             if (anonymousUser.isAnonymous) {
                 switch (socialUser.provider) {
                     case 'google':
-                        return this.upgradeAnonymousUsertoGoogle(anonymousUser, socialUser);
+                        const googleUserSessionAndCSRF = await this.authenticateGoogleUser(socialUser);
+                        return await this.cleanUpAnonymousUserData(anonymousUser, googleUserSessionAndCSRF);
                     case 'facebook':
-                        return this.upgradeAnonymousUsertoFacebook(anonymousUser, socialUser);
+                        const facebookUserSessionAndCSRF = await this.authenticateFacebookUser(socialUser);
+                        return await this.cleanUpAnonymousUserData(anonymousUser, facebookUserSessionAndCSRF);
                 }
             } else {
                 return <AuthResult>{
@@ -324,24 +326,12 @@ export class AuthService {
         }
     }
 
-    async upgradeAnonymousUsertoGoogle(anonymousUser: User, socialUser: SocialUser): Promise<AuthResult> {
-        // first check if socialUser.socialUid already exists in database
-        // if exists, sign in as social user and delete this anonymous user after merging any details (ie: shopping cart contents) into main acount.
-        // if not exists, update User to be not anonymous, and attach the social provider to user details
-        return <AuthResult>{
-            apiCallResult: false,
-            result: { error: 'upgrade anonymous user to google still being built' },
-        };
-    }
-
-    async upgradeAnonymousUsertoFacebook(anonymousUser: User, socialUser: SocialUser): Promise<AuthResult> {
-        // first check if socialUser.socialUid already exists in database
-        // if exists, sign in as social user and delete this anonymous user after merging any details (ie: shopping cart contents) into main acount.
-        // if not exists, update User to be not anonymous, and attach the social provider to user details
-        return <AuthResult>{
-            apiCallResult: false,
-            result: { error: 'upgrade anonymous user to facebook still being built' },
-        };
+    private async cleanUpAnonymousUserData(anonymousUser: User, existingUserSessionAndCSRF: AuthResult): Promise<AuthResult> {
+        // merge any data from anonymousUser into existingUser
+        // i will likely add features to this function as i create data
+        // for now there is nothing else to do but delete the anonymous user
+        this.userRepository.remove(anonymousUser);
+        return existingUserSessionAndCSRF;
     }
 
     async findUserByUuid(uuid: string) {
@@ -490,11 +480,13 @@ export class AuthService {
         }
     }
 
+    // this function will need to clean up after all providers, not just one like it does currently.
+    // once i add in multiple providers to one account.
     async deleteAccount(jwt: UserJWT): Promise<AuthResult> {
         try {
             const userToBeDeleted = await this.userRepository.findOne(jwt.sub);
-            const providerToBeDeleted = async () => {
-                switch (jwt.loginProvider) {
+            const providerToBeDeleted = async loginProvider => {
+                switch (loginProvider) {
                     case 'emailAndPassword':
                         return await this.emailAndPasswordService.findEmailAndPasswordProviderById(
                             userToBeDeleted.emailAndPasswordProviderId
@@ -502,7 +494,7 @@ export class AuthService {
                 }
             };
             await this.userRepository.remove(userToBeDeleted);
-            await this.emailAndPasswordService.removeEmailAndPasswordProvider(await providerToBeDeleted());
+            await this.emailAndPasswordService.removeEmailAndPasswordProvider(await providerToBeDeleted(jwt.loginProvider));
 
             return { apiCallResult: true, result: {} };
         } catch (e) {
