@@ -262,13 +262,12 @@ export class AuthService {
         }
     }
 
-    async upgradeAnonymousUserToEmailAndPassword(req: Request, body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
+    async upgradeAnonymousUserToEmailAndPassword(userId: string, body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
         const verifyResult = await this.verifyEmailAndPasswordValidity(body);
 
         if (verifyResult !== 'success') return verifyResult;
         else {
             try {
-                const userId = req['user']['sub'];
                 const upgradeAnonymousUserToEmailAndPasswordResult = await this.emailAndPasswordService.upgradeAnonymousUserToEmailAndPassword(
                     {
                         email: body.email,
@@ -299,9 +298,8 @@ export class AuthService {
         }
     }
 
-    async upgradeAnonymousUserToSocial(req: Request, socialUser: SocialUser): Promise<AuthResult> {
+    async upgradeAnonymousUserToSocial(userId: string, socialUser: SocialUser): Promise<AuthResult> {
         try {
-            const userId = req['user']['sub'];
             const anonymousUser = await this.findUserByUuid(userId);
             if (anonymousUser.isAnonymous) {
                 switch (socialUser.provider) {

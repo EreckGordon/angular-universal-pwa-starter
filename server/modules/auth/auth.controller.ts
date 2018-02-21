@@ -70,7 +70,8 @@ export class AuthController {
 
     @Patch('upgrade-anonymous-user-to-email-and-password')
     async upgradeAnonymousUserToEmailAndPassword(@Req() req: Request, @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
-        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(req, body);
+        const userId = await req['user']['sub'];
+        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(userId, body);
         if (upgradeResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, upgradeResult.result, 'emailAndPassword');
         } else {
@@ -88,7 +89,8 @@ export class AuthController {
 
     @Patch('upgrade-anonymous-user-to-social')
     async upgradeAnonymousUserToSocial(@Req() req: Request, @Res() res: Response, @Body() body) {
-        const upgradeResult = await this.authService.upgradeAnonymousUserToSocial(req, body);
+        const userId = await req['user']['sub'];
+        const upgradeResult = await this.authService.upgradeAnonymousUserToSocial(userId, body);
         if (upgradeResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, upgradeResult.result, body.provider);
         } else {
@@ -199,19 +201,18 @@ export class AuthController {
         }
 
         let authProviders: string[] = [];
-        try {        
+        try {
             user.emailAndPasswordProviderId !== null ? authProviders.push('emailAndPassword') : null;
             user.facebookProviderId !== null ? authProviders.push('facebook') : null;
             user.googleProviderId !== null ? authProviders.push('google') : null;
-        }
-        catch(e) {}
+        } catch (e) {}
 
         res.status(200).json({
             id: user.id,
             isAnonymous: user.isAnonymous,
             roles: user.roles,
             email,
-            authProviders
+            authProviders,
         });
     }
 }
