@@ -106,6 +106,18 @@ export class AuthController {
         }
     }
 
+    @Patch('link-provider-to-account')
+    @Roles('user')
+    async linkProviderToAccount(@Req() req: Request, @Res() res: Response, @Body() body){
+        const userId = await req['user']['sub'];
+        const linkProviderToAccountResult = await this.authService.linkProviderToAccount(userId, body);
+        if (linkProviderToAccountResult.apiCallResult) {
+            this.sendSuccessfulUserResult(res, linkProviderToAccountResult.result, body.provider);
+        } else {
+            res.status(401).json(linkProviderToAccountResult.result.error);
+        }        
+    }
+
     @Post('request-password-reset')
     async requestPasswordReset(@Req() req: Request, @Res() res: Response, @Body() body: { email: string }) {
         const requestPasswordResetResult = await this.authService.requestPasswordReset(body);

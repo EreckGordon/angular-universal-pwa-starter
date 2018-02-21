@@ -168,6 +168,18 @@ export class AuthService {
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
+    linkProviderToAccount() {
+        this.http
+            .patch<AuthenticatedUser>(
+                `${environment.baseUrl}/api/auth/link-provider-to-account`,
+                {
+                    // body contents here when i figure out what to put here
+                },
+                this.jsonOptions
+            )
+            .take(1)
+            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
+    }
     // used to clear error message manually after the component has performed its localized error logic
     // avoids errors when user navigates away from page after an error.
     errorHandled() {
@@ -175,6 +187,7 @@ export class AuthService {
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
+        console.log(error)
         this.userSubject.next(error);
     }
 

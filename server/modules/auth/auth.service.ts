@@ -324,6 +324,18 @@ export class AuthService {
         }
     }
 
+    async linkProviderToAccount(userId: string, providerData: any): Promise<AuthResult> {
+        try {
+            // do the things with the stuff.
+            throw new Error('aaaa') 
+        } catch (e) {
+            return <AuthResult>{
+                apiCallResult: false,
+                result: { error: 'Error linking provider to account' },
+            };
+        }        
+    }    
+
     private async cleanUpAnonymousUserData(anonymousUser: User, existingUserSessionAndCSRF: AuthResult): Promise<AuthResult> {
         // merge any data from anonymousUser into existingUser
         // i will likely add features to this function as i create data

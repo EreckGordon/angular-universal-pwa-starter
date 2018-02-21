@@ -38,6 +38,10 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         this.showChangePassword = !this.showChangePassword;
     }
 
+    linkProviderToAccount() {
+        this.auth.linkProviderToAccount();
+    }
+
     ngOnDestroy() {
         this.destroy.next();
     }

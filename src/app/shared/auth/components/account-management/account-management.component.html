@@ -22,6 +22,12 @@
 	<app-change-password *ngIf="showChangePassword" (passwordChanged)="toggleShowChangePassword()"></app-change-password>
 </ng-container>
 
+<ng-container>
+	<h5 class="center-everything"> Alternate Login Methods: </h5>
+	<div class="center-everything"><button mat-raised-button color="primary" (click)="linkProviderToAccount()">link provider to account</button></div>
+</ng-container>
+
+
 <h5 class="center-everything">Delete Account:</h5>
 <div class="center-everything">
 	<button mat-button color="warn" routerLink='/delete-account'> Delete Account </button>
