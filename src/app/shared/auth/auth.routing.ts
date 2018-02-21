@@ -18,7 +18,16 @@ export const routes: Routes = [
     { path: 'reset-password', component: ResetPasswordComponent },
     {
         path: 'account',
-        component: AccountManagementComponent,
+        children: [
+            {
+                path: '',
+                component: AccountManagementComponent,
+            },
+            {
+                path: 'social',
+                loadChildren: './social-module/social-auth.module#SocialAuthModule',
+            },
+        ],
         canActivate: [AuthGuard],
     },
     { path: 'delete-account', component: DeleteAccountComponent },

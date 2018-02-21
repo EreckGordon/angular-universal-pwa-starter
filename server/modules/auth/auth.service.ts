@@ -305,10 +305,10 @@ export class AuthService {
                 switch (socialUser.provider) {
                     case 'google':
                         const googleUserSessionAndCSRF = await this.authenticateGoogleUser(socialUser);
-                        return await this.cleanUpAnonymousUserData(anonymousUser, googleUserSessionAndCSRF);
+                        return await this.cleanUpOldUserData(anonymousUser, googleUserSessionAndCSRF);
                     case 'facebook':
                         const facebookUserSessionAndCSRF = await this.authenticateFacebookUser(socialUser);
-                        return await this.cleanUpAnonymousUserData(anonymousUser, facebookUserSessionAndCSRF);
+                        return await this.cleanUpOldUserData(anonymousUser, facebookUserSessionAndCSRF);
                 }
             } else {
                 return <AuthResult>{
@@ -326,21 +326,66 @@ export class AuthService {
 
     async linkProviderToAccount(userId: string, providerData: any): Promise<AuthResult> {
         try {
-            // do the things with the stuff.
-            throw new Error('aaaa') 
+            switch (providerData.provider) {
+                case 'google':
+                    return await this.linkGoogleProviderToAccount(userId, providerData);
+                case 'facebook':
+                    return await this.linkFacebookProviderToAccount(userId, providerData);
+                case 'emailAndPassword':
+                    return await this.linkEmailAndPasswordProviderToAccount(userId, providerData);
+            }
         } catch (e) {
             return <AuthResult>{
                 apiCallResult: false,
                 result: { error: 'Error linking provider to account' },
             };
-        }        
-    }    
+        }
+    }
 
-    private async cleanUpAnonymousUserData(anonymousUser: User, existingUserSessionAndCSRF: AuthResult): Promise<AuthResult> {
-        // merge any data from anonymousUser into existingUser
+    private async linkGoogleProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
+        // verify the socialUser data is good
+        // look up provider account by socialUid
+        // if provider is connected to other account, check that both accounts do not have any differing provider data (excluding null)
+        // merge if no conflicts, current user id is the "main" account, other is deleted. Take all data and providers and attach to main.
+        // throw error if conflicts.
+        // if provider account does not exist, add provider to user data, update database, return updated user data
+        return <AuthResult>{
+            apiCallResult: false,
+            result: { error: 'link google provider to account function still being built' },
+        };
+    }
+
+    private async linkFacebookProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
+        // verify the socialUser data is good
+        // look up provider account by socialUid
+        // if provider is connected to other account, check that both accounts do not have any differing provider data (excluding null)
+        // merge if no conflicts, current user id is the "main" account, other is deleted. Take all data and providers and attach to main.
+        // throw error if conflicts.
+        // if provider account does not exist, add provider to user data, update database, return updated user data
+        return <AuthResult>{
+            apiCallResult: false,
+            result: { error: 'link facebook provider to account function still being built' },
+        };
+    }
+
+    private async linkEmailAndPasswordProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
+        // verify username/pw is good - validate password
+        // look up provider account by email
+        // if provider is connected to other account, check that both accounts do not have any differing provider data (excluding null)
+        // merge if no conflicts, current user id is the "main" account, other is deleted. Take all data and providers and attach to main.
+        // throw error if conflicts.
+        // if provider account does not exist, add provider to user data, update database, return updated user data
+        return <AuthResult>{
+            apiCallResult: false,
+            result: { error: 'link emailAndPassword provider to account function still being built' },
+        };
+    }
+
+    private async cleanUpOldUserData(oldUser: User, existingUserSessionAndCSRF: AuthResult): Promise<AuthResult> {
+        // merge any data from oldUser into existingUser
         // i will likely add features to this function as i create data
-        // for now there is nothing else to do but delete the anonymous user
-        this.userRepository.remove(anonymousUser);
+        // for now there is nothing else to do but delete the old user
+        this.userRepository.remove(oldUser);
         return existingUserSessionAndCSRF;
     }
 

@@ -15,6 +15,8 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
     user: AuthenticatedUser;
     showChangePassword = false;
     hasEmailAndPasswordAuthProvider = false;
+    hasGoogleAuthProvider = false;
+    hasFacebookAuthProvider = false;
 
     constructor(public auth: AuthService, public router: Router) {}
 
@@ -26,6 +28,8 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
             if (this.auth.isAuthenticatedUser(user)) {
                 this.user = user;
                 this.hasEmailAndPasswordAuthProvider = user.authProviders.includes('emailAndPassword');
+                this.hasGoogleAuthProvider = user.authProviders.includes('google');
+                this.hasFacebookAuthProvider = user.authProviders.includes('facebook');
             }
         });
     }
@@ -36,10 +40,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
 
     toggleShowChangePassword() {
         this.showChangePassword = !this.showChangePassword;
-    }
-
-    linkProviderToAccount() {
-        this.auth.linkProviderToAccount();
     }
 
     ngOnDestroy() {

@@ -24,7 +24,17 @@
 
 <ng-container>
 	<h5 class="center-everything"> Alternate Login Methods: </h5>
-	<div class="center-everything"><button mat-raised-button color="primary" (click)="linkProviderToAccount()">link provider to account</button></div>
+	<div class="center-everything" style="flex-direction: column;">
+		<p *ngIf="!hasEmailAndPasswordAuthProvider" style="margin: 1em;"> <button mat-button color="accent" routerLink="/account/email-and-password">Link Email and Password</button> </p>
+		<p *ngIf="!hasGoogleAuthProvider || !hasFacebookAuthProvider" style="margin: 1em;"> 
+			<button mat-button color="accent" routerLink="/account/social/link-social-to-account"> 
+				Link Social Sign In 
+				<img *ngIf="!hasGoogleAuthProvider" src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /> 
+				<img *ngIf="!hasFacebookAuthProvider" src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" />
+			</button> 
+		</p>
+	</div>
+
 </ng-container>
 
 

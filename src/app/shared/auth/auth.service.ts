@@ -138,6 +138,8 @@ export class AuthService {
                 return this.authenticateSocialUser(socialInfo);
             } else if (this.isAuthenticatedUser(user) && user.isAnonymous) {
                 return this.upgradeAnonymousUserToSocial(socialInfo);
+            } else if (this.isAuthenticatedUser(user)) {
+                return this.linkProviderToAccount(socialInfo);
             }
         });
     }
@@ -168,17 +170,23 @@ export class AuthService {
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
-    linkProviderToAccount() {
+    linkProviderToAccount(providerInfo) {
         this.http
             .patch<AuthenticatedUser>(
                 `${environment.baseUrl}/api/auth/link-provider-to-account`,
                 {
-                    // body contents here when i figure out what to put here
+                    ...providerInfo,
                 },
                 this.jsonOptions
             )
             .take(1)
-            .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
+            .subscribe(
+                user => this.userSubject.next(user),
+                error => {
+                    console.log(error);
+                    return this.snackbar.open('Unknown Error, sorry about that', 'OK', { duration: 5000 });
+                }
+            );
     }
     // used to clear error message manually after the component has performed its localized error logic
     // avoids errors when user navigates away from page after an error.
@@ -187,7 +195,6 @@ export class AuthService {
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
-        console.log(error)
         this.userSubject.next(error);
     }
 

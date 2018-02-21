@@ -115,6 +115,7 @@ pm2 restart dist/server
 		- social: github
 	- ~to email users~
 		- ~to reset their password upon forgetting it~
+	- identify common functionality and refactor. I know there are a good amount of times where I repeat code that I shouldn't.
 - ~baseUrl as a part of environment~
 - social provider upgrades:
 	- ~upgrade anonymous user to social account~
@@ -140,6 +141,8 @@ pm2 restart dist/server
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
+- file uploads with dropzone
+
 - needed tests
 	- username / password auth
 		- forgotten password reset
@@ -151,7 +154,7 @@ pm2 restart dist/server
 		- google
 		- facebook
 - SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
-    I believe that I need the following meta tags. There is also stuff about schema.org linked data (json-ld) that i need to read more about.
+    - I believe that I need the following meta tags. There is also stuff about schema.org linked data (json-ld) that i need to read more about.
 
 	```
 	<!-- Place this data between the <head> tags of your website -->

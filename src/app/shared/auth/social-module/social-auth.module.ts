@@ -7,9 +7,10 @@ import { CustomMaterialModule } from '../../custom-material-module/index';
 import { routes } from './social-auth.routing';
 import { SocialAuthService } from './social-auth.service';
 import { SocialAuthSignInComponent } from './components/social-auth-sign-in.component';
+import { LinkSocialToAccountComponent } from './components/link-social-to-account.component';
 
 @NgModule({
-    declarations: [SocialAuthSignInComponent],
+    declarations: [SocialAuthSignInComponent, LinkSocialToAccountComponent],
     imports: [CommonModule, RouterModule.forChild(routes), CustomMaterialModule],
     providers: [SocialAuthService],
 })
