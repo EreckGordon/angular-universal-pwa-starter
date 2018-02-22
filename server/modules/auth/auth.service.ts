@@ -305,10 +305,18 @@ export class AuthService {
                 switch (socialUser.provider) {
                     case 'google':
                         const googleUserSessionAndCSRF = await this.authenticateGoogleUser(socialUser);
-                        return await this.cleanUpOldUserData(anonymousUser, googleUserSessionAndCSRF);
+                        googleUserSessionAndCSRF.result.user = await this.cleanUpOldUserData(
+                            anonymousUser,
+                            googleUserSessionAndCSRF.result.user
+                        );
+                        return googleUserSessionAndCSRF;
                     case 'facebook':
                         const facebookUserSessionAndCSRF = await this.authenticateFacebookUser(socialUser);
-                        return await this.cleanUpOldUserData(anonymousUser, facebookUserSessionAndCSRF);
+                        facebookUserSessionAndCSRF.result.user = await this.cleanUpOldUserData(
+                            anonymousUser,
+                            facebookUserSessionAndCSRF.result.user
+                        );
+                        return facebookUserSessionAndCSRF;
                 }
             } else {
                 return <AuthResult>{
@@ -343,16 +351,82 @@ export class AuthService {
     }
 
     private async linkGoogleProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
-        // verify the socialUser data is good
-        // look up provider account by socialUid
-        // if provider is connected to other account, check that both accounts do not have any differing provider data (excluding null)
-        // merge if no conflicts, current user id is the "main" account, other is deleted. Take all data and providers and attach to main.
-        // throw error if conflicts.
-        // if provider account does not exist, add provider to user data, update database, return updated user data
-        return <AuthResult>{
-            apiCallResult: false,
-            result: { error: 'link google provider to account function still being built' },
-        };
+        try {
+            // verify the socialUser data is good
+            const verifiedGoogleJWT = await this.googleService.verifyIdToken(socialUser.idToken);
+            if (verifiedGoogleJWT === false) {
+                const result: AuthResult = {
+                    apiCallResult: false,
+                    result: { error: 'Invalid JWT' },
+                };
+                return result;
+            }
+            // look up provider account by socialUid
+            const googleProvider = await this.googleService.findGoogleProviderBySocialUid(socialUser.socialUid);
+            const user: User = await this.findUserByUuid(userId);
+
+            // if provider account does not exist, add provider to user data, update database, return updated user data
+            if (googleProvider === undefined) {
+                const updatedUser = await this.googleService.linkProviderToExistingAccount(user, socialUser);
+                return {
+                    apiCallResult: true,
+                    result: {
+                        user: updatedUser.user,
+                        sessionToken: updatedUser.sessionToken,
+                        csrfToken: updatedUser.csrfToken,
+                    },
+                };
+            }
+
+            const otherUserWithCurrentGoogleAccount = await this.googleService.findUserAccountByGoogleProviderId(googleProvider.id);
+            user.googleProviderId = googleProvider.id;
+            user.googleProvider = googleProvider;
+
+            // check for conflicts, one provider at a time
+
+            if (user.emailAndPasswordProviderId === null) {
+                if (otherUserWithCurrentGoogleAccount.emailAndPasswordProviderId === null) {
+                } else {
+                    user.emailAndPasswordProviderId = otherUserWithCurrentGoogleAccount.emailAndPasswordProviderId;
+                    user.emailAndPasswordProvider = otherUserWithCurrentGoogleAccount.emailAndPasswordProvider;
+                }
+            } else if (otherUserWithCurrentGoogleAccount.emailAndPasswordProviderId !== null) {
+                if (user.emailAndPasswordProviderId !== otherUserWithCurrentGoogleAccount.emailAndPasswordProviderId) {
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: emailAndPassword conflict' } };
+                }
+            }
+
+            if (user.facebookProviderId === null) {
+                if (otherUserWithCurrentGoogleAccount.facebookProviderId === null) {
+                } else {
+                    user.facebookProviderId = otherUserWithCurrentGoogleAccount.facebookProviderId;
+                    user.facebookProvider = otherUserWithCurrentGoogleAccount.facebookProvider;
+                }
+            } else if (otherUserWithCurrentGoogleAccount.facebookProviderId !== null) {
+                if (user.facebookProviderId !== otherUserWithCurrentGoogleAccount.facebookProviderId) {
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: facebook conflict' } };
+                }
+            }
+
+            const updatedUser = await this.cleanUpOldUserData(otherUserWithCurrentGoogleAccount, user);
+            await this.userRepository.save(updatedUser);
+            const userSessionAndCSRFToken = await this.googleService.loginGoogleUserSessionAndCSRF(updatedUser.googleProvider);
+
+            return {
+                apiCallResult: true,
+                result: {
+                    user: userSessionAndCSRFToken.user,
+                    sessionToken: userSessionAndCSRFToken.sessionToken,
+                    csrfToken: userSessionAndCSRFToken.csrfToken,
+                },
+            };
+        } catch (e) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'unknown error linking google provider to account' },
+            };
+            return result;
+        }
     }
 
     private async linkFacebookProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
@@ -381,12 +455,12 @@ export class AuthService {
         };
     }
 
-    private async cleanUpOldUserData(oldUser: User, existingUserSessionAndCSRF: AuthResult): Promise<AuthResult> {
+    private async cleanUpOldUserData(oldUser: User, existingUser: User): Promise<User> {
         // merge any data from oldUser into existingUser
         // i will likely add features to this function as i create data
         // for now there is nothing else to do but delete the old user
         this.userRepository.remove(oldUser);
-        return existingUserSessionAndCSRF;
+        return existingUser;
     }
 
     async findUserByUuid(uuid: string) {

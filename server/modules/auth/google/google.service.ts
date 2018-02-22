@@ -57,7 +57,7 @@ export class GoogleService {
             const user: User = await this.addGoogleUserToDatabase(socialUser);
             const sessionToken = await this.securityService.createSessionToken({
                 roles: user.roles,
-                id: user.id.toString(),
+                id: user.id,
                 loginProvider: socialUser.provider,
             });
             const csrfToken = await this.securityService.createCsrfToken();
@@ -87,11 +87,32 @@ export class GoogleService {
         const user: User = await this.findUserAccountByGoogleProviderId(googleProvider.id);
         const sessionToken = await this.securityService.createSessionToken({
             roles: user.roles,
-            id: user.id.toString(),
+            id: user.id,
             loginProvider: 'google',
         });
         const csrfToken = await this.securityService.createCsrfToken();
         const result = { user, sessionToken, csrfToken };
+        return result;
+    }
+
+    async linkProviderToExistingAccount(user: User, socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
+        const updatedUser: User = user;
+        const googleProvider = new GoogleProvider();
+        googleProvider.accessToken = socialUser.accessToken;
+        googleProvider.email = socialUser.email;
+        googleProvider.idToken = socialUser.idToken;
+        googleProvider.name = socialUser.name;
+        googleProvider.photoUrl = socialUser.photoUrl;
+        googleProvider.socialUid = socialUser.socialUid;
+        updatedUser.googleProvider = googleProvider;
+        await this.userRepository.save(updatedUser);
+        const sessionToken = await this.securityService.createSessionToken({
+            roles: updatedUser.roles,
+            id: updatedUser.id,
+            loginProvider: 'google',
+        });
+        const csrfToken = await this.securityService.createCsrfToken();
+        const result = { user: updatedUser, sessionToken, csrfToken };
         return result;
     }
 }
