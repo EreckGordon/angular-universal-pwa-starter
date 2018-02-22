@@ -430,16 +430,86 @@ export class AuthService {
     }
 
     private async linkFacebookProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
-        // verify the socialUser data is good
-        // look up provider account by socialUid
-        // if provider is connected to other account, check that both accounts do not have any differing provider data (excluding null)
-        // merge if no conflicts, current user id is the "main" account, other is deleted. Take all data and providers and attach to main.
-        // throw error if conflicts.
-        // if provider account does not exist, add provider to user data, update database, return updated user data
-        return <AuthResult>{
-            apiCallResult: false,
-            result: { error: 'link facebook provider to account function still being built' },
-        };
+        try {
+            // verify the socialUser data is good
+            const verifiedAccessToken = await this.facebookService.verifyAccessToken(socialUser.accessToken);
+            if (
+                verifiedAccessToken === false ||
+                socialUser.email !== verifiedAccessToken['email'] ||
+                socialUser.socialUid !== verifiedAccessToken['id']
+            ) {
+                const result: AuthResult = {
+                    apiCallResult: false,
+                    result: { error: 'Invalid Access Token' },
+                };
+                return result;
+            }
+            const facebookProvider = await this.facebookService.findFacebookProviderBySocialUid(socialUser.socialUid);
+            const user: User = await this.findUserByUuid(userId);
+
+            if (facebookProvider === undefined) {
+                const updatedUser = await this.facebookService.linkProviderToExistingAccount(user, socialUser);
+
+                const result: AuthResult = {
+                    apiCallResult: true,
+                    result: {
+                        user: updatedUser.user,
+                        csrfToken: updatedUser.csrfToken,
+                        sessionToken: updatedUser.sessionToken,
+                    },
+                };
+                return result;
+            }
+
+            const otherUserWithCurrentFacebookAccount = await this.facebookService.findUserAccountByFacebookProviderId(facebookProvider.id);
+            user.facebookProviderId = facebookProvider.id;
+            user.facebookProvider = facebookProvider;
+
+            // check for conflicts, one provider at a time
+
+            if (user.emailAndPasswordProviderId === null) {
+                if (otherUserWithCurrentFacebookAccount.emailAndPasswordProviderId === null) {
+                } else {
+                    user.emailAndPasswordProviderId = otherUserWithCurrentFacebookAccount.emailAndPasswordProviderId;
+                    user.emailAndPasswordProvider = otherUserWithCurrentFacebookAccount.emailAndPasswordProvider;
+                }
+            } else if (otherUserWithCurrentFacebookAccount.emailAndPasswordProviderId !== null) {
+                if (user.emailAndPasswordProviderId !== otherUserWithCurrentFacebookAccount.emailAndPasswordProviderId) {
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: emailAndPassword conflict' } };
+                }
+            }
+
+            if (user.googleProviderId === null) {
+                if (otherUserWithCurrentFacebookAccount.googleProviderId === null) {
+                } else {
+                    user.googleProviderId = otherUserWithCurrentFacebookAccount.googleProviderId;
+                    user.googleProvider = otherUserWithCurrentFacebookAccount.googleProvider;
+                }
+            } else if (otherUserWithCurrentFacebookAccount.googleProviderId !== null) {
+                if (user.googleProviderId !== otherUserWithCurrentFacebookAccount.googleProviderId) {
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: facebook conflict' } };
+                }
+            }
+
+            const updatedUser = await this.cleanUpOldUserData(otherUserWithCurrentFacebookAccount, user);
+            await this.userRepository.save(updatedUser);
+            const userSessionAndCSRFToken = await this.facebookService.loginFacebookUserSessionAndCSRF(updatedUser.facebookProvider);
+
+            return {
+                apiCallResult: true,
+                result: {
+                    user: userSessionAndCSRFToken.user,
+                    sessionToken: userSessionAndCSRFToken.sessionToken,
+                    csrfToken: userSessionAndCSRFToken.csrfToken,
+                },
+            };
+        } catch (e) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'unknown error linking facebook provider to account' },
+            };
+            return result;
+        }
     }
 
     private async linkEmailAndPasswordProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {

@@ -39,7 +39,7 @@ export class FacebookService {
     async findUserAccountByFacebookProviderId(id) {
         return await this.userRepository.findOne({
             where: { facebookProviderId: id },
-            relations: ['facebookProvider']
+            relations: ['facebookProvider'],
         });
     }
 
@@ -55,7 +55,7 @@ export class FacebookService {
             const user: User = await this.addFacebookUserToDatabase(socialUser);
             const sessionToken = await this.securityService.createSessionToken({
                 roles: user.roles,
-                id: user.id.toString(),
+                id: user.id,
                 loginProvider: socialUser.provider,
             });
             const csrfToken = await this.securityService.createCsrfToken();
@@ -84,11 +84,31 @@ export class FacebookService {
         const user: User = await this.findUserAccountByFacebookProviderId(facebookProvider.id);
         const sessionToken = await this.securityService.createSessionToken({
             roles: user.roles,
-            id: user.id.toString(),
+            id: user.id,
             loginProvider: 'facebook',
         });
         const csrfToken = await this.securityService.createCsrfToken();
         const result = { user, sessionToken, csrfToken };
+        return result;
+    }
+
+    async linkProviderToExistingAccount(user: User, socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
+        const updatedUser: User = user;
+        const facebookProvider = new FacebookProvider();
+        facebookProvider.accessToken = socialUser.accessToken;
+        facebookProvider.email = socialUser.email;
+        facebookProvider.name = socialUser.name;
+        facebookProvider.photoUrl = socialUser.photoUrl;
+        facebookProvider.socialUid = socialUser.socialUid;
+        updatedUser.facebookProvider = facebookProvider;
+        await this.userRepository.save(updatedUser);
+        const sessionToken = await this.securityService.createSessionToken({
+            roles: updatedUser.roles,
+            id: updatedUser.id,
+            loginProvider: 'facebook',
+        });
+        const csrfToken = await this.securityService.createCsrfToken();
+        const result = { user: updatedUser, sessionToken, csrfToken };
         return result;
     }
 }
