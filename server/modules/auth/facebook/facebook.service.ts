@@ -39,8 +39,7 @@ export class FacebookService {
     async findUserAccountByFacebookProviderId(id) {
         return await this.userRepository.findOne({
             where: { facebookProviderId: id },
-            relations: ['facebookProvider'],
-            cache: true,
+            relations: ['facebookProvider']
         });
     }
 

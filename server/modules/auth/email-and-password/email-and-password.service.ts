@@ -39,8 +39,7 @@ export class EmailAndPasswordService {
     async findUserAccountByEmailAndPasswordProviderId(id) {
         return await this.userRepository.findOne({
             where: { emailAndPasswordProviderId: id },
-            relations: ['emailAndPasswordProvider'],
-            cache: true,
+            relations: ['emailAndPasswordProvider']
         });
     }
 
