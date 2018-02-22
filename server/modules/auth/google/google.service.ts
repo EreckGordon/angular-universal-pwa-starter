@@ -40,8 +40,7 @@ export class GoogleService {
     async findUserAccountByGoogleProviderId(id) {
         return await this.userRepository.findOne({
             where: { googleProviderId: id },
-            relations: ['googleProvider'],
-            cache: true,
+            relations: ['googleProvider']
         });
     }
 
