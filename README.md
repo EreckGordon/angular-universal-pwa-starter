@@ -141,7 +141,7 @@ pm2 restart dist/server
 				- ~also need frontend built, making sure to send email, password, and `provider: 'emailAndPassword'`~
 	- delete account:
 		- make sure to clean up all login providers when deleting account.
-			- delete providers
+			- ~delete providers~
 			- unauthorize account from provider permissions
 			    - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.			
 - recaptchas everywhere that you can sign in or create account. missing in a few areas:

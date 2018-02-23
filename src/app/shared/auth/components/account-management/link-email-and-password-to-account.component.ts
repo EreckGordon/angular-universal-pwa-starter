@@ -28,20 +28,26 @@ export class LinkEmailAndPasswordToAccountComponent implements OnInit, OnDestroy
         });
 
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
-            if (user === null) {
-            } else if (this.auth.isHttpErrorResponse(user) && user.error === 'Password Invalid') {
-                this.auth.errorHandled();
+            if (this.auth.isAuthenticatedUser(user) && user.authProviders.includes('emailAndPassword')) {
+                this.router.navigate(['/account']);
+            }
+        });
+
+        this.auth.additionalProviderError$.takeUntil(this.destroy).subscribe(error => {
+            if (error === null) {
+            } else if (error.error === 'Password Invalid') {
+                this.auth.additionalProviderErrorHandled();
                 this.form.patchValue({ password: '' });
                 this.recaptcha.reset();
                 this.snackbar.open(`Your password is invalid`, `OK`, {
                     duration: 5000,
                 });
-            } else if (this.auth.isHttpErrorResponse(user) && Array.isArray(user.error)) {
+            } else if (Array.isArray(error.error)) {
                 // password validation errors.
-                this.auth.errorHandled();
+                this.auth.additionalProviderErrorHandled();
                 this.form.patchValue({ password: '' });
                 this.recaptcha.reset();
-                switch (user.error[0]) {
+                switch (error.error[0]) {
                     case 'min':
                         return this.snackbar.open(`Password is too short`, `OK`, {
                             duration: 5000,
@@ -52,15 +58,12 @@ export class LinkEmailAndPasswordToAccountComponent implements OnInit, OnDestroy
                             duration: 5000,
                         });
                 }
-            } else if (this.auth.isAuthenticatedUser(user) && user.authProviders.includes('emailAndPassword')) {
-                this.router.navigate(['/account']);
             }
         });
     }
 
     linkEmailAndPasswordToAccount() {
         const formValue = this.form.value;
-        console.log(formValue);
         this.auth.linkProviderToAccount({
             email: formValue.email,
             password: formValue.password,

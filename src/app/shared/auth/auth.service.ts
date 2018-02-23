@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { MatSnackBar } from '@angular/material';
 
 import { environment } from '../../../environments/environment';
@@ -26,7 +27,9 @@ export type UserOrError = AuthenticatedUser | HttpErrorResponse | null;
 @Injectable()
 export class AuthService {
     private userSubject = new ReplaySubject<UserOrError>(1);
+    private additionalProviderErrorSubject = new BehaviorSubject<HttpErrorResponse>(null);
     user$: Observable<UserOrError> = this.userSubject.asObservable();
+    additionalProviderError$: Observable<HttpErrorResponse> = this.additionalProviderErrorSubject.asObservable();
     private jsonHeaders: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
     });
@@ -185,7 +188,7 @@ export class AuthService {
                 error => {
                     switch (providerInfo.provider) {
                         case 'emailAndPassword':
-                            return this.assignErrorToUserSubject(error);
+                            return this.additionalProviderErrorSubject.next(error);
 
                         default:
                             return this.snackbar.open('Unknown Error, sorry about that', 'OK', { duration: 5000 });
@@ -198,6 +201,9 @@ export class AuthService {
     // avoids errors when user navigates away from page after an error.
     errorHandled() {
         this.userSubject.next(null);
+    }
+
+    additionalProviderErrorHandled() {
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
