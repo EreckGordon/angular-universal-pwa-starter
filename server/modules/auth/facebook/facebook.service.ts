@@ -111,4 +111,8 @@ export class FacebookService {
         const result = { user: updatedUser, sessionToken, csrfToken };
         return result;
     }
+
+    async removeFacebookProvider(provider) {
+        await this.facebookProviderRepository.remove(provider);
+    }
 }

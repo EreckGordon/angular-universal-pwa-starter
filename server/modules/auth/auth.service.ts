@@ -777,21 +777,37 @@ export class AuthService {
         }
     }
 
-    // this function will need to clean up after all providers, not just one like it does currently.
-    // once i add in multiple providers to one account.
     async deleteAccount(jwt: UserJWT): Promise<AuthResult> {
         try {
             const userToBeDeleted = await this.userRepository.findOne(jwt.sub);
-            const providerToBeDeleted = async loginProvider => {
-                switch (loginProvider) {
+
+            const providersToBeDeleted = [];
+            userToBeDeleted.emailAndPasswordProviderId !== null ? providersToBeDeleted.push('emailAndPassword') : null;
+            userToBeDeleted.facebookProviderId !== null ? providersToBeDeleted.push('facebook') : null;
+            userToBeDeleted.googleProviderId !== null ? providersToBeDeleted.push('google') : null;
+
+            await this.userRepository.remove(userToBeDeleted);
+
+            providersToBeDeleted.forEach(async provider => {
+                switch (provider) {
                     case 'emailAndPassword':
-                        return await this.emailAndPasswordService.findEmailAndPasswordProviderById(
+                        const emailProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderById(
                             userToBeDeleted.emailAndPasswordProviderId
                         );
+                        await this.emailAndPasswordService.removeEmailAndPasswordProvider(emailProvider);
+                        break;
+                    case 'facebook':
+                        // we need to remove authorization for our app to access user data
+                        const facebookProvider = await this.facebookService.findFacebookProviderById(userToBeDeleted.facebookProviderId);
+                        await this.facebookService.removeFacebookProvider(facebookProvider);
+                        break;
+                    case 'google':
+                        // we need to remove authorization for our app to access user data
+                        const googleProvider = await this.googleService.findGoogleProviderById(userToBeDeleted.googleProviderId);
+                        await this.googleService.removeGoogleProvider(googleProvider);
+                        break;
                 }
-            };
-            await this.userRepository.remove(userToBeDeleted);
-            await this.emailAndPasswordService.removeEmailAndPasswordProvider(await providerToBeDeleted(jwt.loginProvider));
+            });
 
             return { apiCallResult: true, result: {} };
         } catch (e) {

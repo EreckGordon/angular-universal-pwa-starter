@@ -2,7 +2,7 @@
 Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Postgres. Auth with jsonwebtoken library.
 
 ## Assumptions
-- angular cli (project generated with version 1.6.0-rc.0)
+- angular cli
 - yarn (dependency management)
 - angular 5.0+ (new service worker)
 - I have provided public and private keys for demonstration purposes only. Please do not use them in your project.
@@ -115,6 +115,11 @@ pm2 restart dist/server
 		- social: github
 	- ~to email users~
 		- ~to reset their password upon forgetting it~
+	- change return user info -- currently giving email of logged in user (even if they have multiple emails associated with their account)
+		- maybe give array of all account emails?
+		- notify user of their currently logged in method
+			- maybe have little svgs of each type of login method associated with account
+			- and logged in method is highlighted, or maybe explicitly called out as logged in
 	- identify common functionality and refactor. I know there are a good amount of times where I repeat code that I shouldn't.
 	- inconsistency - upgrading from anonymous to various users.
 		- social users delete the old anonymous user from database after taking what they need.
@@ -123,6 +128,7 @@ pm2 restart dist/server
 			- it never assumes you have an existing account.
 		- i think this would be best resolved by having username / pw more closely mimic the way social providers handle it.
 			- this will take some refactoring i believe.	
+		- ps: does this even matter at all?
 - ~baseUrl as a part of environment~
 - social provider upgrades:
 	- ~upgrade anonymous user to social account~
@@ -142,6 +148,14 @@ pm2 restart dist/server
 	- social sign in page
 	- social link page
 	- ~username/password link page~
+
+- eventually i would like to wipe out home page to make it a blank canvas
+	- original motivation was to test the server functions quick and dirty. they now have proper angular components that uses the functions
+	- hello world and create anonymous user are both without proper component
+		- and unsure if i want either of them available as components
+			- anonymous user might just get set up as an auto add when user navigates to site
+			- hello world was a proof of concept that the server is running properly. i believe that the project has progressed beyond needing this.
+				- anonymous user may function as hello worlds current server (and as added bonus) database check. remaining as explicit button click.
 
 - database migrations
 - websocket

@@ -22,7 +22,7 @@
 	<app-change-password *ngIf="showChangePassword" (passwordChanged)="toggleShowChangePassword()"></app-change-password>
 </ng-container>
 
-<ng-container>
+<ng-container *ngIf="!hasGoogleAuthProvider || !hasFacebookAuthProvider || !hasEmailAndPasswordAuthProvider">
 	<h5 class="center-everything"> Alternate Login Methods: </h5>
 	<div class="center-everything" style="flex-direction: column;">
 		<p *ngIf="!hasEmailAndPasswordAuthProvider" style="margin: 1em;"> <button mat-button color="accent" routerLink="/account/link-email-and-password">Link Email and Password</button> </p>

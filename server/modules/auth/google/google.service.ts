@@ -114,4 +114,8 @@ export class GoogleService {
         const result = { user: updatedUser, sessionToken, csrfToken };
         return result;
     }
+
+    async removeGoogleProvider(provider) {
+        await this.googleProviderRepository.remove(provider);
+    }
 }
