@@ -183,11 +183,17 @@ export class AuthService {
             .subscribe(
                 user => this.userSubject.next(user),
                 error => {
-                    console.log(error);
-                    return this.snackbar.open('Unknown Error, sorry about that', 'OK', { duration: 5000 });
+                    switch (providerInfo.provider) {
+                        case 'emailAndPassword':
+                            return this.assignErrorToUserSubject(error);
+
+                        default:
+                            return this.snackbar.open('Unknown Error, sorry about that', 'OK', { duration: 5000 });
+                    }
                 }
             );
     }
+
     // used to clear error message manually after the component has performed its localized error logic
     // avoids errors when user navigates away from page after an error.
     errorHandled() {

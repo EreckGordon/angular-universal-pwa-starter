@@ -14,6 +14,7 @@ import { ResetPasswordComponent } from './components/forgot-password/reset-passw
 import { AccountManagementComponent } from './components/account-management/account-management.component';
 import { ChangePasswordComponent } from './components/account-management/change-password.component';
 import { DeleteAccountComponent } from './components/account-management/delete-account.component';
+import { LinkEmailAndPasswordToAccountComponent } from './components/account-management/link-email-and-password-to-account.component';
 import { ConfirmDeleteAccountDialog } from './components/account-management/confirm-delete-account.dialog';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './auth.service';
@@ -34,6 +35,7 @@ const globalRecaptchaSettings: RecaptchaSettings = {
         ChangePasswordComponent,
         DeleteAccountComponent,
         ConfirmDeleteAccountDialog,
+        LinkEmailAndPasswordToAccountComponent,
     ],
     imports: [
         CommonModule,

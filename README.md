@@ -116,32 +116,40 @@ pm2 restart dist/server
 	- ~to email users~
 		- ~to reset their password upon forgetting it~
 	- identify common functionality and refactor. I know there are a good amount of times where I repeat code that I shouldn't.
-- ~baseUrl as a part of environment~
-- social provider upgrades:
-	- ~upgrade anonymous user to social account~
-	- link username/pw to social account
-	- fix account management page
-		- ~edit pw only if you have a username/password combo for our site.~
-		- merge accounts - if you have 2 accounts, login as one to merge with other.
-	- select primary email + unique password for social account (link account)
 	- inconsistency - upgrading from anonymous to various users.
 		- social users delete the old anonymous user from database after taking what they need.
 			- this is because i assume that there could be an existing user that you just forgot to sign in as, and the server takes care of the rest
 		- username/password users use the uid of the anonymous user. 
 			- it never assumes you have an existing account.
 		- i think this would be best resolved by having username / pw more closely mimic the way social providers handle it.
-			- this will take some refactoring i believe.
-- delete account:
-	- make sure to clean up all login providers when deleting account.
-		- delete providers
-		- unauthorize account from provider permissions
-		    - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.
+			- this will take some refactoring i believe.	
+- ~baseUrl as a part of environment~
+- social provider upgrades:
+	- ~upgrade anonymous user to social account~
+	- ~fix account management page~
+		- ~edit pw only if you have a username/password combo for our site.~
+		- ~merge accounts - if you have 2+ accounts, login as one to merge with other.~
+			- ~link google provider~
+			- ~link facebook provider~
+			- ~link email and password provider~
+				- ~also need frontend built, making sure to send email, password, and `provider: 'emailAndPassword'`~
+	- delete account:
+		- make sure to clean up all login providers when deleting account.
+			- delete providers
+			- unauthorize account from provider permissions
+			    - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.			
+- recaptchas everywhere that you can sign in or create account. missing in a few areas:
+	- social sign in page
+	- social link page
+	- ~username/password link page~
+
 - database migrations
 - websocket
 - comments / chat system
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
 - file uploads with dropzone
+- self-hosted fonts, icons
 
 - needed tests
 	- username / password auth

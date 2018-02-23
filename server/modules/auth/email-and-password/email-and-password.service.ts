@@ -7,6 +7,7 @@ import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
 import { SecurityService } from '../../common/security/security.service';
 import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToken.interface';
 import { SessionAndCSRFToken } from '../interfaces/session-and-csrfToken.interface';
+import { EmailAndPasswordLoginInterface } from '../interfaces/email-and-password-login.interface';
 
 @Component()
 export class EmailAndPasswordService {
@@ -39,7 +40,7 @@ export class EmailAndPasswordService {
     async findUserAccountByEmailAndPasswordProviderId(id) {
         return await this.userRepository.findOne({
             where: { emailAndPasswordProviderId: id },
-            relations: ['emailAndPasswordProvider']
+            relations: ['emailAndPasswordProvider'],
         });
     }
 
@@ -58,7 +59,27 @@ export class EmailAndPasswordService {
         return await this.userRepository.save(user);
     }
 
-    async createEmailAndPasswordUserAndSession(credentials): Promise<UserSessionAndCSRFToken> {
+    async linkProviderToExistingAccount(
+        user: User,
+        emailAndPasswordUser: EmailAndPasswordLoginInterface
+    ): Promise<UserSessionAndCSRFToken> {
+        const updatedUser: User = user;
+        const emailAndPasswordProvider = new EmailAndPasswordProvider();
+        emailAndPasswordProvider.email = emailAndPasswordUser.email;
+        emailAndPasswordProvider.passwordHash = await this.securityService.createPasswordHash({ password: emailAndPasswordUser.password });
+        updatedUser.emailAndPasswordProvider = emailAndPasswordProvider;
+        await this.userRepository.save(updatedUser);
+        const sessionToken = await this.securityService.createSessionToken({
+            roles: updatedUser.roles,
+            id: updatedUser.id,
+            loginProvider: 'emailAndPassword',
+        });
+        const csrfToken = await this.securityService.createCsrfToken();
+        const result = { user: updatedUser, sessionToken, csrfToken };
+        return result;
+    }
+
+    async createEmailAndPasswordUserAndSession(credentials: EmailAndPasswordLoginInterface): Promise<UserSessionAndCSRFToken> {
         try {
             const passwordHash = await this.securityService.createPasswordHash({
                 password: credentials.password,
@@ -66,7 +87,7 @@ export class EmailAndPasswordService {
             const user: User = await this.addEmailAndPasswordUserToDatabase(credentials.email, passwordHash);
             const sessionToken = await this.securityService.createSessionToken({
                 roles: user.roles,
-                id: user.id.toString(),
+                id: user.id,
                 loginProvider: 'emailAndPassword',
             });
             const csrfToken = await this.securityService.createCsrfToken();
@@ -77,7 +98,7 @@ export class EmailAndPasswordService {
         }
     }
 
-    async loginAndCreateSession(credentials: any, user: User): Promise<SessionAndCSRFToken> {
+    async loginAndCreateSession(credentials: EmailAndPasswordLoginInterface, user: User): Promise<SessionAndCSRFToken> {
         try {
             const sessionToken = await this.attemptLoginWithEmailAndPassword(credentials, user);
             const csrfToken = await this.securityService.createCsrfToken();
@@ -88,7 +109,7 @@ export class EmailAndPasswordService {
         }
     }
 
-    async attemptLoginWithEmailAndPassword(credentials: any, user: User) {
+    async attemptLoginWithEmailAndPassword(credentials: EmailAndPasswordLoginInterface, user: User) {
         let emailProvider = await this.findEmailAndPasswordProviderById(user.emailAndPasswordProviderId);
         const isPasswordValid = await this.securityService.verifyPasswordHash({
             passwordHash: emailProvider.passwordHash,

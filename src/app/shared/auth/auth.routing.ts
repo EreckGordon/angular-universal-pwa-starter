@@ -7,6 +7,7 @@ import { ResetPasswordComponent } from './components/forgot-password/reset-passw
 import { AccountManagementComponent } from './components/account-management/account-management.component';
 import { DeleteAccountComponent } from './components/account-management/delete-account.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LinkEmailAndPasswordToAccountComponent } from './components/account-management/link-email-and-password-to-account.component';
 
 export const routes: Routes = [
     { path: 'sign-in', component: SignInComponent },
@@ -22,6 +23,10 @@ export const routes: Routes = [
             {
                 path: '',
                 component: AccountManagementComponent,
+            },
+            {
+                path: 'link-email-and-password',
+                component: LinkEmailAndPasswordToAccountComponent,
             },
             {
                 path: 'social',

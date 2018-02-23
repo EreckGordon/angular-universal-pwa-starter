@@ -31,6 +31,12 @@ interface UserJWT {
     sub: string;
 }
 
+interface EmailAndPasswordUser {
+    email: string;
+    password: string;
+    provider: 'emailAndPassword';
+}
+
 @Component()
 export class AuthService {
     constructor(
@@ -487,7 +493,7 @@ export class AuthService {
                 }
             } else if (otherUserWithCurrentFacebookAccount.googleProviderId !== null) {
                 if (user.googleProviderId !== otherUserWithCurrentFacebookAccount.googleProviderId) {
-                    return { apiCallResult: false, result: { error: 'cannot merge accounts: facebook conflict' } };
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: google conflict' } };
                 }
             }
 
@@ -512,17 +518,109 @@ export class AuthService {
         }
     }
 
-    private async linkEmailAndPasswordProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
-        // verify username/pw is good - validate password
-        // look up provider account by email
-        // if provider is connected to other account, check that both accounts do not have any differing provider data (excluding null)
-        // merge if no conflicts, current user id is the "main" account, other is deleted. Take all data and providers and attach to main.
-        // throw error if conflicts.
-        // if provider account does not exist, add provider to user data, update database, return updated user data
-        return <AuthResult>{
-            apiCallResult: false,
-            result: { error: 'link emailAndPassword provider to account function still being built' },
-        };
+    private async linkEmailAndPasswordProviderToAccount(userId: string, emailAndPasswordUser: EmailAndPasswordUser): Promise<AuthResult> {
+        try {
+            // look up user and provider, if provider doesn't exist, validate password,
+            const user: User = await this.findUserByUuid(userId);
+            const emailAndPasswordProvider = await this.emailAndPasswordService.findEmailAndPasswordProviderByEmail(
+                emailAndPasswordUser.email
+            );
+
+            if (emailAndPasswordProvider === undefined) {
+                const passwordErrors = this.emailAndPasswordService.validatePassword(emailAndPasswordUser.password);
+                if (passwordErrors.length > 0) {
+                    const result = {
+                        apiCallResult: false,
+                        result: { error: passwordErrors },
+                    };
+                    return result;
+                }
+                // create provider and add to user data, update database, return updated user data
+                const updatedUser = await this.emailAndPasswordService.linkProviderToExistingAccount(user, {
+                    email: emailAndPasswordUser.email,
+                    password: emailAndPasswordUser.password,
+                });
+
+                const result: AuthResult = {
+                    apiCallResult: true,
+                    result: {
+                        user: updatedUser.user,
+                        csrfToken: updatedUser.csrfToken,
+                        sessionToken: updatedUser.sessionToken,
+                    },
+                };
+                return result;
+            }
+
+            // attempt to log in.
+            const isPasswordValid = await this.securityService.verifyPasswordHash({
+                passwordHash: emailAndPasswordProvider.passwordHash,
+                password: emailAndPasswordUser.password,
+            });
+
+            // if unsuccessful return failure result
+            if (!isPasswordValid) {
+                const result = {
+                    apiCallResult: false,
+                    result: { error: 'Password Invalid' },
+                };
+                return result;
+            }
+
+            //if successful, assign successful details to current user
+            const otherUserWithCurrentEmailAndPasswordAccount = await this.emailAndPasswordService.findUserAccountByEmailAndPasswordProviderId(
+                emailAndPasswordProvider.id
+            );
+            user.emailAndPasswordProviderId = emailAndPasswordProvider.id;
+            user.emailAndPasswordProvider = emailAndPasswordProvider;
+
+            // check for conflicts, one provider at a time, adding provider details to main user if there are no conflicts.
+            if (user.googleProviderId === null) {
+                if (otherUserWithCurrentEmailAndPasswordAccount.googleProviderId === null) {
+                } else {
+                    user.googleProviderId = otherUserWithCurrentEmailAndPasswordAccount.googleProviderId;
+                    user.googleProvider = otherUserWithCurrentEmailAndPasswordAccount.googleProvider;
+                }
+            } else if (otherUserWithCurrentEmailAndPasswordAccount.googleProviderId !== null) {
+                if (user.googleProviderId !== otherUserWithCurrentEmailAndPasswordAccount.googleProviderId) {
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: google conflict' } };
+                }
+            }
+
+            if (user.facebookProviderId === null) {
+                if (otherUserWithCurrentEmailAndPasswordAccount.facebookProviderId === null) {
+                } else {
+                    user.facebookProviderId = otherUserWithCurrentEmailAndPasswordAccount.facebookProviderId;
+                    user.facebookProvider = otherUserWithCurrentEmailAndPasswordAccount.facebookProvider;
+                }
+            } else if (otherUserWithCurrentEmailAndPasswordAccount.facebookProviderId !== null) {
+                if (user.facebookProviderId !== otherUserWithCurrentEmailAndPasswordAccount.facebookProviderId) {
+                    return { apiCallResult: false, result: { error: 'cannot merge accounts: facebook conflict' } };
+                }
+            }
+
+            const updatedUser = await this.cleanUpOldUserData(otherUserWithCurrentEmailAndPasswordAccount, user);
+            await this.userRepository.save(updatedUser);
+            const sessionAndCSRFToken = await this.emailAndPasswordService.loginAndCreateSession(
+                { email: emailAndPasswordUser.email, password: emailAndPasswordUser.password },
+                updatedUser
+            );
+
+            return {
+                apiCallResult: true,
+                result: {
+                    user: updatedUser,
+                    sessionToken: sessionAndCSRFToken.sessionToken,
+                    csrfToken: sessionAndCSRFToken.csrfToken,
+                },
+            };
+        } catch (e) {
+            const result: AuthResult = {
+                apiCallResult: false,
+                result: { error: 'unknown error linking emailAndPassword provider to account' },
+            };
+            return result;
+        }
     }
 
     private async cleanUpOldUserData(oldUser: User, existingUser: User): Promise<User> {
