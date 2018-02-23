@@ -144,9 +144,9 @@ pm2 restart dist/server
 			- ~delete providers~
 			- unauthorize account from provider permissions
 			    - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.			
-- recaptchas everywhere that you can sign in or create account. missing in a few areas:
-	- social sign in page
-	- social link page
+- ~recaptchas everywhere that you can sign in or create account. missing in a few areas:~
+	- ~social sign in page~
+	- ~social link page~
 	- ~username/password link page~
 
 - eventually i would like to wipe out home page to make it a blank canvas

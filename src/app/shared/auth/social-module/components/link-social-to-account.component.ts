@@ -1,11 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth.service';
+import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
-import { SocialAuthService } from '../social-auth.service';
+import { RecaptchaComponent } from 'ng-recaptcha';
 import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
+
+import { AuthService } from '../../auth.service';
+import { SocialAuthService } from '../social-auth.service';
 
 @Component({
     selector: 'app-link-social-to-account',
@@ -13,11 +16,14 @@ import 'rxjs/add/operator/takeUntil';
 })
 export class LinkSocialToAccountComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
+    form: FormGroup;
+    @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
     hasAnyAuthProvider: boolean;
     hasGoogleAuthProvider: boolean;
     hasFacebookAuthProvider: boolean;
 
     constructor(
+        private fb: FormBuilder,
         private socialAuthService: SocialAuthService,
         public auth: AuthService,
         public router: Router,
@@ -25,6 +31,10 @@ export class LinkSocialToAccountComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
+        this.form = this.fb.group({
+            recaptcha: [null, Validators.required],
+        });
+
         this.auth.user$.takeUntil(this.destroy).subscribe(user => {
             if (user === null) {
             } else if (this.auth.isAuthenticatedUser(user) && this.hasAnyAuthProvider === undefined) {
@@ -33,6 +43,17 @@ export class LinkSocialToAccountComponent implements OnInit, OnDestroy {
                 this.hasFacebookAuthProvider = user.authProviders.includes('facebook');
             } else if (this.auth.isAuthenticatedUser(user) && !!this.hasAnyAuthProvider) {
                 this.router.navigate(['/account']);
+            }
+        });
+
+        this.auth.additionalProviderError$.takeUntil(this.destroy).subscribe(error => {
+            if (error === null) {
+            } else {
+                this.auth.additionalProviderErrorHandled();
+                this.recaptcha.reset();
+                this.snackbar.open(`Unknown error, sorry about that.`, `OK`, {
+                    duration: 5000,
+                });
             }
         });
     }

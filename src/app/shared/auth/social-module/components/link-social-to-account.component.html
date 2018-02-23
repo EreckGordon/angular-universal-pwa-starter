@@ -2,7 +2,18 @@
 	Link Social Sign In
 </h3>
 
-<div class="center-everything" style="margin: 1em; flex-wrap: wrap;">
-    <a color="primary" mat-button style="margin: 1em;" (click)="signInWithGoogle()" *ngIf="!hasGoogleAuthProvider">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
-    <a color="primary" mat-button style="margin: 1em;" (click)="signInWithFacebook()" *ngIf="!hasFacebookAuthProvider">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
+<form class="social-auth-sign-in-form" [formGroup]="form">
+    <div class="center-everything" style="margin: 1em; margin-bottom: 2em;">
+        <re-captcha formControlName="recaptcha" #recaptcha></re-captcha> 
+    </div>     
+</form>
+
+<div class="center-everything" style="margin: 1em; flex-wrap: wrap;" *ngIf="form.invalid">
+	<button mat-button color="primary" [disabled]=true style="margin: 1em;" *ngIf="!hasGoogleAuthProvider">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+	<button mat-button color="primary" [disabled]=true style="margin: 1em;" *ngIf="!hasFacebookAuthProvider">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+</div>
+
+<div class="center-everything" style="margin: 1em; flex-wrap: wrap;" *ngIf="!form.invalid">
+    <button color="primary" mat-button style="margin: 1em;" (click)="signInWithGoogle()" *ngIf="!hasGoogleAuthProvider">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+    <button color="primary" mat-button style="margin: 1em;" (click)="signInWithFacebook()" *ngIf="!hasFacebookAuthProvider">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
 </div>

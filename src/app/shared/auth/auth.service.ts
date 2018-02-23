@@ -183,18 +183,7 @@ export class AuthService {
                 this.jsonOptions
             )
             .take(1)
-            .subscribe(
-                user => this.userSubject.next(user),
-                error => {
-                    switch (providerInfo.provider) {
-                        case 'emailAndPassword':
-                            return this.additionalProviderErrorSubject.next(error);
-
-                        default:
-                            return this.snackbar.open('Unknown Error, sorry about that', 'OK', { duration: 5000 });
-                    }
-                }
-            );
+            .subscribe(user => this.userSubject.next(user), error => this.additionalProviderErrorSubject.next(error));
     }
 
     // used to clear error message manually after the component has performed its localized error logic

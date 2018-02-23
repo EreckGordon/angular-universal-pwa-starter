@@ -1,8 +1,19 @@
 <h3 class="center-everything">
 	Social Sign In
 </h3>
+<form class="social-auth-sign-in-form" [formGroup]="form">
+    <div class="center-everything" style="margin: 1em; margin-bottom: 2em;">
+        <re-captcha formControlName="recaptcha" #recaptcha></re-captcha> 
+    </div>     
+</form>
 
-<div class="center-everything" style="margin: 1em; flex-wrap: wrap;">
-    <a color="primary" mat-button style="margin: 1em;" (click)="signInWithGoogle()">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
-    <a color="primary" mat-button style="margin: 1em;" (click)="signInWithFacebook()">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></a>
+
+<div class="center-everything" style="margin: 1em; flex-wrap: wrap;" *ngIf="form.invalid">
+	<button mat-button color="primary" [disabled]=true style="margin: 1em;">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+	<button mat-button color="primary" [disabled]=true style="margin: 1em;">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+</div>
+
+<div class="center-everything" style="margin: 1em; flex-wrap: wrap;" *ngIf="!form.invalid">
+    <button color="primary" mat-button style="margin: 1em;" (click)="signInWithGoogle()">Sign in with Google<img src="/assets/Gmail_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
+    <button color="primary" mat-button style="margin: 1em;" (click)="signInWithFacebook()">Sign in with Facebook<img src="/assets/Facebook_icon.svg" style="max-height: 1.25em; margin-left: 10px;" /></button>
 </div>

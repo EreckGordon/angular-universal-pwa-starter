@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 
 import { CustomMaterialModule } from '../../custom-material-module/index';
 
@@ -11,7 +15,14 @@ import { LinkSocialToAccountComponent } from './components/link-social-to-accoun
 
 @NgModule({
     declarations: [SocialAuthSignInComponent, LinkSocialToAccountComponent],
-    imports: [CommonModule, RouterModule.forChild(routes), CustomMaterialModule],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        CustomMaterialModule,
+        ReactiveFormsModule,
+        RecaptchaModule,
+        RecaptchaFormsModule,
+    ],
     providers: [SocialAuthService],
 })
 export class SocialAuthModule {}
