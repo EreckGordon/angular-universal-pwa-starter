@@ -204,6 +204,7 @@ export class AuthService {
     }
 
     additionalProviderErrorHandled() {
+        this.additionalProviderErrorSubject.next(null);
     }
 
     private assignErrorToUserSubject(error: HttpErrorResponse) {
