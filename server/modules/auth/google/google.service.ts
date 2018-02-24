@@ -118,4 +118,8 @@ export class GoogleService {
     async removeGoogleProvider(provider) {
         await this.googleProviderRepository.remove(provider);
     }
+
+    async revokeAccessToken(accessToken: string) {
+        return this.googleOAuth2.revokeToken(accessToken)
+    }    
 }

@@ -115,4 +115,10 @@ export class FacebookService {
     async removeFacebookProvider(provider) {
         await this.facebookProviderRepository.remove(provider);
     }
+
+    async revokeAccessToken(accessToken: string){
+        return await FB.api('me/permissions', 'delete', {
+                access_token: accessToken
+            });
+    }
 }

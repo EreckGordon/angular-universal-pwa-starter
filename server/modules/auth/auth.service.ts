@@ -797,13 +797,13 @@ export class AuthService {
                         await this.emailAndPasswordService.removeEmailAndPasswordProvider(emailProvider);
                         break;
                     case 'facebook':
-                        // we need to remove authorization for our app to access user data
                         const facebookProvider = await this.facebookService.findFacebookProviderById(userToBeDeleted.facebookProviderId);
+                        this.facebookService.revokeAccessToken(facebookProvider.accessToken);
                         await this.facebookService.removeFacebookProvider(facebookProvider);
                         break;
                     case 'google':
-                        // we need to remove authorization for our app to access user data
                         const googleProvider = await this.googleService.findGoogleProviderById(userToBeDeleted.googleProviderId);
+                        this.googleService.revokeAccessToken(googleProvider.accessToken);
                         await this.googleService.removeGoogleProvider(googleProvider);
                         break;
                 }
