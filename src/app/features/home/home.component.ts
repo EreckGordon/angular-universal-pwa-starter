@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { SEOService } from '../../shared/seo.service';
 import { AuthService, UserOrError } from '../../shared/auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 import 'rxjs/add/operator/take';
 
@@ -49,7 +50,7 @@ export class HomeComponent implements OnInit {
         const options = { headers, withCredentials: true };
         const body = { hello: 'world' };
         const helloWorld = this.http
-            .post('http://localhost:8000/hello-world', body, options)
+            .post(`${environment.baseUrl}/hello-world`, body, options)
             .take(1)
             .subscribe(
                 result => {

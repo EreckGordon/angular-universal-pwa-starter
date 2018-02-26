@@ -120,6 +120,6 @@ export class GoogleService {
     }
 
     async revokeAccessToken(accessToken: string) {
-        return this.googleOAuth2.revokeToken(accessToken)
-    }    
+        return this.googleOAuth2.revokeToken(accessToken);
+    }
 }

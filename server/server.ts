@@ -38,7 +38,12 @@ const options: cors.CorsOptions = {
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'x-xsrf-token'],
     credentials: true,
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-    origin: ['http://localhost:4200', 'http://localhost:8000'],
+    origin: [
+        'http://localhost:4200',
+        'http://localhost:8000',
+        'https://universal-demo.ereckgordon.com',
+        'https://www.universal-demo.ereckgordon.com',
+    ],
     preflightContinue: false,
     optionsSuccessStatus: 200,
 };

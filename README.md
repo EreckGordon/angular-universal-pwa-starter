@@ -1,6 +1,9 @@
 # Angular Universal PWA Starter
 Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Postgres. Auth with jsonwebtoken library.
 
+## Demo:
+[Universal PWA Starter Demo](https://universal-demo.ereckgordon.com)
+
 ## Assumptions
 - angular cli
 - yarn (dependency management)
@@ -130,7 +133,7 @@ pm2 restart dist/server
 			- this will take some refactoring i believe.	
 		- ps: does this even matter at all?
 - ~baseUrl as a part of environment~
-- social provider upgrades:
+- ~social provider upgrades:~
 	- ~upgrade anonymous user to social account~
 	- ~fix account management page~
 		- ~edit pw only if you have a username/password combo for our site.~
@@ -139,15 +142,16 @@ pm2 restart dist/server
 			- ~link facebook provider~
 			- ~link email and password provider~
 				- ~also need frontend built, making sure to send email, password, and `provider: 'emailAndPassword'`~
-	- delete account:
-		- make sure to clean up all login providers when deleting account.
+	- ~delete account:~
+		- ~make sure to clean up all login providers when deleting account.~
 			- ~delete providers~
-			- unauthorize account from provider permissions
-			    - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.			
+			- ~unauthorize account from provider permissions~
+			    		
 - ~recaptchas everywhere that you can sign in or create account. missing in a few areas:~
 	- ~social sign in page~
 	- ~social link page~
 	- ~username/password link page~
+- frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.		
 
 - eventually i would like to wipe out home page to make it a blank canvas
 	- original motivation was to test the server functions quick and dirty. they now have proper angular components that uses the functions
