@@ -17,10 +17,9 @@ import { SEOService } from '@services/seo.service';
     templateUrl: './request-password-reset.component.html',
 })
 export class RequestPasswordResetComponent implements OnInit, OnDestroy {
-    // to do: update these title and meta tags
     titleAndMetaTags: TitleAndMetaTags = {
         title: 'Request Password Reset',
-        description: 'Forgot your password? Enter your email and we will send a reset token to your inbox.',
+        description: 'Forget your password? Enter your email and we will send a reset token to your inbox.',
     };
     form: FormGroup;
     destroy: Subject<any> = new Subject();

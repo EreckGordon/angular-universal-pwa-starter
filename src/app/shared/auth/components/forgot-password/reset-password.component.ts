@@ -18,7 +18,6 @@ import { SEOService } from '@services/seo.service';
     templateUrl: './reset-password.component.html',
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
-    // to do: update these title and meta tags
     titleAndMetaTags: TitleAndMetaTags = {
         title: 'Reset Password',
         description: 'Enter your new password, and we will update our records and log you in.',

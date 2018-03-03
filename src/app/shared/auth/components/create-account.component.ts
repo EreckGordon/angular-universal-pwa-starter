@@ -17,7 +17,6 @@ import { SEOService } from '@services/seo.service';
     templateUrl: './create-account.component.html',
 })
 export class CreateAccountComponent implements OnInit, OnDestroy {
-    // to do: update these title and meta tags
     titleAndMetaTags: TitleAndMetaTags = {
         title: 'Create New Account',
         description: 'Enter your email and a password and we will sign you up.',

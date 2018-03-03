@@ -17,7 +17,6 @@ import { SEOService } from '@services/seo.service';
     templateUrl: './sign-in.component.html',
 })
 export class SignInComponent implements OnInit, OnDestroy {
-    // to do: update these title and meta tags
     titleAndMetaTags: TitleAndMetaTags = {
         title: 'Angular Universal PWA Starter',
         description: 'Enter your email and password to sign in.',

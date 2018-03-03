@@ -18,7 +18,6 @@ import { SocialAuthService } from '../social-auth.service';
     templateUrl: 'social-auth-sign-in.component.html',
 })
 export class SocialAuthSignInComponent implements OnInit, OnDestroy {
-    // to do: update these title and meta tags
     titleAndMetaTags: TitleAndMetaTags = {
         title: 'Sign in with a social authentication provider',
         description: 'We currently offer google and facebook integration options.',
