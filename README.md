@@ -153,6 +153,13 @@ pm2 restart dist/server
 	- ~username/password link page~
 - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.		
 
+- SEO Stuff: 
+	- ~remove keywords (useless apparently)~
+	- ~add og:~ 
+	- ~add twitter:~
+	- ~add itemprop (schema.org)~
+    - read up on json-ld to determine what properties it requires
+
 - eventually i would like to wipe out home page to make it a blank canvas
 	- original motivation was to test the server functions quick and dirty. they now have proper angular components that uses the functions
 	- hello world and create anonymous user are both without proper component
@@ -179,38 +186,3 @@ pm2 restart dist/server
 	- social auth
 		- google
 		- facebook
-- SEO Stuff: remove keywords (useless apparently), add the og: and other static meta stuff to index.
-    - I believe that I need the following meta tags. There is also stuff about schema.org linked data (json-ld) that i need to read more about.
-
-	```
-	<!-- Place this data between the <head> tags of your website -->
-	<title>Page Title. Maximum length 60-70 characters</title>
-	<meta name="description" content="Page description. No longer than 155 characters." />
-
-	<!-- Schema.org markup for Google+ -->
-	<meta itemprop="name" content="The Name or Title Here">
-	<meta itemprop="description" content="This is the page description">
-	<meta itemprop="image" content="http://www.example.com/image.jpg">
-
-	<!-- Twitter Card data -->
-	<meta name="twitter:card" content="product">
-	<meta name="twitter:site" content="@publisher_handle">
-	<meta name="twitter:title" content="Page Title">
-	<meta name="twitter:description" content="Page description less than 200 characters">
-	<meta name="twitter:creator" content="@author_handle">
-	<meta name="twitter:image" content="http://www.example.com/image.jpg">
-	<meta name="twitter:data1" content="$3">
-	<meta name="twitter:label1" content="Price">
-	<meta name="twitter:data2" content="Black">
-	<meta name="twitter:label2" content="Color">
-
-	<!-- Open Graph data -->
-	<meta property="og:title" content="Title Here" />
-	<meta property="og:type" content="article" />
-	<meta property="og:url" content="http://www.example.com/" />
-	<meta property="og:image" content="http://example.com/image.jpg" />
-	<meta property="og:description" content="Description Here" />
-	<meta property="og:site_name" content="Site Name, i.e. Moz" />
-	<meta property="og:price:amount" content="15.00" />
-	<meta property="og:price:currency" content="USD" />
-	```
