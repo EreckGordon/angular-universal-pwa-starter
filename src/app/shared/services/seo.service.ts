@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
+
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class SEOService {
-    constructor(private meta: Meta, private title: Title) {}
+    constructor(private meta: Meta, private title: Title, private router: Router) {}
 
     public setTitleAndMetaTags({
         title,
@@ -14,7 +18,7 @@ export class SEOService {
         creator = '@EreckGordon',
         image = 'https://avatars0.githubusercontent.com/u/20940462?s=400&u=0966a699f687a46e63a43d88236839c54af90a47&v=4',
         type = 'website',
-        url,
+        url = `${environment.baseUrl}${this.router.url}`,
         siteName = 'Angular Universal PWA Starter',
     }: TitleAndMetaTags): void {
         this.title.setTitle(title);

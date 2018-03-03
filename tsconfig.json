@@ -17,7 +17,9 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@interfaces/*": ["./shared/interfaces/*"]
+      "@interfaces/*": ["./shared/interfaces/*"],
+      "@services/*": ["src/app/shared/services/*"]
+
     }
   }
 }
