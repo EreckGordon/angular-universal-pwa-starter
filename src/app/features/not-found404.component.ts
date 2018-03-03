@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { SEOService } from '../shared/seo.service';
+
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { SEOService } from '@services/seo.service';
 
 @Component({
     selector: 'app-not-found',
@@ -11,9 +14,8 @@ export class NotFound404Component {
         description: 'This is the 404 page. You have entered an invalid url.',
         url: 'https://universal-demo.ereckgordon.com/404',
     };
-    description = 'This is the 404 page. You have entered an invalid url.';
 
-    constructor(public seoService: SEOService) {
+    constructor(private seoService: SEOService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
     }
 }

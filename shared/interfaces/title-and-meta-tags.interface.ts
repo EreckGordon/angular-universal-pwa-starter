@@ -6,6 +6,6 @@ export interface TitleAndMetaTags {
     creator?: string;
     image?: string;
     type?: string;
-    url: string;
+    url?: string;
     siteName?: string;
 }

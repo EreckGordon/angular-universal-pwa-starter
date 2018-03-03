@@ -3,31 +3,29 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/take';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
-import { SEOService } from '../../shared/seo.service';
+import { SEOService } from '@services/seo.service';
 import { AuthService, UserOrError } from '../../shared/auth/auth.service';
 import { environment } from '../../../environments/environment';
-
-import 'rxjs/add/operator/take';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
+    titleAndMetaTags: TitleAndMetaTags = {
+        title: 'Angular Universal PWA Starter',
+        description: 'Angular Universal PWA, built with NestJS and TypeORM.',
+    };
     loginForm: FormGroup;
     createUserForm: FormGroup;
     upgradeAnonymousUserForm: FormGroup;
     user$: Observable<UserOrError>;
-    titleAndMetaTags: TitleAndMetaTags = {
-        title: 'Angular Universal PWA Starter',
-        description: 'Angular Universal PWA, built with NestJS and TypeORM.',
-        url: 'https://universal-demo.ereckgordon.com/',
-    };
 
-    constructor(public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
+    constructor(private seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
         this.user$ = authService.user$;
     }

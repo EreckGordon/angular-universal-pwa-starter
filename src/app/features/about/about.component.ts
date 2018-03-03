@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { SEOService } from '../../shared/seo.service';
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { SEOService } from '@services/seo.service';
 
 @Component({
     selector: 'app-about',
@@ -10,10 +12,9 @@ export class AboutComponent implements OnInit {
     titleAndMetaTags = {
         title: 'Angular Universal PWA Starter - About',
         description: 'About page. It contains contact information.',
-        url: 'https://universal-demo.ereckgordon.com/about',
     };
 
-    constructor(public seoService: SEOService) {
+    constructor(private seoService: SEOService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
     }
 

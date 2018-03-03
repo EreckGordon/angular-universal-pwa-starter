@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { BlogService } from './blog.service';
 
-import { SEOService } from '../../shared/seo.service';
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { BlogService } from './blog.service';
+import { SEOService } from '@services/seo.service';
 
 @Component({
     selector: 'app-blog',
@@ -13,10 +15,9 @@ export class BlogComponent implements OnInit, OnDestroy {
     titleAndMetaTags = {
         title: 'Angular Universal PWA Starter - Blog',
         description: 'Blog page. It is a repository of articles.',
-        url: 'https://universal-demo.ereckgordon.com/blog',
     };
 
-    constructor(public seoService: SEOService, blogService: BlogService) {
+    constructor(private seoService: SEOService, blogService: BlogService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
     }
 

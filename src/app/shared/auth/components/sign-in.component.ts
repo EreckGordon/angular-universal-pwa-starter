@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
 import { MatSnackBar } from '@angular/material';
@@ -8,17 +7,35 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { RecaptchaComponent } from 'ng-recaptcha';
 
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { AuthService } from '../auth.service';
+import { SEOService } from '@services/seo.service';
+
 @Component({
     selector: 'app-sign-in',
     templateUrl: './sign-in.component.html',
 })
 export class SignInComponent implements OnInit, OnDestroy {
+    // to do: update these title and meta tags
+    titleAndMetaTags: TitleAndMetaTags = {
+        title: 'Angular Universal PWA Starter',
+        description: 'Enter your email and password to sign in.',
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     showPassword = false;
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
-    constructor(private fb: FormBuilder, public auth: AuthService, private router: Router, private snackbar: MatSnackBar) {}
+    constructor(
+        private seoService: SEOService,
+        private fb: FormBuilder,
+        public auth: AuthService,
+        private router: Router,
+        private snackbar: MatSnackBar
+    ) {
+        this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
+    }
 
     ngOnInit() {
         this.form = this.fb.group({

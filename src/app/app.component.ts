@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../environments/environment';
 import { views } from './app-nav-views';
-import { NGSWUpdateService } from './shared/ngsw-update.service';
+import { NGSWUpdateService } from '@services/ngsw-update.service';
 import { AuthService, UserOrError } from './shared/auth/auth.service';
 
 @Component({

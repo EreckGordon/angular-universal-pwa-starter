@@ -7,6 +7,9 @@ import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { SEOService } from '@services/seo.service';
 import { AuthService } from '../../auth.service';
 import { SocialAuthService } from '../social-auth.service';
 
@@ -15,17 +18,25 @@ import { SocialAuthService } from '../social-auth.service';
     templateUrl: 'social-auth-sign-in.component.html',
 })
 export class SocialAuthSignInComponent implements OnInit, OnDestroy {
+    // to do: update these title and meta tags
+    titleAndMetaTags: TitleAndMetaTags = {
+        title: 'Sign in with a social authentication provider',
+        description: 'We currently offer google and facebook integration options.',
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
 
     constructor(
+        private seoService: SEOService,
         private fb: FormBuilder,
         private socialAuthService: SocialAuthService,
         public auth: AuthService,
         public router: Router,
         private snackbar: MatSnackBar
-    ) {}
+    ) {
+        this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
+    }
 
     ngOnInit() {
         this.form = this.fb.group({

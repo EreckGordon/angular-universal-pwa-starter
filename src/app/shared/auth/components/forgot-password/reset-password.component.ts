@@ -9,11 +9,20 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as jwt from 'jsonwebtoken';
 
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
+import { SEOService } from '@services/seo.service';
+
 @Component({
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
+    // to do: update these title and meta tags
+    titleAndMetaTags: TitleAndMetaTags = {
+        title: 'Reset Password',
+        description: 'Enter your new password, and we will update our records and log you in.',
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     encodedToken: string;
@@ -22,12 +31,15 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     requestSent = false;
 
     constructor(
+        private seoService: SEOService,
         private fb: FormBuilder,
         public auth: AuthService,
         private router: Router,
         private route: ActivatedRoute,
         private snackbar: MatSnackBar
-    ) {}
+    ) {
+        this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
+    }
 
     ngOnInit() {
         this.form = this.fb.group({
