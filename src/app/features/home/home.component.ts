@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 
 import { Observable } from 'rxjs/Observable';
 
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
+
 import { SEOService } from '../../shared/seo.service';
 import { AuthService, UserOrError } from '../../shared/auth/auth.service';
 import { environment } from '../../../environments/environment';
@@ -19,10 +21,10 @@ export class HomeComponent implements OnInit {
     createUserForm: FormGroup;
     upgradeAnonymousUserForm: FormGroup;
     user$: Observable<UserOrError>;
-    titleAndMetaTags = {
+    titleAndMetaTags: TitleAndMetaTags = {
         title: 'Angular Universal PWA Starter',
         description: 'Angular Universal PWA, built with NestJS and TypeORM.',
-        url: 'https://universal-demo.ereckgordon.com/home',
+        url: 'https://universal-demo.ereckgordon.com/',
     };
 
     constructor(public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {

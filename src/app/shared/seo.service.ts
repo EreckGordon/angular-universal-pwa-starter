@@ -1,17 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-
-interface TitleAndMetaTags {
-    title: string;
-    description: string;
-    card?: string;
-    site?: string;
-    creator?: string;
-    image?: string;
-    type?: string;
-    url: string;
-    siteName?: string;
-}
+import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 @Injectable()
 export class SEOService {
@@ -32,12 +21,12 @@ export class SEOService {
 
         this.meta.updateTag({ name: 'description', content: description }, 'name="description"');
 
-        this.meta.updateTag({ name: 'twitter:card', content: card }, 'name="twitter:card"')
-        this.meta.updateTag({ name: 'twitter:site', content: site }, 'name="twitter:site"')
-        this.meta.updateTag({ name: 'twitter:title', content: title }, 'name="twitter:title"')
-        this.meta.updateTag({ name: 'twitter:description', content: description }, 'name="twitter:description"')
-        this.meta.updateTag({ name: 'twitter:creator', content: creator }, 'name="twitter:creator"')
-        this.meta.updateTag({ name: 'twitter:image', content: image }, 'name="twitter:image"')
+        this.meta.updateTag({ name: 'twitter:card', content: card }, 'name="twitter:card"');
+        this.meta.updateTag({ name: 'twitter:site', content: site }, 'name="twitter:site"');
+        this.meta.updateTag({ name: 'twitter:title', content: title }, 'name="twitter:title"');
+        this.meta.updateTag({ name: 'twitter:description', content: description }, 'name="twitter:description"');
+        this.meta.updateTag({ name: 'twitter:creator', content: creator }, 'name="twitter:creator"');
+        this.meta.updateTag({ name: 'twitter:image', content: image }, 'name="twitter:image"');
 
         this.meta.updateTag({ itemprop: 'name', content: title }, 'itemprop="name"');
         this.meta.updateTag({ itemprop: 'description', content: description }, 'itemprop="description"');
