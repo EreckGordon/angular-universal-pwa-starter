@@ -7,12 +7,14 @@ import { SEOService } from '../../shared/seo.service';
     templateUrl: './about.component.html',
 })
 export class AboutComponent implements OnInit {
-    keywords = 'angular, universal, angular-cli, PWA, expressjs';
-    description = 'About page. It contains contact information.';
+    titleAndMetaTags = {
+        title: 'Angular Universal PWA Starter - About',
+        description: 'About page. It contains contact information.',
+        url: 'https://universal-demo.ereckgordon.com/about',
+    };
 
     constructor(public seoService: SEOService) {
-        this.seoService.setPageTitle('angular universal pwa - about');
-        this.seoService.setKeywordsAndDescription(this.keywords, this.description);
+        this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
     }
 
     ngOnInit() {}

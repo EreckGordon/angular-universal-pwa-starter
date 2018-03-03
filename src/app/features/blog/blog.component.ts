@@ -10,12 +10,14 @@ import { SEOService } from '../../shared/seo.service';
 })
 export class BlogComponent implements OnInit, OnDestroy {
     destroy: Subject<any> = new Subject();
-    keywords = 'angular, universal, angular-cli, PWA, expressjs';
-    description = 'Blog page. It is a repository of articles.';
+    titleAndMetaTags = {
+        title: 'Angular Universal PWA Starter - Blog',
+        description: 'Blog page. It is a repository of articles.',
+        url: 'https://universal-demo.ereckgordon.com/blog',
+    };
 
     constructor(public seoService: SEOService, blogService: BlogService) {
-        this.seoService.setPageTitle('angular universal pwa - blog');
-        this.seoService.setKeywordsAndDescription(this.keywords, this.description);
+        this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
     }
 
     ngOnInit() {}

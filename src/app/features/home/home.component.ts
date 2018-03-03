@@ -18,13 +18,15 @@ export class HomeComponent implements OnInit {
     loginForm: FormGroup;
     createUserForm: FormGroup;
     upgradeAnonymousUserForm: FormGroup;
-    keywords = 'angular, universal, angular-cli, PWA, nestjs';
-    description = 'Angular Universal PWA, built with nestjs and typeorm.';
     user$: Observable<UserOrError>;
+    titleAndMetaTags = {
+        title: 'Angular Universal PWA Starter',
+        description: 'Angular Universal PWA, built with NestJS and TypeORM.',
+        url: 'https://universal-demo.ereckgordon.com/home',
+    };
 
     constructor(public seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
-        this.seoService.setPageTitle('angular universal pwa - home');
-        this.seoService.setKeywordsAndDescription(this.keywords, this.description);
+        this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
         this.user$ = authService.user$;
     }
 
