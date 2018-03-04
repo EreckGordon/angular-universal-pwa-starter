@@ -21,9 +21,10 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
         title: 'Create New Account',
         description: 'Enter your email and a password and we will sign you up.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
-    };    
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     showPassword = false;

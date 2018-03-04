@@ -23,7 +23,7 @@ import { LinkSocialToAccountComponent } from './components/link-social-to-accoun
         ReactiveFormsModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        JsonLdModule
+        JsonLdModule,
     ],
     providers: [SocialAuthService],
 })

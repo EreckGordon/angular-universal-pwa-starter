@@ -22,9 +22,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         title: 'Reset Password',
         description: 'Enter your new password, and we will update our records and log you in.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
-    };    
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     encodedToken: string;

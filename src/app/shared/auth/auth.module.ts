@@ -24,7 +24,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './auth.service';
 import { routes } from './auth.routing';
 
-
 const globalRecaptchaSettings: RecaptchaSettings = {
     siteKey: environment.recaptchaSiteKey,
 };
@@ -48,7 +47,7 @@ const globalRecaptchaSettings: RecaptchaSettings = {
         RouterModule.forChild(routes),
         RecaptchaModule.forRoot(),
         RecaptchaFormsModule,
-        JsonLdModule
+        JsonLdModule,
     ],
     providers: [
         AuthGuard,

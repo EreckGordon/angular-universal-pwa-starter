@@ -21,9 +21,10 @@ export class SignInComponent implements OnInit, OnDestroy {
         title: 'Angular Universal PWA Starter',
         description: 'Enter your email and password to sign in.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
-    };    
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     showPassword = false;

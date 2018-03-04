@@ -20,8 +20,9 @@ export class HomeComponent implements OnInit {
         title: 'Angular Universal PWA Starter',
         description: 'Angular Universal PWA, built with NestJS and TypeORM.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
     };
     loginForm: FormGroup;
     createUserForm: FormGroup;

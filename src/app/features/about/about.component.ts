@@ -13,8 +13,9 @@ export class AboutComponent implements OnInit {
         title: 'Angular Universal PWA Starter - About',
         description: 'About page. It contains contact information.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
     };
 
     constructor(private seoService: SEOService) {

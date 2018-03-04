@@ -17,9 +17,10 @@ export class NotFound404Component {
         description: 'This is the 404 page. You have entered an invalid url.',
         url: 'https://universal-demo.ereckgordon.com/404',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
-    };    
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
+    };
 
     constructor(private seoService: SEOService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);

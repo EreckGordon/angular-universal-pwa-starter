@@ -16,9 +16,10 @@ export class BlogComponent implements OnInit, OnDestroy {
         title: 'Angular Universal PWA Starter - Blog',
         description: 'Blog page. It is a repository of articles.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
-    };    
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
+    };
 
     constructor(private seoService: SEOService, blogService: BlogService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);

@@ -22,9 +22,10 @@ export class SocialAuthSignInComponent implements OnInit, OnDestroy {
         title: 'Sign in with a social authentication provider',
         description: 'We currently offer google and facebook integration options.',
     };
-    jsonLdSchema = { 
-        "@context": "https://schema.org/"
-    };    
+    // prettier-ignore
+    jsonLdSchema = {
+        '@context': 'https://schema.org/'
+    };
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;
