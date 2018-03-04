@@ -10,7 +10,7 @@ import { RecaptchaComponent } from 'ng-recaptcha';
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 import { AuthService } from '../auth.service';
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 
 @Component({
     selector: 'app-sign-in',
@@ -21,6 +21,9 @@ export class SignInComponent implements OnInit, OnDestroy {
         title: 'Angular Universal PWA Starter',
         description: 'Enter your email and password to sign in.',
     };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
+    };    
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     showPassword = false;

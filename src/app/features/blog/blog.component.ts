@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 import { BlogService } from './blog.service';
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 
 @Component({
     selector: 'app-blog',
@@ -16,6 +16,9 @@ export class BlogComponent implements OnInit, OnDestroy {
         title: 'Angular Universal PWA Starter - Blog',
         description: 'Blog page. It is a repository of articles.',
     };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
+    };    
 
     constructor(private seoService: SEOService, blogService: BlogService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);

@@ -9,7 +9,7 @@ import 'rxjs/add/operator/takeUntil';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 import { AuthService } from '../../auth.service';
 import { SocialAuthService } from '../social-auth.service';
 
@@ -22,6 +22,9 @@ export class SocialAuthSignInComponent implements OnInit, OnDestroy {
         title: 'Sign in with a social authentication provider',
         description: 'We currently offer google and facebook integration options.',
     };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
+    };    
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     @ViewChild('recaptcha') recaptcha: RecaptchaComponent;

@@ -7,7 +7,7 @@ import 'rxjs/add/operator/take';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 import { AuthService, UserOrError } from '../../shared/auth/auth.service';
 import { environment } from '../../../environments/environment';
 
@@ -19,6 +19,9 @@ export class HomeComponent implements OnInit {
     titleAndMetaTags: TitleAndMetaTags = {
         title: 'Angular Universal PWA Starter',
         description: 'Angular Universal PWA, built with NestJS and TypeORM.',
+    };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
     };
     loginForm: FormGroup;
     createUserForm: FormGroup;

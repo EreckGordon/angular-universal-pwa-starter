@@ -10,7 +10,7 @@ import { RecaptchaComponent } from 'ng-recaptcha';
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 import { AuthService } from '../auth.service';
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 
 @Component({
     selector: 'app-create-account',
@@ -21,6 +21,9 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
         title: 'Create New Account',
         description: 'Enter your email and a password and we will sign you up.',
     };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
+    };    
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     showPassword = false;

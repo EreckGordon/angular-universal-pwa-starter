@@ -11,7 +11,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 
 @Component({
     selector: 'app-reset-password',
@@ -22,6 +22,9 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         title: 'Reset Password',
         description: 'Enter your new password, and we will update our records and log you in.',
     };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
+    };    
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     encodedToken: string;

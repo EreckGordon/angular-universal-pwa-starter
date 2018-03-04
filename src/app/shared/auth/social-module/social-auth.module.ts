@@ -7,6 +7,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
 import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 
 import { CustomMaterialModule } from '../../custom-material-module/index';
+import { JsonLdModule } from '@seo/json-ld.module';
 
 import { routes } from './social-auth.routing';
 import { SocialAuthService } from './social-auth.service';
@@ -22,6 +23,7 @@ import { LinkSocialToAccountComponent } from './components/link-social-to-accoun
         ReactiveFormsModule,
         RecaptchaModule,
         RecaptchaFormsModule,
+        JsonLdModule
     ],
     providers: [SocialAuthService],
 })

@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from './shared/custom-material-module/index';
 import { AuthModule } from './shared/auth/auth.module';
+import { JsonLdModule } from '@seo/json-ld.module';
 
 import { routes } from './app.routing';
 import { NotFound404Component } from './features/not-found404.component';
@@ -28,9 +29,10 @@ import { NotFound404Component } from './features/not-found404.component';
             initialNavigation: 'enabled',
         }),
         AuthModule,
+        JsonLdModule,
     ],
     providers: [],
     bootstrap: [],
-    exports: [CustomMaterialModule, RouterModule],
+    exports: [CustomMaterialModule, RouterModule, JsonLdModule],
 })
 export class AppCommonModule {}

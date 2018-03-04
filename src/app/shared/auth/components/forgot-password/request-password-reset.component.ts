@@ -10,7 +10,7 @@ import { RecaptchaComponent } from 'ng-recaptcha';
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 import { AuthService } from '../../auth.service';
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 
 @Component({
     selector: 'app-request-password-reset',
@@ -21,6 +21,9 @@ export class RequestPasswordResetComponent implements OnInit, OnDestroy {
         title: 'Request Password Reset',
         description: 'Forget your password? Enter your email and we will send a reset token to your inbox.',
     };
+    jsonLdSchema = { 
+        "@context": "https://schema.org/"
+    };    
     form: FormGroup;
     destroy: Subject<any> = new Subject();
     requestSent = false;

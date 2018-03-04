@@ -6,7 +6,7 @@ import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader'
 
 import { AppComponent } from './app.component';
 import { AppCommonModule } from './app.common.module';
-import { SEOService } from '@services/seo.service';
+import { SEOService } from '@seo/seo.service';
 
 @NgModule({
     imports: [AppCommonModule, NoopAnimationsModule, ServerTransferStateModule, ServerModule, ModuleMapLoaderModule],

@@ -6,7 +6,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
 import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 
+import { JsonLdModule } from '@seo/json-ld.module';
 import { CustomMaterialModule } from '../custom-material-module/index';
+
+import { environment } from '../../../environments/environment';
+
 import { SignInComponent } from './components/sign-in.component';
 import { CreateAccountComponent } from './components/create-account.component';
 import { RequestPasswordResetComponent } from './components/forgot-password/request-password-reset.component';
@@ -19,7 +23,7 @@ import { ConfirmDeleteAccountDialog } from './components/account-management/conf
 import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './auth.service';
 import { routes } from './auth.routing';
-import { environment } from '../../../environments/environment';
+
 
 const globalRecaptchaSettings: RecaptchaSettings = {
     siteKey: environment.recaptchaSiteKey,
@@ -44,6 +48,7 @@ const globalRecaptchaSettings: RecaptchaSettings = {
         RouterModule.forChild(routes),
         RecaptchaModule.forRoot(),
         RecaptchaFormsModule,
+        JsonLdModule
     ],
     providers: [
         AuthGuard,
