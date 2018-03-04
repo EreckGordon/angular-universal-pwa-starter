@@ -15,6 +15,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 	- angular-universal-pwa-starter-deploy contains:a git repo, .gitignore, and .gitattributes. You will copy over the needed files with build scripts. It is the deployment folder that you pull from to update the server.
 	- The various build scripts compile the server and move the dist folder & package.json to the angular-universal-pwa-starter-deploy folder.
 - [Postgres Config](https://github.com/EreckGordon/angular-universal-pwa-starter/blob/master/server/modules/database/database.providers.ts) You have a database with the same configuration as linked, or you change that config to database user info of your choosing.
+- [Change SEO Defaults](https://github.com/EreckGordon/angular-universal-pwa-starter/blob/master/src/app/shared/seo/seo.service.ts#L13)
 
 ## Files that require changes for a fresh project
 - /src/app/app.common.module.ts `{appId: 'angular-universal-pwa-starter'}`
@@ -145,20 +146,19 @@ pm2 restart dist/server
 	- ~delete account:~
 		- ~make sure to clean up all login providers when deleting account.~
 			- ~delete providers~
-			- ~unauthorize account from provider permissions~
-			    		
+			- ~unauthorize account from provider permissions~			    		
 - ~recaptchas everywhere that you can sign in or create account. missing in a few areas:~
 	- ~social sign in page~
 	- ~social link page~
-	- ~username/password link page~
-- frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.		
-
-- SEO Stuff: 
+	- ~username/password link page~	
+- ~SEO Stuff:~ 
 	- ~remove keywords (useless apparently)~
 	- ~add og:~ 
 	- ~add twitter:~
 	- ~add itemprop (schema.org)~
-    - read up on json-ld to determine what properties it requires
+    - ~read up on json-ld to determine what properties it requires~
+
+- frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.
 
 - eventually i would like to wipe out home page to make it a blank canvas
 	- original motivation was to test the server functions quick and dirty. they now have proper angular components that uses the functions
@@ -168,13 +168,19 @@ pm2 restart dist/server
 			- hello world was a proof of concept that the server is running properly. i believe that the project has progressed beyond needing this.
 				- anonymous user may function as hello worlds current server (and as added bonus) database check. remaining as explicit button click.
 
-- database migrations
+- Move shared interfaces to dedicated shared folder.
+- Rename from `src` to `frontend` to clarify intentions.
+
 - websocket
+- file uploads with dropzone
+- flesh out blog
+- service worker push
+- second theme - simultaneously active for additional color options
 - comments / chat system
+- database migrations
 - copy over only a barebones package.json that just gives the dependencies, rather than the entire copy of package.json as currently implemented.
 - auto delete anonymous users over a certain age. maybe a cron job? maybe with a subject.
-- file uploads with dropzone
-- self-hosted fonts, icons
+- self-hosted fonts, icons (maybe?)
 
 - needed tests
 	- username / password auth
@@ -186,3 +192,4 @@ pm2 restart dist/server
 	- social auth
 		- google
 		- facebook
+	- unit tests front and backend
