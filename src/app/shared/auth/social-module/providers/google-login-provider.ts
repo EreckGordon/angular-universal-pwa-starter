@@ -78,15 +78,4 @@ export class GoogleLoginProvider extends BaseLoginProvider {
         });
     }
 
-    revokeAuth(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.auth2.disconnect().then((err: any) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
 }

@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/take';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 import { SEOService } from '@seo/seo.service';
 import { AuthService, UserOrError } from '../../shared/auth/auth.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-home',
@@ -27,74 +23,17 @@ export class HomeComponent implements OnInit {
         "keywords": "angular universal, angular cli, angular service worker, nestjs, typeorm, postgres",
         "name": "Angular Universal PWA Demo Page"
     };
-    loginForm: FormGroup;
-    createUserForm: FormGroup;
-    upgradeAnonymousUserForm: FormGroup;
     user$: Observable<UserOrError>;
 
-    constructor(private seoService: SEOService, private http: HttpClient, public fb: FormBuilder, public authService: AuthService) {
+    constructor(private seoService: SEOService, public authService: AuthService) {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
         this.user$ = authService.user$;
     }
 
-    ngOnInit() {
-        this.loginForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        });
-
-        this.createUserForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        });
-
-        this.upgradeAnonymousUserForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        });
-    }
-
-    helloWorld() {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        const options = { headers, withCredentials: true };
-        const body = { hello: 'world' };
-        const helloWorld = this.http
-            .post(`${environment.baseUrl}/hello-world`, body, options)
-            .take(1)
-            .subscribe(
-                result => {
-                    console.log(result);
-                },
-                error => console.log(error)
-            );
-    }
-
-    loginWithEmailAndPassword() {
-        const email = this.loginForm.value.email;
-        const password = this.loginForm.value.password;
-        this.authService.loginWithEmailAndPassword({ email, password });
-    }
-
-    logout() {
-        this.authService.logout();
-    }
-
-    createEmailAndPasswordUser() {
-        const email = this.createUserForm.value.email;
-        const password = this.createUserForm.value.password;
-        this.authService.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({ email, password });
-    }
+    ngOnInit() {}
 
     createAnonymousUser() {
         this.authService.createAnonymousUser();
     }
 
-    upgradeAnonymousUserToEmailAndPasswordUser() {
-        const email = this.upgradeAnonymousUserForm.value.email;
-        const password = this.upgradeAnonymousUserForm.value.password;
-        this.authService.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({
-            email,
-            password,
-        });
-    }
 }
