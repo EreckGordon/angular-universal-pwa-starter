@@ -18,7 +18,9 @@ export class BlogComponent implements OnInit, OnDestroy {
     };
     // prettier-ignore
     jsonLdSchema = {
-        '@context': 'https://schema.org/'
+        "@context": "https://schema.org/",
+        "@type": "Blog",
+        "description": "Blog entries are found here"
     };
 
     constructor(private seoService: SEOService, blogService: BlogService) {

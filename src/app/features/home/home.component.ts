@@ -22,7 +22,10 @@ export class HomeComponent implements OnInit {
     };
     // prettier-ignore
     jsonLdSchema = {
-        '@context': 'https://schema.org/'
+        "@context": "https://schema.org/",
+        "@type": "WebSite",
+        "keywords": "angular universal, angular cli, angular service worker, nestjs, typeorm, postgres",
+        "name": "Angular Universal PWA Demo Page"
     };
     loginForm: FormGroup;
     createUserForm: FormGroup;

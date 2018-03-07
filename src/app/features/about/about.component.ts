@@ -15,7 +15,9 @@ export class AboutComponent implements OnInit {
     };
     // prettier-ignore
     jsonLdSchema = {
-        '@context': 'https://schema.org/'
+        "@context": "https://schema.org/",
+        "@type": "WebPage",
+        "description": "Design decisions may be found here"
     };
 
     constructor(private seoService: SEOService) {
