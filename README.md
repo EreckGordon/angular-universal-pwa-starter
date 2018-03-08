@@ -159,6 +159,7 @@ pm2 restart dist/server
     - ~read up on json-ld to determine what properties it requires~
 
 - ssr module -- currently AppController eats any get requests. Put it into its own module and import it last, so it only eats unused routes, letting us use get requests.
+- update auth module middleware usage
 
 - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.
 
