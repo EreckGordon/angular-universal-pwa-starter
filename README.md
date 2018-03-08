@@ -158,6 +158,8 @@ pm2 restart dist/server
 	- ~add itemprop (schema.org)~
     - ~read up on json-ld to determine what properties it requires~
 
+- ssr module -- currently AppController eats any get requests. Put it into its own module and import it last, so it only eats unused routes, letting us use get requests.
+
 - frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.
 
 - eventually i would like to wipe out home page to make it a blank canvas
