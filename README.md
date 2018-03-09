@@ -36,7 +36,7 @@ Angular Universal PWA Starter built with Angular Cli on Nestjs with TypeORM + Po
 - create another `.env` file in your deploy folder, it will have the same variable names, but with values suited for a production environment.
 
 ## Thoughts
-- why bother with a depoyment repo? precompile everything on your dev environment, it is probably a beefier machine.
+- why bother with a depoyment repo? precompile everything on your dev environment, it is probably a beefier machine. A $5 Digital Ocean droplet runs out of memory when trying to run `ng build --prod`, so let's just skip that pain entirely.
 
 ## e2e testing in watch mode
 - 3 terminals: 
@@ -157,19 +157,11 @@ pm2 restart dist/server
 	- ~add twitter:~
 	- ~add itemprop (schema.org)~
     - ~read up on json-ld to determine what properties it requires~
+- ~ssr module -- currently AppController eats any get requests. Put it into its own module and import it last, so it only eats unused routes, letting us use get requests.~
+- ~wipe out frontent functions except create anonymous user as hello world to server + db~
+- ~frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.~
 
-- ssr module -- currently AppController eats any get requests. Put it into its own module and import it last, so it only eats unused routes, letting us use get requests.
 - update auth module middleware usage
-
-- frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.
-
-- eventually i would like to wipe out home page to make it a blank canvas
-	- original motivation was to test the server functions quick and dirty. they now have proper angular components that uses the functions
-	- hello world and create anonymous user are both without proper component
-		- and unsure if i want either of them available as components
-			- anonymous user might just get set up as an auto add when user navigates to site
-			- hello world was a proof of concept that the server is running properly. i believe that the project has progressed beyond needing this.
-				- anonymous user may function as hello worlds current server (and as added bonus) database check. remaining as explicit button click.
 
 - Move shared interfaces to dedicated shared folder.
 - Rename from `src` to `frontend` to clarify intentions.
