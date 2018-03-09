@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
-
-import { HelloWorldController } from './hello-world.controller';
+import { ServerSideRenderingModule } from './server-side-rendering/server-side-rendering.module';
 
 @Module({
-    modules: [AuthModule],
-    controllers: [AppController, HelloWorldController],
+    //awalys put ServerSideRenderingModule as last entry in array so it does not eat any GET requests.
+    modules: [AuthModule, ServerSideRenderingModule],
 })
 export class ApplicationModule {}

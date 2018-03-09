@@ -2,7 +2,7 @@ import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Controller('*')
-export class AppController {
+export class ServerSideRenderingController {
     renderCache: {} = {};
 
     @Get()

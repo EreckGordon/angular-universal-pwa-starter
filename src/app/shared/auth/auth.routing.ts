@@ -24,9 +24,9 @@ export const routes: Routes = [
                 path: '',
                 component: AccountManagementComponent,
             },
-            { 
-                path: 'delete-account', 
-                component: DeleteAccountComponent 
+            {
+                path: 'delete-account',
+                component: DeleteAccountComponent,
             },
             {
                 path: 'link-email-and-password',

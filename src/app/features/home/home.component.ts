@@ -34,64 +34,9 @@ export class HomeComponent implements OnInit {
         this.user$ = authService.user$;
     }
 
-    ngOnInit() {
-        this.loginForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        });
-
-        this.createUserForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        });
-
-        this.upgradeAnonymousUserForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required],
-        });
-    }
-
-    helloWorld() {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        const options = { headers, withCredentials: true };
-        const body = { hello: 'world' };
-        const helloWorld = this.http
-            .post(`${environment.baseUrl}/hello-world`, body, options)
-            .take(1)
-            .subscribe(
-                result => {
-                    console.log(result);
-                },
-                error => console.log(error)
-            );
-    }
-
-    loginWithEmailAndPassword() {
-        const email = this.loginForm.value.email;
-        const password = this.loginForm.value.password;
-        this.authService.loginWithEmailAndPassword({ email, password });
-    }
-
-    logout() {
-        this.authService.logout();
-    }
-
-    createEmailAndPasswordUser() {
-        const email = this.createUserForm.value.email;
-        const password = this.createUserForm.value.password;
-        this.authService.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({ email, password });
-    }
+    ngOnInit() {}
 
     createAnonymousUser() {
         this.authService.createAnonymousUser();
-    }
-
-    upgradeAnonymousUserToEmailAndPasswordUser() {
-        const email = this.upgradeAnonymousUserForm.value.email;
-        const password = this.upgradeAnonymousUserForm.value.password;
-        this.authService.createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({
-            email,
-            password,
-        });
     }
 }

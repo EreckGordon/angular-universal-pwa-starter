@@ -16,57 +16,6 @@
 		{{user.authProviders}}<br>
 	</div>
 
-
-	<div style="margin:2em"><button mat-raised-button color="primary" (click)="helloWorld()">Hello World (f12)</button></div>
-
-
-	<div style="margin:2em"><button mat-raised-button color="warn" (click)="logout()">Log Out</button></div>
-
-
-	<form style="margin:2em" autocomplete="off" novalidate class="login-form" [formGroup]="loginForm">
-
-		<mat-input-container style="width: 100%">
-			<input matInput placeholder="Email" formControlName="email">
-		</mat-input-container>
-
-		<mat-input-container style="width: 100%">
-			<input matInput placeholder="Password" formControlName="password">
-		</mat-input-container>
-
-		<button mat-raised-button color="accent" (click)="loginWithEmailAndPassword()">Log In</button>
-
-	</form>
-
-
-	<form style="margin:2em" autocomplete="off" novalidate class="create-user-form" [formGroup]="createUserForm">
-
-		<mat-input-container style="width: 100%">
-			<input matInput placeholder="Email" formControlName="email">
-		</mat-input-container>
-
-		<mat-input-container style="width: 100%">
-			<input matInput placeholder="Password" formControlName="password">
-		</mat-input-container>
-
-		<button mat-raised-button color="primary" (click)="createEmailAndPasswordUser()">Create User</button>
-
-	</form>
-
-
-	<form style="margin:2em" autocomplete="off" novalidate class="upgrade-anonymous-user-form" [formGroup]="upgradeAnonymousUserForm">
-
-		<mat-input-container style="width: 100%">
-			<input matInput placeholder="Email" formControlName="email">
-		</mat-input-container>
-
-		<mat-input-container style="width: 100%">
-			<input matInput placeholder="Password" formControlName="password">
-		</mat-input-container>
-
-		<button mat-raised-button color="accent" (click)="upgradeAnonymousUserToEmailAndPasswordUser()">Upgrade Anonymous User</button>
-
-	</form>
-
 	<div>
 		<button mat-raised-button color="primary" (click)="createAnonymousUser()">Create Anonymous User</button>
 	</div>
