@@ -77,5 +77,4 @@ export class GoogleLoginProvider extends BaseLoginProvider {
             });
         });
     }
-    
 }

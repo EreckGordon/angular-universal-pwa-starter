@@ -1078,10 +1078,6 @@ buffer-indexof@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/buffer-indexof/-/buffer-indexof-1.1.1.tgz#52fabcc6a606d1a00302802648ef68f639da268c"
 
-buffer-writer@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/buffer-writer/-/buffer-writer-1.0.0.tgz#6c29c3b2dea0c9e455a1f261a199a48a04f88b08"
-
 buffer-writer@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/buffer-writer/-/buffer-writer-1.0.1.tgz#22a936901e3029afcd7547eb4487ceb697a3bf08"
@@ -2869,10 +2865,6 @@ generate-object-property@^1.1.0:
   resolved "https://registry.yarnpkg.com/generate-object-property/-/generate-object-property-1.2.0.tgz#9c0e1c40308ce804f4783618b937fa88f99d50d0"
   dependencies:
     is-property "^1.0.0"
-
-generic-pool@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.1.1.tgz#af04dc2c325cfcb975023fa52bfce9617a7435fd"
 
 get-caller-file@^1.0.1:
   version "1.0.2"
@@ -4982,10 +4974,6 @@ pac-resolver@^3.0.0:
     netmask "^1.0.6"
     thunkify "^2.1.2"
 
-packet-reader@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-0.2.0.tgz#819df4d010b82d5ea5671f8a1a3acf039bcd7700"
-
 packet-reader@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-0.3.1.tgz#cd62e60af8d7fea8a705ec4ff990871c46871f27"
@@ -5189,10 +5177,6 @@ pg-query-stream@^1.1.1:
   dependencies:
     pg-cursor "1.3.0"
 
-pg-types@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/pg-types/-/pg-types-1.6.0.tgz#3872a0f199143025497f4ee2a65fdaf00d7ea8b3"
-
 pg-types@^1.12.1:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/pg-types/-/pg-types-1.13.0.tgz#75f490b8a8abf75f1386ef5ec4455ecf6b345c63"
@@ -5212,17 +5196,6 @@ pg-types@~1.12.1:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg.js@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/pg.js/-/pg.js-4.1.1.tgz#654033ae706b31d44be1443883b2a5f9aae9cfc4"
-  dependencies:
-    buffer-writer "1.0.0"
-    generic-pool "2.1.1"
-    packet-reader "0.2.0"
-    pg-connection-string "0.1.3"
-    pg-types "1.6.0"
-    pgpass "0.0.3"
-
 pg@^7.3.0:
   version "7.4.1"
   resolved "https://registry.yarnpkg.com/pg/-/pg-7.4.1.tgz#f3411c8ddf9f692322fe05e7017a1888e47f78f1"
@@ -5235,12 +5208,6 @@ pg@^7.3.0:
     pg-types "~1.12.1"
     pgpass "1.x"
     semver "4.3.2"
-
-pgpass@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/pgpass/-/pgpass-0.0.3.tgz#12e67e343b3189c2f31206ebc9cc0befffcf9140"
-  dependencies:
-    split "~0.3"
 
 pgpass@1.x:
   version "1.0.2"
@@ -6485,12 +6452,6 @@ split-string@^3.0.1, split-string@^3.0.2:
 split@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/split/-/split-1.0.1.tgz#605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
-  dependencies:
-    through "2"
-
-split@~0.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/split/-/split-0.3.3.tgz#cd0eea5e63a211dfff7eb0f091c4133e2d0dd28f"
   dependencies:
     through "2"
 
