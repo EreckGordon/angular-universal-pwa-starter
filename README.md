@@ -166,7 +166,7 @@ pm2 restart dist/server
 - Move shared interfaces to dedicated shared folder.
 - Rename from `src` to `frontend` to clarify intentions.
 
-
+- google analytics
 - file uploads with dropzone
 - flesh out blog
 - service worker push
