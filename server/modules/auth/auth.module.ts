@@ -12,7 +12,7 @@ import { AuthGateway } from './auth.gateway';
 import { AuthCache } from './auth.cache';
 
 import { CommonModule } from '../common/common.module';
-import { checkCSRFTokenMiddleware, checkIfAuthenticatedMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
+import { checkCSRFTokenMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
 
 @Module({
     modules: [CommonModule, DatabaseModule],
@@ -32,7 +32,13 @@ export class AuthModule implements NestModule {
     configure(consumer: MiddlewaresConsumer): void {
         consumer.apply([RetrieveUserIdFromRequestMiddleware]).forRoutes(AuthController);
         consumer
-            .apply([checkIfAuthenticatedMiddleware, checkCSRFTokenMiddleware])
-            .forRoutes({ path: '/logout', method: RequestMethod.ALL });
+            .apply([checkCSRFTokenMiddleware])
+            .forRoutes(
+                { path: '/api/auth/reauthenticate', method: RequestMethod.ALL },
+                { path: '/api/auth/logout', method: RequestMethod.ALL },
+                { path: '/api/auth/link-provider-to-account', method: RequestMethod.ALL },
+                { path: '/api/auth/delete-account', method: RequestMethod.ALL },
+                { path: '/api/auth/change-password', method: RequestMethod.ALL }
+            );
     }
 }

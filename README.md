@@ -161,8 +161,7 @@ pm2 restart dist/server
 - ~wipe out frontent functions except create anonymous user as hello world to server + db~
 - ~frontend has an unauthorize function. i think it may be useless, because the server should just handle unauthorize upon account deletion.~
 - ~websocket~ <-- see auth gateway + auth cache.
-
-- update auth module middleware usage
+- ~update auth module middleware usage~
 
 - Move shared interfaces to dedicated shared folder.
 - Rename from `src` to `frontend` to clarify intentions.
