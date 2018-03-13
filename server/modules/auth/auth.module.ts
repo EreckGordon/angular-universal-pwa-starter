@@ -8,13 +8,24 @@ import { EmailAndPasswordService } from './email-and-password/email-and-password
 import { GoogleService } from './google/google.service';
 import { FacebookService } from './facebook/facebook.service';
 import { AnonymousService } from './anonymous/anonymous.service';
+import { AuthGateway } from './auth.gateway';
+import { AuthCache } from './auth.cache';
 
 import { CommonModule } from '../common/common.module';
 import { checkCSRFTokenMiddleware, checkIfAuthenticatedMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
 
 @Module({
     modules: [CommonModule, DatabaseModule],
-    components: [...authProviders, AuthService, EmailAndPasswordService, AnonymousService, GoogleService, FacebookService],
+    components: [
+        ...authProviders,
+        AuthService,
+        EmailAndPasswordService,
+        AnonymousService,
+        GoogleService,
+        FacebookService,
+        AuthGateway,
+        AuthCache,
+    ],
     controllers: [AuthController],
 })
 export class AuthModule implements NestModule {

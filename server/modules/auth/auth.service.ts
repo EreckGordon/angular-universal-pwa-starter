@@ -12,6 +12,7 @@ import { GoogleService } from './google/google.service';
 import { FacebookService } from './facebook/facebook.service';
 import { MailgunService } from '../common/mailgun.service';
 import { SecurityService } from '../common/security/security.service';
+import { AuthCache } from './auth.cache';
 
 interface AuthResult {
     apiCallResult: boolean;
@@ -46,7 +47,8 @@ export class AuthService {
         private readonly googleService: GoogleService,
         private readonly facebookService: FacebookService,
         private readonly mailgunService: MailgunService,
-        private readonly securityService: SecurityService
+        private readonly securityService: SecurityService,
+        private readonly authCache: AuthCache
     ) {}
 
     async loginEmailAndPasswordUser(body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
@@ -250,6 +252,7 @@ export class AuthService {
     async createAnonymousUser(): Promise<AuthResult> {
         try {
             const createAnonymousUserResult = await this.anonymousService.createAnonymousUserAndSession();
+            this.authCache.addData(createAnonymousUserResult.user);
             const result: AuthResult = {
                 apiCallResult: true,
                 result: {
