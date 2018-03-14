@@ -1,8 +1,8 @@
 export const views: Object[] = [
     {
-        name: 'About',
-        icon: 'important_devices',
-        link: ['about'],
+        name: 'Chat',
+        icon: 'chat',
+        link: ['chat'],
     },
     {
         name: 'Blog',

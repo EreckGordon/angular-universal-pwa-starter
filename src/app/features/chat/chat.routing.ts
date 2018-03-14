@@ -1,6 +1,6 @@
 /* tslint:disable: variable-name */
 import { Routes } from '@angular/router';
-import { AboutComponent } from './about.component';
+import { ChatComponent } from './chat.component';
 
 export const routes: Routes = [
     {
@@ -8,7 +8,7 @@ export const routes: Routes = [
         children: [
             {
                 path: '',
-                component: AboutComponent,
+                component: ChatComponent,
             },
         ],
     },

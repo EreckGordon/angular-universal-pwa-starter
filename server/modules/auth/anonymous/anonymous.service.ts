@@ -29,7 +29,7 @@ export class AnonymousService {
     private async addAnonymousUserToDatabase(): Promise<User> {
         const user = new User();
         user.isAnonymous = true;
-        user.roles = [''];
+        user.roles = ['anon'];
         return await this.userRepository.save(user);
     }
 }

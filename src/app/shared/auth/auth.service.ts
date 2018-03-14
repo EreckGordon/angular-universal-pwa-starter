@@ -7,15 +7,9 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { MatSnackBar } from '@angular/material';
 
-import { environment } from '../../../environments/environment';
+import { AuthenticatedUser } from '@interfaces/authenticated-user.interface';
 
-export interface AuthenticatedUser {
-    id: string;
-    isAnonymous: boolean;
-    roles: string[];
-    email: string | null;
-    authProviders: string[];
-}
+import { environment } from '../../../environments/environment';
 
 interface EmailAndPassword {
     email: string;

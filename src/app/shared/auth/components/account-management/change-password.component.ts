@@ -6,7 +6,9 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { MatSnackBar } from '@angular/material';
 
-import { AuthService, AuthenticatedUser } from '../../auth.service';
+import { AuthenticatedUser } from '@interfaces/authenticated-user.interface';
+
+import { AuthService } from '../../auth.service';
 
 @Component({
     selector: 'app-change-password',
