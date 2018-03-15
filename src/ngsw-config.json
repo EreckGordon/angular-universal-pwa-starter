@@ -38,8 +38,6 @@
   "dataGroups": [{
       "name": "api-freshness",
       "urls": [
-        "/blog",
-        "/social-sign-in"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -51,7 +49,6 @@
     {
       "name": "api-performance",
       "urls": [
-        "/about"
       ],
       "cacheConfig": {
         "strategy": "performance",
