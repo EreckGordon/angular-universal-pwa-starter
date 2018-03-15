@@ -5,7 +5,8 @@
   },
   "assetGroups": [{
     "name": "app",
-    "installMode": "prefetch",
+    "installMode": "lazy",
+    "updateMode": "lazy",
     "resources": {
       "files": [
         "/favicon.ico",
@@ -20,7 +21,7 @@
   }, {
     "name": "assets",
     "installMode": "lazy",
-    "updateMode": "prefetch",
+    "updateMode": "lazy",
     "resources": {
       "files": [
         "/assets/**"
