@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 
-import { environment } from '../environments/environment';
+import { environment } from '@environments/environment';
 import { views } from './app-nav-views';
 import { NGSWUpdateService } from '@ngsw/ngsw-update.service';
 import { AuthService, UserOrError } from './shared/auth/auth.service';

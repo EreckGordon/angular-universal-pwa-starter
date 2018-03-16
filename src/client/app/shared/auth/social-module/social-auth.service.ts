@@ -3,7 +3,7 @@ import { PLATFORM_ID, Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 import { AuthService } from '../auth.service';
 

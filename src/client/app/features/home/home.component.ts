@@ -8,7 +8,7 @@ import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
 import { SEOService } from '@seo/seo.service';
 import { AuthService, UserOrError } from '../../shared/auth/auth.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Component({
     selector: 'app-home',

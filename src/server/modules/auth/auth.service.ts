@@ -2,7 +2,7 @@ import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 
-import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/social-user.class';
+import { SocialUser } from '../../../client/app/shared/auth/social-module/classes/social-user.class';
 
 import { User } from './user.entity';
 import { EmailAndPasswordService } from './email-and-password/email-and-password.service';

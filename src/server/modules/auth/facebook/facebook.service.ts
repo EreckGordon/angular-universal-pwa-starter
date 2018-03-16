@@ -2,8 +2,8 @@ import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import FB from 'fb';
 
-import { environment } from '../../../../src/environments/environment';
-import { SocialUser } from '../../../../src/app/shared/auth/social-module/classes/social-user.class';
+import { environment } from '@environments/environment';
+import { SocialUser } from '../../../../client/app/shared/auth/social-module/classes/social-user.class';
 
 import { User } from '../user.entity';
 import { FacebookProvider } from './facebook-provider.entity';

@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { AppCommonModule } from './app.common.module';
 import { SEOService } from '@seo/seo.service';
 import { NGSWUpdateService } from '@ngsw/ngsw-update.service';
-import { environment } from '../environments/environment';
+import { environment } from '@environments/environment';
 
 @NgModule({
     bootstrap: [AppComponent],

@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Req, Res, Next, HttpStatus, HttpException, Body, ReflectMetadata, UseGuards, Patch } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { SocialUser } from '../../../src/app/shared/auth/social-module/classes/social-user.class';
+import { SocialUser } from '../../../client/app/shared/auth/social-module/classes/social-user.class';
 
 import { User } from './user.entity';
 import { AuthService } from './auth.service';

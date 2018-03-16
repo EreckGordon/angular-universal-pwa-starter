@@ -9,7 +9,7 @@ import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
 import { JsonLdModule } from '@seo/json-ld.module';
 import { CustomMaterialModule } from '../custom-material-module/index';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 import { SignInComponent } from './components/sign-in.component';
 import { CreateAccountComponent } from './components/create-account.component';

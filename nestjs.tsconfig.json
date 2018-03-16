@@ -15,12 +15,13 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@interfaces/*": ["./shared/interfaces/*"]
+      "@environments/*": ["src/environments/*"],
+      "@interfaces/*": ["src/shared/interfaces/*"]
     }
   },
   "include": [
-    "server/modules/**/*",
-    "server/server.ts"
+    "src/server/modules/**/*",
+    "src/server/server.ts"
   ],
   "exclude": [
     "server/**/*.spec.ts"
