@@ -4,7 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Injectable()
 export class SEOService {

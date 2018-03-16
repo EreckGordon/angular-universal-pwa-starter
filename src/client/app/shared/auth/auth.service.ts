@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material';
 
 import { AuthenticatedUser } from '@interfaces/authenticated-user.interface';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 interface EmailAndPassword {
     email: string;
