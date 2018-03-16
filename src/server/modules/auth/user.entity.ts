@@ -7,7 +7,7 @@ import { FacebookProvider } from './facebook/facebook-provider.entity';
 export class User {
     @PrimaryGeneratedColumn('uuid') id: string;
 
-    // @CreateDateColumn() createdDate: Date;
+    @CreateDateColumn() createdDate: Date;
 
     @Column() isAnonymous: boolean;
 

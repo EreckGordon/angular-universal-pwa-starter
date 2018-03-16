@@ -375,6 +375,12 @@
   version "1.4.32"
   resolved "https://registry.yarnpkg.com/@types/socket.io-client/-/socket.io-client-1.4.32.tgz#988a65a0386c274b1c22a55377fab6a30789ac14"
 
+"@types/socket.io@1.4.31":
+  version "1.4.31"
+  resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-1.4.31.tgz#7a928518a35516fccd90431f94538ed3fddaba19"
+  dependencies:
+    "@types/node" "*"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

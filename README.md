@@ -163,8 +163,9 @@ pm2 restart dist/server
 - ~websocket~ <-- see auth gateway + auth cache.
 - ~update auth module middleware usage~
 
-- Move shared interfaces to dedicated shared folder.
-- Rename from `src` to `frontend` to clarify intentions.
+- ~Move shared interfaces to dedicated shared folder.~
+	- there's probably a few more floating around that need refactoring
+- ~Rename from `src` to `frontend` to clarify intentions.~
 
 - google analytics
 - file uploads with dropzone
