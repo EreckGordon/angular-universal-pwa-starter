@@ -30,14 +30,14 @@ export class AuthGateway implements NestGateway {
 
     @SubscribeMessage('recently-created-anon')
     onRecentlyCreatedAnon(client, data): Observable<WsResponse<any>> {
-        const hasRole = this.roleGuard(client, this.requiredRolesForRecentlyCreatedAnonEvent);
+        const hasRole = this.roleGuard(client.user.roles, this.requiredRolesForRecentlyCreatedAnonEvent);
         if (!hasRole) {
             return of({ event: this.recentlyCreatedAnonEvent, data: [] });
         }
         return this.authCache.wsObservable.pipe(map(res => ({ event: this.recentlyCreatedAnonEvent, data: res })));
     }
 
-    private roleGuard(client, requiredRoles): boolean {
-        return !!client.user.roles.find(role => !!requiredRoles.find(item => item === role));
+    private roleGuard(roles: string[], requiredRoles: string[]): boolean {
+        return !!roles.find(role => !!requiredRoles.find(item => item === role));
     }
 }
