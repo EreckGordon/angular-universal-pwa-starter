@@ -2,13 +2,13 @@ import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as GoogleAuthLibrary from 'google-auth-library';
 
-import { environment } from '../../../../environments/environment';
-import { SocialUser } from '../../../../client/app/shared/auth/social-module/classes/social-user.class';
+import { environment } from '../../../../../environments/environment';
+import { SocialUser } from '../../../../../client/app/shared/auth/social-module/classes/social-user.class';
 
-import { User } from '../user.entity';
+import { User } from '../../user.entity';
 import { GoogleProvider } from './google-provider.entity';
-import { SecurityService } from '../../common/security/security.service';
-import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToken.interface';
+import { SecurityService } from '../../../common/security/security.service';
+import { UserSessionAndCSRFToken } from '../../interfaces/user-session-and-csrfToken.interface';
 
 @Component()
 export class GoogleService {

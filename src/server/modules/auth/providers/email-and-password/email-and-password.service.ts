@@ -2,12 +2,12 @@ import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as passwordValidator from 'password-validator';
 
-import { User } from '../user.entity';
+import { User } from '../../user.entity';
 import { EmailAndPasswordProvider } from './email-and-password-provider.entity';
-import { SecurityService } from '../../common/security/security.service';
-import { UserSessionAndCSRFToken } from '../interfaces/user-session-and-csrfToken.interface';
-import { SessionAndCSRFToken } from '../interfaces/session-and-csrfToken.interface';
-import { EmailAndPasswordLoginInterface } from '../interfaces/email-and-password-login.interface';
+import { SecurityService } from '../../../common/security/security.service';
+import { UserSessionAndCSRFToken } from '../../interfaces/user-session-and-csrfToken.interface';
+import { SessionAndCSRFToken } from '../../interfaces/session-and-csrfToken.interface';
+import { EmailAndPasswordLoginInterface } from '../../interfaces/email-and-password-login.interface';
 
 @Component()
 export class EmailAndPasswordService {

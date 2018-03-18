@@ -5,9 +5,9 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
 import { of } from 'rxjs/observable/of';
 
-import { SecurityService } from '../common/security/security.service';
+import { SecurityService } from '../../common/security/security.service';
 
-import { AuthCache } from './auth.cache';
+import { AuthCache } from '../auth.cache';
 
 @WebSocketGateway({ namespace: 'api/auth/gateway', port: 8001 })
 export class AuthGateway implements NestGateway {

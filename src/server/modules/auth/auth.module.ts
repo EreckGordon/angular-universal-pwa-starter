@@ -2,13 +2,13 @@ import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from '@nestjs/
 
 import { DatabaseModule } from '../database/database.module';
 import { AuthController } from './auth.controller';
-import { authProviders } from './auth.providers';
+import { authProviders } from './providers/auth.providers';
 import { AuthService } from './auth.service';
-import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
-import { GoogleService } from './google/google.service';
-import { FacebookService } from './facebook/facebook.service';
-import { AnonymousService } from './anonymous/anonymous.service';
-import { AuthGateway } from './auth.gateway';
+import { EmailAndPasswordService } from './providers/email-and-password/email-and-password.service';
+import { GoogleService } from './providers/google/google.service';
+import { FacebookService } from './providers/facebook/facebook.service';
+import { AnonymousService } from './providers/anonymous/anonymous.service';
+import { AuthGateway } from './gateways/auth.gateway';
 import { AuthCache } from './auth.cache';
 
 import { CommonModule } from '../common/common.module';

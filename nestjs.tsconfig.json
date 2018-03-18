@@ -13,11 +13,7 @@
       "es2017", 
       "dom"
     ],
-    "baseUrl": "./",
-    "paths": {
-      "@environments/*": ["src/environments/*"],
-      "@interfaces/*": ["src/shared/interfaces/*"]
-    }
+    "baseUrl": "./"
   },
   "include": [
     "src/server/modules/**/*",

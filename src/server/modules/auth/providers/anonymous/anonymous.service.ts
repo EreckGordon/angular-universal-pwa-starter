@@ -1,7 +1,7 @@
 import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User } from '../user.entity';
-import { SecurityService } from '../../common/security/security.service';
+import { User } from '../../user.entity';
+import { SecurityService } from '../../../common/security/security.service';
 
 @Component()
 export class AnonymousService {

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
-import { EmailAndPasswordProvider } from './email-and-password/email-and-password-provider.entity';
-import { GoogleProvider } from './google/google-provider.entity';
-import { FacebookProvider } from './facebook/facebook-provider.entity';
+import { EmailAndPasswordProvider } from './providers/email-and-password/email-and-password-provider.entity';
+import { GoogleProvider } from './providers/google/google-provider.entity';
+import { FacebookProvider } from './providers/facebook/facebook-provider.entity';
 
 @Entity()
 export class User {

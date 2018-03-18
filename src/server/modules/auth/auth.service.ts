@@ -5,11 +5,11 @@ import { Request } from 'express';
 import { SocialUser } from '../../../client/app/shared/auth/social-module/classes/social-user.class';
 
 import { User } from './user.entity';
-import { EmailAndPasswordService } from './email-and-password/email-and-password.service';
-import { AnonymousService } from './anonymous/anonymous.service';
+import { EmailAndPasswordService } from './providers/email-and-password/email-and-password.service';
+import { AnonymousService } from './providers/anonymous/anonymous.service';
 import { EmailAndPasswordLoginInterface } from './interfaces/email-and-password-login.interface';
-import { GoogleService } from './google/google.service';
-import { FacebookService } from './facebook/facebook.service';
+import { GoogleService } from './providers/google/google.service';
+import { FacebookService } from './providers/facebook/facebook.service';
 import { MailgunService } from '../common/mailgun.service';
 import { SecurityService } from '../common/security/security.service';
 import { AuthCache } from './auth.cache';
