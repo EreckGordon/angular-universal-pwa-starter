@@ -20,7 +20,11 @@ export class AuthGateway implements NestGateway {
 
     async handleConnection(client) {
         const parsedCookies = cookie.parse(client.request.headers.cookie);
-        const user = await this.securityService.decodeJwt(parsedCookies['SESSIONID']);
+        const userCookie = parsedCookies['SESSIONID'];
+        if (!userCookie) {
+            return (client.user = { roles: [''] });
+        }
+        const user = await this.securityService.decodeJwt(userCookie);
         client.user = user;
     }
 
