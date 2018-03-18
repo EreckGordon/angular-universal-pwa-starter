@@ -25,7 +25,7 @@ export class ChatComponent implements OnInit {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
         if (isPlatformBrowser(this.platformId)) {
             this.chatService = this.injector.get(ChatService);
-            setTimeout(() => this.chatService.emit(), 500); // need to send an emission to actually connect the service
+            this.chatService.emit();
         }
     }
 
