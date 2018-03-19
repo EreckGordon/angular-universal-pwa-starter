@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn, OneToMany, ManyToMany } from 'typeorm';
 import { EmailAndPasswordProvider } from './providers/email-and-password/email-and-password-provider.entity';
 import { GoogleProvider } from './providers/google/google-provider.entity';
 import { FacebookProvider } from './providers/facebook/facebook-provider.entity';
+import { Message } from '../chat/message.entity';
+import { Chatroom } from '../chat/chatroom.entity';
 
 @Entity()
 export class User {
@@ -33,4 +35,13 @@ export class User {
     @OneToOne(type => FacebookProvider, { cascade: true })
     @JoinColumn()
     facebookProvider: FacebookProvider;
+
+    @ManyToMany(type => Chatroom, chatroom => chatroom.populatedBy)
+    chatrooms: Chatroom[];
+
+    @OneToMany(type => Message, message => message.user)
+    messages: Message[];
+
+    //@OneToMany(type => Chatroom, chatroom => chatroom.ownedBy)
+    //chatroomOwner: Chatroom[];
 }
