@@ -17,7 +17,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('login-email-and-password-user')
-    async loginEmailAndPasswordUser(@Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
+    async loginEmailAndPasswordUser(@Req() req: Request, @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const loginResult = await this.authService.loginEmailAndPasswordUser(body);
         if (loginResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, loginResult.result, 'emailAndPassword');
@@ -71,7 +71,8 @@ export class AuthController {
     @Patch('upgrade-anonymous-user-to-email-and-password')
     async upgradeAnonymousUserToEmailAndPassword(@Req() req: Request, @Res() res: Response, @Body() body: EmailAndPasswordLoginInterface) {
         const userId = await req['user']['sub'];
-        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(userId, body);
+        const refreshToken = await req['user']['refreshToken'];
+        const upgradeResult = await this.authService.upgradeAnonymousUserToEmailAndPassword(userId, body, refreshToken);
         if (upgradeResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, upgradeResult.result, 'emailAndPassword');
         } else {
@@ -110,7 +111,8 @@ export class AuthController {
     @Roles('user')
     async linkProviderToAccount(@Req() req: Request, @Res() res: Response, @Body() body) {
         const userId = await req['user']['sub'];
-        const linkProviderToAccountResult = await this.authService.linkProviderToAccount(userId, body);
+        const refreshToken = await req['user']['refreshToken'];
+        const linkProviderToAccountResult = await this.authService.linkProviderToAccount(userId, body, refreshToken);
         if (linkProviderToAccountResult.apiCallResult) {
             this.sendSuccessfulUserResult(res, linkProviderToAccountResult.result, body.provider);
         } else {
@@ -160,6 +162,20 @@ export class AuthController {
             res.clearCookie('SESSIONID');
             await res.clearCookie('XSRF-TOKEN');
             res.status(401).json(reauthenticateResult.result.error);
+        }
+    }
+
+    @Post('disavow-all-refresh-tokens')
+    @Roles('user')
+    async disavowAllRefreshTokens(@Req() req: Request, @Res() res: Response) {
+        const userId = await req['user']['sub'];
+        const disavowAllRefreshTokensResult = await this.authService.deleteAllRefreshTokensAssociatedWithUser(userId);
+        if (disavowAllRefreshTokensResult.apiCallResult) {
+            res.clearCookie('SESSIONID');
+            await res.clearCookie('XSRF-TOKEN');
+            return res.status(200).json({ result: 'successfully disavowed all refresh tokens' });
+        } else {
+            res.status(401).json(disavowAllRefreshTokensResult.result.error);
         }
     }
 

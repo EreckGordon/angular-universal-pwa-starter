@@ -1,5 +1,8 @@
-import { Component } from '@nestjs/common';
+import { Component, Inject } from '@nestjs/common';
+import { Repository } from 'typeorm';
+
 import { User } from '../../auth/user.entity';
+import { RefreshToken } from './refresh-token.entity';
 
 const util = require('util');
 import * as fs from 'fs';
@@ -16,7 +19,7 @@ const RSA_PUBLIC_KEY = fs.readFileSync(path.join(process.cwd(), 'public.key'));
 
 @Component()
 export class SecurityService {
-    constructor() {}
+    constructor(@Inject('RefreshTokenRepositoryToken') private readonly refreshTokenRepository: Repository<RefreshToken>) {}
 
     get publicRSAKey() {
         return RSA_PUBLIC_KEY;
@@ -26,16 +29,53 @@ export class SecurityService {
         return await randomBytes(32).then(bytes => bytes.toString('hex'));
     }
 
-    async createSessionToken({ roles, id, loginProvider }) {
+    async createRefreshToken(uuid: string) {
+        const refreshToken: string = await randomBytes(16).then(bytes => bytes.toString('hex'));
+        const refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.refreshToken = refreshToken;
+        refreshTokenEntity.owner = uuid;
+        refreshTokenEntity.expiration = Date.now() + 1210000000; // 2 weeks in ms
+        this.refreshTokenRepository.save(refreshTokenEntity);
+        return refreshToken;
+    }
+
+    async checkRefreshToken(refreshToken: string, uuid: string): Promise<boolean> {
+        const refreshTokenInDb = await this.refreshTokenRepository.findOne(refreshToken);
+        const validOwner: boolean = refreshTokenInDb.owner === uuid;
+        const validToken: boolean = refreshTokenInDb.expiration > Date.now();
+        if (validOwner && validToken) return true;
+        else {
+            await this.refreshTokenRepository.remove(refreshTokenInDb);
+            return false;
+        }
+    }
+
+    async deleteAllRefreshTokensAssociatedWithUser(uuid: string) {
+        const associatedRefreshTokens = await this.refreshTokenRepository.find({
+            where: {
+                owner: uuid,
+            },
+        });
+        if (associatedRefreshTokens !== undefined && associatedRefreshTokens.length > 0) {
+            associatedRefreshTokens.forEach(token => this.refreshTokenRepository.remove(token));
+        }
+    }
+
+    async createSessionToken({ roles, id, loginProvider, refreshToken = 'none' }) {
+        if (refreshToken === 'none') {
+            refreshToken = await this.createRefreshToken(id);
+        }
+
         return await signJwt(
             {
                 roles,
                 loginProvider,
+                refreshToken,
             },
             RSA_PRIVATE_KEY,
             {
                 algorithm: 'RS256',
-                expiresIn: '2h',
+                expiresIn: '10m',
                 subject: id,
             }
         );

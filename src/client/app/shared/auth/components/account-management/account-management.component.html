@@ -7,6 +7,12 @@
 	<button mat-raised-button color="warn" (click)="logout()"> Log Out </button>
 </div>
 
+<h5 class="center-everything">Disavow All Refresh Tokens:</h5>
+<div class="center-everything">
+	<button mat-raised-button color="warn" (click)="disavowAllRefreshTokens()"> Disavow </button>
+</div>
+
+
 <h5 class="center-everything">User Details:</h5>
 <div class="center-everything" style="margin: 2em; flex-direction: column">
 	<p>Email: {{user.email}}</p>

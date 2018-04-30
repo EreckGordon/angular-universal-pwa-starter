@@ -94,7 +94,7 @@ export class GoogleService {
         return result;
     }
 
-    async linkProviderToExistingAccount(user: User, socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
+    async linkProviderToExistingAccount(user: User, socialUser: SocialUser, refreshToken: string): Promise<UserSessionAndCSRFToken> {
         const updatedUser: User = user;
         const googleProvider = new GoogleProvider();
         googleProvider.accessToken = socialUser.accessToken;
@@ -109,6 +109,7 @@ export class GoogleService {
             roles: updatedUser.roles,
             id: updatedUser.id,
             loginProvider: 'google',
+            refreshToken,
         });
         const csrfToken = await this.securityService.createCsrfToken();
         const result = { user: updatedUser, sessionToken, csrfToken };

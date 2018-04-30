@@ -61,7 +61,8 @@ export class EmailAndPasswordService {
 
     async linkProviderToExistingAccount(
         user: User,
-        emailAndPasswordUser: EmailAndPasswordLoginInterface
+        emailAndPasswordUser: EmailAndPasswordLoginInterface,
+        refreshToken: string
     ): Promise<UserSessionAndCSRFToken> {
         const updatedUser: User = user;
         const emailAndPasswordProvider = new EmailAndPasswordProvider();
@@ -73,6 +74,7 @@ export class EmailAndPasswordService {
             roles: updatedUser.roles,
             id: updatedUser.id,
             loginProvider: 'emailAndPassword',
+            refreshToken,
         });
         const csrfToken = await this.securityService.createCsrfToken();
         const result = { user: updatedUser, sessionToken, csrfToken };
@@ -125,7 +127,17 @@ export class EmailAndPasswordService {
         });
     }
 
-    async upgradeAnonymousUserToEmailAndPassword({ email, password, userId }: { email: string; password: string; userId: string }) {
+    async upgradeAnonymousUserToEmailAndPassword({
+        email,
+        password,
+        userId,
+        refreshToken,
+    }: {
+        email: string;
+        password: string;
+        userId: string;
+        refreshToken: string;
+    }) {
         try {
             const passwordHash = await this.securityService.createPasswordHash({
                 password,
@@ -139,6 +151,7 @@ export class EmailAndPasswordService {
                 roles: user.roles,
                 id: user.id,
                 loginProvider: 'emailAndPassword',
+                refreshToken,
             });
             const csrfToken = await this.securityService.createCsrfToken();
             const result = { user, sessionToken, csrfToken };

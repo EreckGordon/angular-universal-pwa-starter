@@ -40,6 +40,10 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         this.auth.logout();
     }
 
+    disavowAllRefreshTokens() {
+        this.auth.disavowAllRefreshTokens();
+    }
+
     toggleShowChangePassword() {
         this.showChangePassword = !this.showChangePassword;
     }

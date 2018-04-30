@@ -115,6 +115,13 @@ export class AuthService {
         return this.http.post(`${environment.baseUrl}/api/auth/change-password`, { oldPassword, newPassword }, this.jsonOptions);
     }
 
+    disavowAllRefreshTokens(): void {
+        this.http
+            .post(`${environment.baseUrl}/api/auth/disavow-all-refresh-tokens`, {}, this.jsonOptions)
+            .take(1)
+            .subscribe(() => this.userSubject.next(null), error => console.log(error));
+    }
+
     logout(): void {
         this.http
             .post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)

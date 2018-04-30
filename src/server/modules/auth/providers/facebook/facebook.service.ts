@@ -92,7 +92,7 @@ export class FacebookService {
         return result;
     }
 
-    async linkProviderToExistingAccount(user: User, socialUser: SocialUser): Promise<UserSessionAndCSRFToken> {
+    async linkProviderToExistingAccount(user: User, socialUser: SocialUser, refreshToken: string): Promise<UserSessionAndCSRFToken> {
         const updatedUser: User = user;
         const facebookProvider = new FacebookProvider();
         facebookProvider.accessToken = socialUser.accessToken;
@@ -106,6 +106,7 @@ export class FacebookService {
             roles: updatedUser.roles,
             id: updatedUser.id,
             loginProvider: 'facebook',
+            refreshToken,
         });
         const csrfToken = await this.securityService.createCsrfToken();
         const result = { user: updatedUser, sessionToken, csrfToken };

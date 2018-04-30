@@ -30,6 +30,7 @@ interface UserJWT {
     iat: number;
     exp: number;
     sub: string;
+    refreshToken: string;
 }
 
 interface EmailAndPasswordUser {
@@ -271,7 +272,11 @@ export class AuthService {
         }
     }
 
-    async upgradeAnonymousUserToEmailAndPassword(userId: string, body: EmailAndPasswordLoginInterface): Promise<AuthResult> {
+    async upgradeAnonymousUserToEmailAndPassword(
+        userId: string,
+        body: EmailAndPasswordLoginInterface,
+        refreshToken: string
+    ): Promise<AuthResult> {
         const verifyResult = await this.verifyEmailAndPasswordValidity(body);
 
         if (verifyResult !== 'success') return verifyResult;
@@ -282,6 +287,7 @@ export class AuthService {
                         email: body.email,
                         password: body.password,
                         userId,
+                        refreshToken,
                     }
                 );
                 if (upgradeAnonymousUserToEmailAndPasswordResult['message'] === 'User is not anonymous')
@@ -341,15 +347,15 @@ export class AuthService {
         }
     }
 
-    async linkProviderToAccount(userId: string, providerData: any): Promise<AuthResult> {
+    async linkProviderToAccount(userId: string, providerData: any, refreshToken: string): Promise<AuthResult> {
         try {
             switch (providerData.provider) {
                 case 'google':
-                    return await this.linkGoogleProviderToAccount(userId, providerData);
+                    return await this.linkGoogleProviderToAccount(userId, providerData, refreshToken);
                 case 'facebook':
-                    return await this.linkFacebookProviderToAccount(userId, providerData);
+                    return await this.linkFacebookProviderToAccount(userId, providerData, refreshToken);
                 case 'emailAndPassword':
-                    return await this.linkEmailAndPasswordProviderToAccount(userId, providerData);
+                    return await this.linkEmailAndPasswordProviderToAccount(userId, providerData, refreshToken);
             }
         } catch (e) {
             return <AuthResult>{
@@ -359,7 +365,7 @@ export class AuthService {
         }
     }
 
-    private async linkGoogleProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
+    private async linkGoogleProviderToAccount(userId: string, socialUser: SocialUser, refreshToken: string): Promise<AuthResult> {
         try {
             // verify the socialUser data is good
             const verifiedGoogleJWT = await this.googleService.verifyIdToken(socialUser.idToken);
@@ -376,7 +382,7 @@ export class AuthService {
 
             // if provider account does not exist, add provider to user data, update database, return updated user data
             if (googleProvider === undefined) {
-                const updatedUser = await this.googleService.linkProviderToExistingAccount(user, socialUser);
+                const updatedUser = await this.googleService.linkProviderToExistingAccount(user, socialUser, refreshToken);
                 return {
                     apiCallResult: true,
                     result: {
@@ -438,7 +444,7 @@ export class AuthService {
         }
     }
 
-    private async linkFacebookProviderToAccount(userId: string, socialUser: SocialUser): Promise<AuthResult> {
+    private async linkFacebookProviderToAccount(userId: string, socialUser: SocialUser, refreshToken: string): Promise<AuthResult> {
         try {
             // verify the socialUser data is good
             const verifiedAccessToken = await this.facebookService.verifyAccessToken(socialUser.accessToken);
@@ -457,7 +463,7 @@ export class AuthService {
             const user: User = await this.findUserByUuid(userId);
 
             if (facebookProvider === undefined) {
-                const updatedUser = await this.facebookService.linkProviderToExistingAccount(user, socialUser);
+                const updatedUser = await this.facebookService.linkProviderToExistingAccount(user, socialUser, refreshToken);
 
                 const result: AuthResult = {
                     apiCallResult: true,
@@ -521,7 +527,11 @@ export class AuthService {
         }
     }
 
-    private async linkEmailAndPasswordProviderToAccount(userId: string, emailAndPasswordUser: EmailAndPasswordUser): Promise<AuthResult> {
+    private async linkEmailAndPasswordProviderToAccount(
+        userId: string,
+        emailAndPasswordUser: EmailAndPasswordUser,
+        refreshToken: string
+    ): Promise<AuthResult> {
         try {
             // look up user and provider, if provider doesn't exist, validate password,
             const user: User = await this.findUserByUuid(userId);
@@ -539,10 +549,14 @@ export class AuthService {
                     return result;
                 }
                 // create provider and add to user data, update database, return updated user data
-                const updatedUser = await this.emailAndPasswordService.linkProviderToExistingAccount(user, {
-                    email: emailAndPasswordUser.email,
-                    password: emailAndPasswordUser.password,
-                });
+                const updatedUser = await this.emailAndPasswordService.linkProviderToExistingAccount(
+                    user,
+                    {
+                        email: emailAndPasswordUser.email,
+                        password: emailAndPasswordUser.password,
+                    },
+                    refreshToken
+                );
 
                 const result: AuthResult = {
                     apiCallResult: true,
@@ -629,8 +643,11 @@ export class AuthService {
     private async cleanUpOldUserData(oldUser: User, existingUser: User): Promise<User> {
         // merge any data from oldUser into existingUser
         // i will likely add features to this function as i create data
-        // for now there is nothing else to do but delete the old user
+
         this.userRepository.remove(oldUser);
+
+        // look up any refreshToken associated with oldUser.id and delete them.
+        await this.securityService.deleteAllRefreshTokensAssociatedWithUser(oldUser.id);
         return existingUser;
     }
 
@@ -641,6 +658,12 @@ export class AuthService {
     async reauthenticateUser(jwt): Promise<AuthResult> {
         try {
             const user = await this.findUserByUuid(jwt['sub']);
+            if (user === undefined)
+                return {
+                    apiCallResult: false,
+                    result: { error: 'could not reauthenticate, user no longer exists' },
+                };
+
             if (user.isAnonymous) {
                 return { apiCallResult: true, result: { user } };
             }
@@ -780,9 +803,20 @@ export class AuthService {
         }
     }
 
+    async deleteAllRefreshTokensAssociatedWithUser(uuid: string): Promise<AuthResult> {
+        try {
+            await this.securityService.deleteAllRefreshTokensAssociatedWithUser(uuid);
+            return { apiCallResult: true, result: {} };
+        } catch (e) {
+            return { apiCallResult: false, result: { error: 'error deleting refresh tokens associated with user' } };
+        }
+    }
+
     async deleteAccount(jwt: UserJWT): Promise<AuthResult> {
         try {
             const userToBeDeleted = await this.userRepository.findOne(jwt.sub);
+
+            this.deleteAllRefreshTokensAssociatedWithUser(jwt.sub);
 
             const providersToBeDeleted = [];
             userToBeDeleted.emailAndPasswordProviderId !== null ? providersToBeDeleted.push('emailAndPassword') : null;
