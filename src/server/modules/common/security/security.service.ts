@@ -40,13 +40,17 @@ export class SecurityService {
     }
 
     async checkRefreshToken(refreshToken: string, uuid: string): Promise<boolean> {
-        const refreshTokenInDb = await this.refreshTokenRepository.findOne(refreshToken);
-        const validOwner: boolean = refreshTokenInDb.owner === uuid;
-        const validToken: boolean = refreshTokenInDb.expiration > Date.now();
-        if (validOwner && validToken) return true;
-        else {
-            await this.refreshTokenRepository.remove(refreshTokenInDb);
-            return false;
+        try {
+            const refreshTokenInDb = await this.refreshTokenRepository.findOne(refreshToken);
+            const validOwner: boolean = refreshTokenInDb.owner === uuid;
+            const validToken: boolean = refreshTokenInDb.expiration > Date.now();
+            if (validOwner && validToken) return true;
+            else {
+                await this.refreshTokenRepository.remove(refreshTokenInDb);
+                return false;
+            }
+        } catch(e){
+            return false
         }
     }
 
