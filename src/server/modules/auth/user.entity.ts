@@ -42,6 +42,6 @@ export class User {
     @OneToMany(type => Message, message => message.user)
     messages: Message[];
 
-    //@OneToMany(type => Chatroom, chatroom => chatroom.ownedBy)
-    //chatroomOwner: Chatroom[];
+    @OneToMany(type => Chatroom, chatroom => chatroom.ownedBy)
+    chatroomOwner: Chatroom[];
 }

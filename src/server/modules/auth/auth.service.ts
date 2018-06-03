@@ -8,6 +8,7 @@ import { User } from './user.entity';
 import { EmailAndPasswordService } from './providers/email-and-password/email-and-password.service';
 import { AnonymousService } from './providers/anonymous/anonymous.service';
 import { EmailAndPasswordLoginInterface } from './interfaces/email-and-password-login.interface';
+import { UserJWT } from './interfaces/user-jwt.interface';
 import { GoogleService } from './providers/google/google.service';
 import { FacebookService } from './providers/facebook/facebook.service';
 import { MailgunService } from '../common/mailgun.service';
@@ -24,14 +25,7 @@ interface AuthResult {
     };
 }
 
-interface UserJWT {
-    roles: string[];
-    loginProvider: string;
-    iat: number;
-    exp: number;
-    sub: string;
-    refreshToken: string;
-}
+
 
 interface EmailAndPasswordUser {
     email: string;

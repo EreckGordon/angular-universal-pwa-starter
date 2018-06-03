@@ -14,5 +14,5 @@ export class Message {
     @ManyToOne(type => Chatroom, chatroom => chatroom.messages)
     chatroom: Chatroom;
 
-    @Column() content: string;
+    @Column() message: string;
 }

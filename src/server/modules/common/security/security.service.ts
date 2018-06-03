@@ -2,6 +2,7 @@ import { Component, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { User } from '../../auth/user.entity';
+import { UserJWT } from '../../auth/interfaces/user-jwt.interface';
 import { RefreshToken } from './refresh-token.entity';
 
 const util = require('util');
@@ -85,7 +86,7 @@ export class SecurityService {
         );
     }
 
-    async decodeJwt(token: string) {
+    async decodeJwt(token: string): Promise<UserJWT> {
         return await jwt.verify(token, RSA_PUBLIC_KEY, {
             ignoreExpiration: true,
         });

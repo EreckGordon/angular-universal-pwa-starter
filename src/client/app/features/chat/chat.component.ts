@@ -25,7 +25,6 @@ export class ChatComponent implements OnInit {
         this.seoService.setTitleAndMetaTags(this.titleAndMetaTags);
         if (isPlatformBrowser(this.platformId)) {
             this.chatService = this.injector.get(ChatService);
-            this.chatService.emit();
         }
     }
 
@@ -33,5 +32,9 @@ export class ChatComponent implements OnInit {
 
     emit() {
         this.chatService.emit();
+    }
+
+    emit2(){
+        this.chatService.emit2();
     }
 }

@@ -1,5 +1,7 @@
 import { WebSocketGateway, SubscribeMessage, WsResponse, WebSocketServer, NestGateway } from '@nestjs/websockets';
 
+import * as socketIO from 'socket.io';
+
 import * as cookie from 'cookie';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
@@ -8,18 +10,20 @@ import { of } from 'rxjs/observable/of';
 import { SecurityService } from '../../common/security/security.service';
 
 import { ChatCache } from '../chat.cache';
+import { ChatService } from '../chat.service';
+import { UserJWT } from '../../auth/interfaces/user-JWT.interface';
 
-@WebSocketGateway({ namespace: 'api/chat/gateway', port: 8001 })
+@WebSocketGateway({ namespace: 'api/chat/gateway', port: 8002 })
 export class ChatGateway implements NestGateway {
     requiredRolesForGateway = ['anon', 'user']; // match any role and you have access
     recentlyCreatedAnonEvent = 'recently-created-anon';
-    // requiredRolesForRecentlyCreatedAnonEvent = ['user']; // add this for granular role check
+    requiredRolesForAdminRoute = ['admin']; // add this for granular role check
 
-    constructor(private readonly chatCache: ChatCache, private readonly securityService: SecurityService) {}
+    constructor(private readonly chatCache: ChatCache, private readonly securityService: SecurityService, private readonly chatService: ChatService) {}
 
-    @WebSocketServer() server;
+    @WebSocketServer() server: SocketIO.Namespace;
 
-    async handleConnection(client) {
+    async handleConnection(client: SocketIO.Socket) {
         const parsedCookies = cookie.parse(client.request.headers.cookie);
         const userCookie = parsedCookies['SESSIONID'];
         if (!userCookie) {
@@ -30,27 +34,80 @@ export class ChatGateway implements NestGateway {
         if (!canAccess) {
             return client.disconnect();
         }
-        client.user = user;
+        client['user'] = user;
+        client.emit('message', 'successfully connected to api/chat/gateway websocket')
     }
 
-    // this is giving totally wrong events currently, needs configuring.
-    @SubscribeMessage('recently-created-anon')
-    onRecentlyCreatedAnon(client, data): Observable<WsResponse<any>> {
-        /*
-        * we can also do granular role guarding
-        *
-        * depending on what kind of action this socket is, we may want to check that the user exists in db before performing any action.
-        * however, I have chosen to not check the db for normal type of interactions because the guard does not come without a cost.
-        *
-        const hasRole = this.roleGuard(client.user.roles, this.requiredRolesForRecentlyCreatedAnonEvent);
-        if (!hasRole) {
-            return of({ event: this.recentlyCreatedAnonEvent, data: [] });
+    @SubscribeMessage('join-chatroom')
+    async onJoinChatroom(client: SocketIO.Socket, data: {roomName:string}) {
+
+        const user: UserJWT = client['user']
+        const chatroom = await this.chatService.findChatroomByName(data.roomName);
+        console.log(data)
+        console.log('chatroom:', chatroom)
+        if (chatroom === undefined){
+            console.log('in undefined block')
+            const newlyCreatedChatroom = await this.chatService.createChatroom(data.roomName, user);
+            console.log('newly created chatroom:', newlyCreatedChatroom)
+            client.join(newlyCreatedChatroom.name);
+            return client.emit('message', newlyCreatedChatroom)
         }
+
+        //const hasRoles = this.roleGuard(user.roles, chatroom.requiredRoles)
+        //if (!hasRoles) {
+        //    return client.emit('message', 'insufficient permissions to join room')
+        //}
+
+        // add user to the chatroom db listing
+        // connect to chat room
+
+        // add user to datatable of chatrooms. this way they auto join in future. need some other magic too once i figure it out...
+        //this.chatService.addUserToChatroom()
+        client.join(chatroom.name);   
+        // send contents of room to user     
+        return client.emit('message', chatroom)
+
+
+
+
+
+        /*
+        * this is the implementation for in memory db. lets now use the real db.
+        *
+        //give newly connected member contents of room (assuming it exists)
+        if (this.chatCache.currentValue()[data.roomName]){
+            client.emit('message', this.chatCache.currentValue()[data.roomName])
+        }
+        else {
+            client.emit('message', `new room: ${data.roomName}`)
+        }
+        *
+        * end of in memory db
         */
-        return this.chatCache.chatObservable.pipe(map(res => ({ event: this.recentlyCreatedAnonEvent, data: res })));
+    }
+
+    @SubscribeMessage('message')
+    async onRecentlyCreatedAnon(client: SocketIO.Socket, data: {roomName: string, message: string}) {
+
+        /*
+        * more in memory db impl
+        *
+        // add the message to the cache (for when new users join they can get all historical messages)
+        this.chatCache.addData({message: data.message, messageId: Date.now(), roomId: 1, roomName: data.roomName, sender: '', senderId: '', timestamp: 1})
+        // emit message to user, they concat to their chatlog
+        return this.server.to(data.roomName).emit('message', data.message)
+        *
+        * end of in memory db
+        */
+
+        const savedMessage = await this.chatService.addMessage(data, client['user'])
+
+        // emit the message, for user to concat it to their chatlog
+        return this.server.to(data.roomName).emit('message', savedMessage)
+
     }
 
     private roleGuard(roles: string[], requiredRoles: string[]): boolean {
-        return !!roles.find(role => !!requiredRoles.find(item => item === role));
+        return roles.some(role => !!requiredRoles.find(item => item === role));
     }
 }

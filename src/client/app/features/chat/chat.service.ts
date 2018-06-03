@@ -9,7 +9,7 @@ import { AuthService } from '../../shared/auth/auth.service';
 
 @Injectable()
 export class ChatService {
-    socket = io('http://localhost:8001/api/auth/gateway');
+    socket = io('http://localhost:8002/api/chat/gateway');
     recentlyCreatedAnon$;
     destroy = new Subject();
 
@@ -18,9 +18,9 @@ export class ChatService {
             this.resetConnection();
             if (currentUser === null) {
             } else if (this.auth.isAuthenticatedUser(currentUser)) {
-                this.recentlyCreatedAnon$ = fromEvent(this.socket, 'recently-created-anon')
+                this.recentlyCreatedAnon$ = fromEvent(this.socket, 'message')
                     .takeUntil(this.destroy)
-                    .subscribe(console.log);
+                    .subscribe(res=>console.log(res));
             }
         });
     }
@@ -32,6 +32,11 @@ export class ChatService {
     }
 
     emit() {
-        this.socket.emit('recently-created-anon');
+        this.socket.emit('join-chatroom', {roomName: 'room1'});
+        
+    }
+    emit2(){
+        this.socket.emit('message', {roomName: 'room1', message: 'hi'})
+        //this.socket.emit('message', {roomName: 'test2', message: 'hi2'})
     }
 }
