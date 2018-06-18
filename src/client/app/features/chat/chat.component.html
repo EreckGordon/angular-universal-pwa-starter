@@ -1,11 +1,26 @@
 <json-ld [json]="jsonLdSchema"></json-ld>
 
-<header>
-  <h5>
-    Chat
-  </h5>
-</header>
+<mat-drawer-container style="position: absolute; top: 48px; bottom: 60px; left: 0; right: 0;">
+  <mat-drawer opened disableClose [mode]="'side'">
+  	<mat-list>
+  		<mat-list-item> Available Rooms </mat-list-item>
+  	</mat-list>
+    <mat-nav-list>
+    	<!--<ng-content *ngFor="let room of chatrooms | async">
+    		<a mat-list-item [routerLink]="[room.name]" (click)="joinRoom(room.name)"> {{room.name}} </a>
+    	</ng-content>-->
+    	<a mat-list-item [routerLink]="['room1']"> room1 </a>
+    	<a mat-list-item [routerLink]="['room2']"> room2 </a>
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content style="background: white;">
+	<header *ngIf="isMainChatRoute | async">
+		<h5>
+			Chat
+		</h5>
+	</header>
 
-<button (click)="emit()"> emit</button>
+	<router-outlet></router-outlet>
 
-<button (click)="emit2()"> emit2</button>
+	</mat-drawer-content>
+</mat-drawer-container>

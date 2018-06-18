@@ -19,7 +19,11 @@ export class ChatGateway implements NestGateway {
     recentlyCreatedAnonEvent = 'recently-created-anon';
     requiredRolesForAdminRoute = ['admin']; // add this for granular role check
 
-    constructor(private readonly chatCache: ChatCache, private readonly securityService: SecurityService, private readonly chatService: ChatService) {}
+    constructor(
+        private readonly chatCache: ChatCache,
+        private readonly securityService: SecurityService,
+        private readonly chatService: ChatService
+    ) {}
 
     @WebSocketServer() server: SocketIO.Namespace;
 
@@ -35,41 +39,40 @@ export class ChatGateway implements NestGateway {
             return client.disconnect();
         }
         client['user'] = user;
-        client.emit('message', 'successfully connected to api/chat/gateway websocket')
+        client.emit('message', 'successfully connected to api/chat/gateway websocket');
+
+        // look up user see what chatrooms they are a member of, and join those rooms
+        // something like:
+        // user.chatrooms.forEach(chatroom => {
+        //    this.chatService.findChatroomById(chatroom.id)
+        //        .then(room => client.emit('join-room', {roomName: room.name}))
+        //})
     }
 
     @SubscribeMessage('join-chatroom')
-    async onJoinChatroom(client: SocketIO.Socket, data: {roomName:string}) {
-
-        const user: UserJWT = client['user']
+    async onJoinChatroom(client: SocketIO.Socket, data: { roomName: string }) {
+        const user: UserJWT = client['user'];
         const chatroom = await this.chatService.findChatroomByName(data.roomName);
-        console.log(data)
-        console.log('chatroom:', chatroom)
-        if (chatroom === undefined){
-            console.log('in undefined block')
+
+        if (chatroom === undefined) {
+            // disconnect from other chatrooms, currently doing this for simplicity. git rid of this in future
+            client.leaveAll();
             const newlyCreatedChatroom = await this.chatService.createChatroom(data.roomName, user);
-            console.log('newly created chatroom:', newlyCreatedChatroom)
             client.join(newlyCreatedChatroom.name);
-            return client.emit('message', newlyCreatedChatroom)
+            return client.emit('message', newlyCreatedChatroom);
         }
 
-        //const hasRoles = this.roleGuard(user.roles, chatroom.requiredRoles)
-        //if (!hasRoles) {
-        //    return client.emit('message', 'insufficient permissions to join room')
-        //}
+        // disconnect from other chatrooms, currently doing this for simplicity. git rid of this in future
+        client.leaveAll();
 
         // add user to the chatroom db listing
         // connect to chat room
 
-        // add user to datatable of chatrooms. this way they auto join in future. need some other magic too once i figure it out...
-        //this.chatService.addUserToChatroom()
-        client.join(chatroom.name);   
-        // send contents of room to user     
-        return client.emit('message', chatroom)
-
-
-
-
+        // add user to table of chatrooms. this way they auto join in future. need some other magic too once i figure it out...
+        //this.chatService.addUserToChatroom
+        client.join(chatroom.name);
+        // send contents of room to user
+        return client.emit('message', chatroom);
 
         /*
         * this is the implementation for in memory db. lets now use the real db.
@@ -87,8 +90,7 @@ export class ChatGateway implements NestGateway {
     }
 
     @SubscribeMessage('message')
-    async onRecentlyCreatedAnon(client: SocketIO.Socket, data: {roomName: string, message: string}) {
-
+    async onRecentlyCreatedAnon(client: SocketIO.Socket, data: { roomName: string; message: string }) {
         /*
         * more in memory db impl
         *
@@ -100,11 +102,10 @@ export class ChatGateway implements NestGateway {
         * end of in memory db
         */
 
-        const savedMessage = await this.chatService.addMessage(data, client['user'])
+        const savedMessage = await this.chatService.addMessage(data, client['user']);
 
         // emit the message, for user to concat it to their chatlog
-        return this.server.to(data.roomName).emit('message', savedMessage)
-
+        return this.server.to(data.roomName).emit('message', savedMessage);
     }
 
     private roleGuard(roles: string[], requiredRoles: string[]): boolean {

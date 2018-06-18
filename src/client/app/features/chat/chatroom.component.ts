@@ -1,11 +1,9 @@
-import { Component, OnInit, Injector, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, Injector, PLATFORM_ID, Inject, Input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { filter } from 'rxjs/operators/filter';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
@@ -15,22 +13,18 @@ import { SEOService } from '@seo/seo.service';
 import { ChatService } from './chat.service';
 
 @Component({
-    selector: 'app-chat',
-    templateUrl: './chat.component.html',
+    selector: 'app-chatroom',
+    templateUrl: './chatroom.component.html',
 })
-export class ChatComponent implements OnInit {
+export class ChatroomComponent implements OnInit {
     destroy = new Subject();
     titleAndMetaTags = {
         title: 'Angular Universal PWA Starter - Chat',
         description: 'Live chat powered by websockets.',
     };
-    // prettier-ignore
-    jsonLdSchema = {
-        '@context': 'https://schema.org/'
-    };
     chatService: ChatService;
-    isMainChatRouteSubject: BehaviorSubject<boolean> = new BehaviorSubject(this.router.url.endsWith('chat'));
-    isMainChatRoute = this.isMainChatRouteSubject.asObservable();
+    currentChatroomBehaviorSubject: BehaviorSubject<string> = new BehaviorSubject(this.route.snapshot.params['roomName']);
+    currentChatroom = this.currentChatroomBehaviorSubject.asObservable();
 
     constructor(
         private seoService: SEOService,
@@ -46,9 +40,16 @@ export class ChatComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.router.events
-            .pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy))
-            .subscribe(event => this.isMainChatRouteSubject.next(this.router.url.endsWith('chat')));
+        this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy)).subscribe(event => {
+            this.currentChatroomBehaviorSubject.next(this.route.snapshot.params['roomName']);
+            console.log(this.currentChatroomBehaviorSubject.getValue());
+            this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());
+        });
+    }
+
+    sendMessage(message) {
+        this.chatService.sendMessage({ message, roomName: this.currentChatroomBehaviorSubject.getValue() });
     }
 
     ngOnDestroy() {

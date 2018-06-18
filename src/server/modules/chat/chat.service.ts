@@ -18,8 +18,8 @@ export class ChatService {
         private readonly chatCache: ChatCache
     ) {}
 
-    async findChatroomByName(roomName: string): Promise<Chatroom|undefined> {
-    	return this.chatRepository.findOne({ where: { name: roomName } });
+    async findChatroomByName(roomName: string): Promise<Chatroom | undefined> {
+        return this.chatRepository.findOne({ where: { name: roomName } });
     }
 
     async createChatroom(roomName: string, userJWT: UserJWT) {
@@ -32,10 +32,8 @@ export class ChatService {
         this.chatRepository.save(chatroom);
 
         // may need to prune some of the info returned here before emitting. maybe handle that in the service?
-    	return chatroom;
+        return chatroom;
     }
 
-    async addMessage(messageData, userJWT: UserJWT){
-    	return 'to do: implement'
-    }
+    async addMessage(messageData: { roomName: string; message: string }, userJWT: UserJWT) {}
 }

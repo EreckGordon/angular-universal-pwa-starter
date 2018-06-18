@@ -20,7 +20,7 @@ export class ChatService {
             } else if (this.auth.isAuthenticatedUser(currentUser)) {
                 this.recentlyCreatedAnon$ = fromEvent(this.socket, 'message')
                     .takeUntil(this.destroy)
-                    .subscribe(res=>console.log(res));
+                    .subscribe(res => console.log(res));
             }
         });
     }
@@ -31,12 +31,11 @@ export class ChatService {
         this.socket.connect();
     }
 
-    emit() {
-        this.socket.emit('join-chatroom', {roomName: 'room1'});
-        
+    joinRoom(roomName) {
+        this.socket.emit('join-chatroom', { roomName });
     }
-    emit2(){
-        this.socket.emit('message', {roomName: 'room1', message: 'hi'})
-        //this.socket.emit('message', {roomName: 'test2', message: 'hi2'})
+
+    sendMessage(messageData: { roomName: string; message: string }) {
+        this.socket.emit('message', messageData);
     }
 }
