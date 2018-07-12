@@ -10,7 +10,7 @@ import { ChatCache } from './chat.cache';
 import { CommonModule } from '../common/common.module';
 
 @Module({
-    modules: [CommonModule, DatabaseModule],
-    components: [...chatProviders, ...authProviders, ChatService, ChatGateway, ChatCache],
+    imports: [CommonModule, DatabaseModule, ...chatProviders, ...authProviders],
+    providers: [ChatService, ChatGateway, ChatCache],
 })
 export class ChatModule {}

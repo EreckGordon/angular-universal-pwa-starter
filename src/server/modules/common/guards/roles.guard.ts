@@ -1,13 +1,15 @@
-import { Guard, CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs/Observable';
 import { Reflector } from '@nestjs/core';
 
-@Guard()
+@Injectable()
 export class RolesGuard implements CanActivate {
     constructor(private readonly reflector: Reflector) {}
 
-    canActivate(req, context: ExecutionContext): boolean {
-        const { parent, handler } = context;
+    canActivate(context: ExecutionContext): boolean {
+        const req = context.switchToHttp().getRequest();
+        const handler = context.getHandler();
+
         const roles = this.reflector.get<string[]>('roles', handler);
         if (!roles) {
             return true; // if you don't request a certain role, you return true so the guard doesn't break your other routes.

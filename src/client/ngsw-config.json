@@ -10,11 +10,9 @@
     "resources": {
       "files": [
         "/favicon.ico",
-        "/index.html"
-      ],
-      "versionedFiles": [
-        "/*.bundle.css",
-        "/*.bundle.js",
+        "/index.html",
+        "/*.css",
+        "/*.js",
         "/*.chunk.js"
       ]
     }

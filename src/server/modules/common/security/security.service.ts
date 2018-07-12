@@ -1,5 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../../auth/user.entity';
 import { UserJWT } from '../../auth/interfaces/user-jwt.interface';
@@ -18,9 +19,9 @@ const signJwt = util.promisify(jwt.sign);
 const RSA_PRIVATE_KEY = fs.readFileSync(path.join(process.cwd(), 'private.key'));
 const RSA_PUBLIC_KEY = fs.readFileSync(path.join(process.cwd(), 'public.key'));
 
-@Component()
+@Injectable()
 export class SecurityService {
-    constructor(@Inject('RefreshTokenRepositoryToken') private readonly refreshTokenRepository: Repository<RefreshToken>) {}
+    constructor(@InjectRepository(RefreshToken) private readonly refreshTokenRepository: Repository<RefreshToken>) {}
 
     get publicRSAKey() {
         return RSA_PUBLIC_KEY;

@@ -1,5 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as passwordValidator from 'password-validator';
 
 import { User } from '../../user.entity';
@@ -9,11 +10,11 @@ import { UserSessionAndCSRFToken } from '../../interfaces/user-session-and-csrfT
 import { SessionAndCSRFToken } from '../../interfaces/session-and-csrfToken.interface';
 import { EmailAndPasswordLoginInterface } from '../../interfaces/email-and-password-login.interface';
 
-@Component()
+@Injectable()
 export class EmailAndPasswordService {
     constructor(
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('EmailAndPasswordProviderRepositoryToken')
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(EmailAndPasswordProvider)
         private readonly emailAndPasswordProviderRepository: Repository<EmailAndPasswordProvider>,
         private readonly securityService: SecurityService
     ) {}

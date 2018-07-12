@@ -1,10 +1,11 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from './article.entity';
 
-@Component()
+@Injectable()
 export class ArticleService {
-    constructor(@Inject('ArticleRepositoryToken') private readonly articleRepository: Repository<Article>) {}
+    constructor(@InjectRepository(Article) private readonly articleRepository: Repository<Article>) {}
 
     async findAllArticles(): Promise<Article[]> {
         return await this.articleRepository.find();

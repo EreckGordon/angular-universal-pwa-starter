@@ -1,4 +1,13 @@
-import { WebSocketGateway, SubscribeMessage, WsResponse, WebSocketServer, NestGateway } from '@nestjs/websockets';
+import {
+    WebSocketGateway,
+    SubscribeMessage,
+    WsResponse,
+    WebSocketServer,
+    NestGateway,
+    OnGatewayInit,
+    OnGatewayConnection,
+    OnGatewayDisconnect,
+} from '@nestjs/websockets';
 
 import * as socketIO from 'socket.io';
 
@@ -13,8 +22,8 @@ import { ChatCache } from '../chat.cache';
 import { ChatService } from '../chat.service';
 import { UserJWT } from '../../auth/interfaces/user-JWT.interface';
 
-@WebSocketGateway({ namespace: 'api/chat/gateway', port: 8002 })
-export class ChatGateway implements NestGateway {
+@WebSocketGateway(8002, { namespace: '/api/chat/gateway' })
+export class ChatGateway implements NestGateway, OnGatewayConnection {
     requiredRolesForGateway = ['anon', 'user']; // match any role and you have access
     recentlyCreatedAnonEvent = 'recently-created-anon';
     requiredRolesForAdminRoute = ['admin']; // add this for granular role check
@@ -46,7 +55,7 @@ export class ChatGateway implements NestGateway {
         // user.chatrooms.forEach(chatroom => {
         //    this.chatService.findChatroomById(chatroom.id)
         //        .then(room => client.emit('join-room', {roomName: room.name}))
-        //})
+        // })
     }
 
     @SubscribeMessage('join-chatroom')
@@ -69,7 +78,7 @@ export class ChatGateway implements NestGateway {
         // connect to chat room
 
         // add user to table of chatrooms. this way they auto join in future. need some other magic too once i figure it out...
-        //this.chatService.addUserToChatroom
+        // this.chatService.addUserToChatroom
         client.join(chatroom.name);
         // send contents of room to user
         return client.emit('message', chatroom);
@@ -95,7 +104,15 @@ export class ChatGateway implements NestGateway {
         * more in memory db impl
         *
         // add the message to the cache (for when new users join they can get all historical messages)
-        this.chatCache.addData({message: data.message, messageId: Date.now(), roomId: 1, roomName: data.roomName, sender: '', senderId: '', timestamp: 1})
+        this.chatCache.addData({
+            message: data.message,
+            messageId: Date.now(),
+            roomId: 1,
+            roomName: data.roomName,
+            sender: '',
+            senderId: '',
+            timestamp: 1
+        })
         // emit message to user, they concat to their chatlog
         return this.server.to(data.roomName).emit('message', data.message)
         *

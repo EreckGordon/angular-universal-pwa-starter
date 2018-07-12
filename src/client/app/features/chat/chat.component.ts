@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Injector, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
@@ -18,7 +18,7 @@ import { ChatService } from './chat.service';
     selector: 'app-chat',
     templateUrl: './chat.component.html',
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
     destroy = new Subject();
     titleAndMetaTags = {
         title: 'Angular Universal PWA Starter - Chat',

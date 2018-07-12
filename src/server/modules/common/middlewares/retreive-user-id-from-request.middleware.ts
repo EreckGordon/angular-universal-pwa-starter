@@ -1,15 +1,15 @@
-import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, MiddlewareFunction } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 import { SecurityService } from '../security/security.service';
 import { AuthService } from '../../auth/auth.service';
 
-@Middleware()
+@Injectable()
 export class RetrieveUserIdFromRequestMiddleware implements NestMiddleware {
     useSecure: boolean = process.env.SESSION_ID_SECURE_COOKIE === 'true';
 
     constructor(private readonly securityService: SecurityService, private readonly authService: AuthService) {}
-    async resolve(): Promise<ExpressMiddleware> {
+    async resolve(): Promise<MiddlewareFunction> {
         return async (req: Request, res: Response, next: NextFunction) => {
             const jwt = req.cookies['SESSIONID'];
             if (jwt) {
@@ -19,7 +19,9 @@ export class RetrieveUserIdFromRequestMiddleware implements NestMiddleware {
                         const canCreateNewSession = await this.securityService.checkRefreshToken(payload.refreshToken, payload.sub);
                         if (!canCreateNewSession) {
                             console.log(
-                                'create new session check failed. refresh token too old or removed from db. removing their authorizing cookies.'
+                                `create new session check failed.
+                                refresh token too old or removed from db.
+                                removing their authorizing cookies.`
                             );
                             res.clearCookie('SESSIONID');
                             res.clearCookie('XSRF-TOKEN');

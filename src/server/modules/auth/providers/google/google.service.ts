@@ -1,5 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as GoogleAuthLibrary from 'google-auth-library';
 
 import { environment } from '../../../../../environments/environment';
@@ -10,12 +11,12 @@ import { GoogleProvider } from './google-provider.entity';
 import { SecurityService } from '../../../common/security/security.service';
 import { UserSessionAndCSRFToken } from '../../interfaces/user-session-and-csrfToken.interface';
 
-@Component()
+@Injectable()
 export class GoogleService {
     private googleOAuth2 = new GoogleAuthLibrary.OAuth2Client();
     constructor(
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('GoogleProviderRepositoryToken') private readonly googleProviderRepository: Repository<GoogleProvider>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(GoogleProvider) private readonly googleProviderRepository: Repository<GoogleProvider>,
         private readonly securityService: SecurityService
     ) {}
 

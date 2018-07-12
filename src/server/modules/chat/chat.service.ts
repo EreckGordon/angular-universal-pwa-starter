@@ -1,5 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../auth/user.entity';
 import { Chatroom } from './chatroom.entity';
@@ -8,12 +9,12 @@ import { SecurityService } from '../common/security/security.service';
 import { ChatCache } from './chat.cache';
 import { UserJWT } from '../auth/interfaces/user-JWT.interface';
 
-@Component()
+@Injectable()
 export class ChatService {
     constructor(
-        @Inject('ChatroomRepositoryToken') private readonly chatRepository: Repository<Chatroom>,
-        @Inject('MessageRepositoryToken') private readonly messageRepository: Repository<Message>,
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
+        @InjectRepository(Chatroom) private readonly chatRepository: Repository<Chatroom>,
+        @InjectRepository(Message) private readonly messageRepository: Repository<Message>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly securityService: SecurityService,
         private readonly chatCache: ChatCache
     ) {}
@@ -24,7 +25,7 @@ export class ChatService {
 
     async createChatroom(roomName: string, userJWT: UserJWT) {
         const user = await this.userRepository.findOne(userJWT.sub);
-        //console.log(user)
+        // console.log(user)
         const chatroom = new Chatroom();
         chatroom.name = roomName;
         chatroom.ownedBy = user;
@@ -35,5 +36,17 @@ export class ChatService {
         return chatroom;
     }
 
-    async addMessage(messageData: { roomName: string; message: string }, userJWT: UserJWT) {}
+    async addMessage(messageData: { roomName: string; message: string }, userJWT: UserJWT) {
+        const user = await this.userRepository.findOne(userJWT.sub);
+        const room = await this.findChatroomByName(messageData.roomName);
+
+        const message = new Message();
+        message.chatroom = room;
+        message.createdDate = new Date();
+        message.message = messageData.message;
+        message.user = user;
+        this.messageRepository.save(message);
+
+        return message;
+    }
 }

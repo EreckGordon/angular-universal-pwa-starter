@@ -20,7 +20,7 @@ import * as compression from 'compression';
 import { ApplicationModule } from './modules/app.module';
 const DIST_FOLDER = path.join(process.cwd(), 'dist');
 const DIST_BROWSER_FOLDER = path.join(DIST_FOLDER, 'dist-browser');
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOLDER, 'dist-bridge', 'main.bundle'));
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require(path.join(DIST_FOLDER, 'dist-bridge', 'main'));
 
 enableProdMode();
 const configuredNgExpressEngine = ngExpressEngine({
@@ -34,13 +34,16 @@ server.engine('html', configuredNgExpressEngine);
 server.set('view engine', 'html');
 server.set('views', DIST_BROWSER_FOLDER);
 
+const frontEndPort = 4200;
+const backEndPort = 8000;
+
 const options: cors.CorsOptions = {
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'x-xsrf-token'],
     credentials: true,
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     origin: [
-        'http://localhost:4200',
-        'http://localhost:8000',
+        `http://localhost:${frontEndPort}`,
+        `http://localhost:${backEndPort}`,
         'https://universal-demo.ereckgordon.com',
         'https://www.universal-demo.ereckgordon.com',
     ],
@@ -58,7 +61,7 @@ server.options('*', cors(options));
 
 async function bootstrap() {
     const app = await NestFactory.create(ApplicationModule, server, {});
-    await app.listen(8000);
+    await app.listen(backEndPort);
 }
 
 bootstrap();

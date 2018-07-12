@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { CustomMaterialModule } from './shared/custom-material-module';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { NGSWUpdateService } from './shared/ngsw-update.service';
+import { NGSWUpdateService } from './shared/ngsw/ngsw-update.service';
 
 describe('AppComponent', () => {
     beforeEach(
