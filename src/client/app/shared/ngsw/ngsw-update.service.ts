@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { MatSnackBar } from '@angular/material';
 
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/take';
+import { Subject } from 'rxjs';
+import { debounceTime, startWith, take } from 'rxjs/operators';
 
 @Injectable()
 export class NGSWUpdateService {
@@ -14,8 +12,10 @@ export class NGSWUpdateService {
     constructor(private swUpdate: SwUpdate, private snackBar: MatSnackBar) {
         this.swUpdate.available.subscribe(event => this.reloadPrompt());
         this.checkForUpdateSubj
-            .debounceTime(this.checkInterval)
-            .startWith(null)
+            .pipe(
+                debounceTime(this.checkInterval),
+                startWith(null)
+            )
             .subscribe(() => this.checkForUpdate());
     }
 
@@ -41,7 +41,7 @@ export class NGSWUpdateService {
         this.snackBar
             .open('Updated Content Available, Press OK to Reload', 'OK')
             .afterDismissed()
-            .take(1)
+            .pipe(take(1))
             .subscribe(() => window.location.reload());
     }
 }

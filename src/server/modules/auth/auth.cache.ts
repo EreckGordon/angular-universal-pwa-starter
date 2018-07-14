@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class AuthCache {

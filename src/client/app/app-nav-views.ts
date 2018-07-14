@@ -1,4 +1,4 @@
-export const views: Object[] = [
+export const views: NavViews[] = [
     {
         name: 'Chat',
         icon: 'chat',
@@ -10,3 +10,9 @@ export const views: Object[] = [
         link: ['blog'],
     },
 ];
+
+interface NavViews {
+    name: string;
+    icon: string;
+    link: string[];
+}

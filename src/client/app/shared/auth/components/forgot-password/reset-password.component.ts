@@ -5,8 +5,8 @@ import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms'
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatSnackBar } from '@angular/material';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil, take } from 'rxjs/operators';
 import * as jwt from 'jsonwebtoken';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
@@ -49,7 +49,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             password: ['', Validators.required],
         });
 
-        this.route.queryParams.take(1).subscribe(params => {
+        this.route.queryParams.pipe(take(1)).subscribe(params => {
             if (!!params.token) {
                 this.encodedToken = params.token;
                 this.decodedToken = jwt.decode(params.token);
@@ -59,7 +59,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.auth.user$.takeUntil(this.destroy).subscribe(user => {
+        this.auth.user$.pipe(takeUntil(this.destroy)).subscribe(user => {
             if (user === null) {
             } else if (this.auth.isAuthenticatedUser(user) && user.isAnonymous) {
             } else if (this.auth.isHttpErrorResponse(user)) {

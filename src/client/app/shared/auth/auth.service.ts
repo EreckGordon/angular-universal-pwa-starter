@@ -2,9 +2,8 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, ReplaySubject, BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 
 import { AuthenticatedUser } from '@interfaces/authenticated-user.interface';
@@ -40,7 +39,7 @@ export class AuthService {
     private reauthenticate(): void {
         this.http
             .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reauthenticate`, {}, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
@@ -48,12 +47,12 @@ export class AuthService {
     createAnonymousUser(): void {
         this.http
             .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/create-anonymous-user`, {}, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.userSubject.next(null));
     }
 
     createEmailAndPasswordUserOrUpgradeAnonymousToEmailAndPassword({ email, password }: EmailAndPassword) {
-        this.user$.take(1).subscribe(user => {
+        this.user$.pipe(take(1)).subscribe(user => {
             if (user === null) {
                 return this.createEmailAndPasswordUser({ email, password });
             } else if (this.isAuthenticatedUser(user) && user.isAnonymous) {
@@ -69,7 +68,7 @@ export class AuthService {
                 { email, password },
                 this.jsonOptions
             )
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
@@ -80,21 +79,21 @@ export class AuthService {
                 { email, password },
                 this.jsonOptions
             )
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     loginWithEmailAndPassword({ email, password }: EmailAndPassword): void {
         this.http
             .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/login-email-and-password-user`, { email, password }, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
     requestPasswordReset({ email }: { email: string }): void {
         this.http
             .post(`${environment.baseUrl}/api/auth/request-password-reset`, { email }, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(
                 () =>
                     this.snackbar.open(`Password Reset Requested`, `OK`, {
@@ -107,7 +106,7 @@ export class AuthService {
     resetPassword({ password, token }: { password: string; token: string }): void {
         this.http
             .post<AuthenticatedUser>(`${environment.baseUrl}/api/auth/reset-password`, { password, token }, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
@@ -118,26 +117,26 @@ export class AuthService {
     disavowAllRefreshTokens(): void {
         this.http
             .post(`${environment.baseUrl}/api/auth/disavow-all-refresh-tokens`, {}, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(() => this.userSubject.next(null), error => console.log(error));
     }
 
     logout(): void {
         this.http
             .post(`${environment.baseUrl}/api/auth/logout`, {}, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(() => this.userSubject.next(null), error => console.log(error));
     }
 
     deleteAccount() {
         this.http
             .post(`${environment.baseUrl}/api/auth/delete-account`, {}, this.jsonOptions)
-            .take(1)
+            .pipe(take(1))
             .subscribe(() => this.userSubject.next(null), error => console.log(error));
     }
 
     signInWithSocialUser(socialInfo) {
-        this.user$.take(1).subscribe(user => {
+        this.user$.pipe(take(1)).subscribe(user => {
             if (user === null) {
                 return this.authenticateSocialUser(socialInfo);
             } else if (this.isAuthenticatedUser(user) && user.isAnonymous) {
@@ -157,7 +156,7 @@ export class AuthService {
                 },
                 this.jsonOptions
             )
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
@@ -170,7 +169,7 @@ export class AuthService {
                 },
                 this.jsonOptions
             )
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.assignErrorToUserSubject(error));
     }
 
@@ -183,7 +182,7 @@ export class AuthService {
                 },
                 this.jsonOptions
             )
-            .take(1)
+            .pipe(take(1))
             .subscribe(user => this.userSubject.next(user), error => this.additionalProviderErrorSubject.next(error));
     }
 

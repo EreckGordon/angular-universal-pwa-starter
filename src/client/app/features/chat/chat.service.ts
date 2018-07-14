@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import * as io from 'socket.io-client';
-import { Observable } from 'rxjs/Observable';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { Subject } from 'rxjs/Subject';
+import { Observable, fromEvent, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../shared/auth/auth.service';
 
@@ -19,7 +18,7 @@ export class ChatService {
             if (currentUser === null) {
             } else if (this.auth.isAuthenticatedUser(currentUser)) {
                 this.recentlyCreatedAnon$ = fromEvent(this.socket, 'message')
-                    .takeUntil(this.destroy)
+                    .pipe(takeUntil(this.destroy))
                     .subscribe(res => console.log(res));
             }
         });

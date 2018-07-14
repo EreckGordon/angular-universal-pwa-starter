@@ -73,7 +73,6 @@
     "pg-query-stream": "^1.1.1",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^6.2.1",
-    "rxjs-compat": "^6.2.1",
     "socket.io-client": "^2.1.1",
     "tslib": "^1.9.3",
     "typeorm": "^0.2.7",

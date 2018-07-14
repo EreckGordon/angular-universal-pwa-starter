@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 interface RoomsCache {
     [roomName: string]: {

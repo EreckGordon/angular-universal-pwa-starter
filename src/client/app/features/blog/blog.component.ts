@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 

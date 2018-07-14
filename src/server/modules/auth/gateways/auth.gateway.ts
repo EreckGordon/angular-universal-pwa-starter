@@ -1,9 +1,8 @@
 import { WebSocketGateway, SubscribeMessage, WsResponse, WebSocketServer, NestGateway } from '@nestjs/websockets';
 
 import * as cookie from 'cookie';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
-import { of } from 'rxjs/observable/of';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { SecurityService } from '../../common/security/security.service';
 

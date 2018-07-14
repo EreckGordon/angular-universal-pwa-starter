@@ -4,8 +4,8 @@ import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms'
 
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { MatSnackBar } from '@angular/material';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../auth.service';
 import { SocialAuthService } from '../social-auth.service';
@@ -35,7 +35,7 @@ export class LinkSocialToAccountComponent implements OnInit, OnDestroy {
             recaptcha: [null, Validators.required],
         });
 
-        this.auth.user$.takeUntil(this.destroy).subscribe(user => {
+        this.auth.user$.pipe(takeUntil(this.destroy)).subscribe(user => {
             if (user === null) {
             } else if (this.auth.isAuthenticatedUser(user) && this.hasAnyAuthProvider === undefined) {
                 this.hasAnyAuthProvider = user.authProviders.length > 0;
@@ -46,7 +46,7 @@ export class LinkSocialToAccountComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.auth.additionalProviderError$.takeUntil(this.destroy).subscribe(error => {
+        this.auth.additionalProviderError$.pipe(takeUntil(this.destroy)).subscribe(error => {
             if (error === null) {
             } else {
                 this.auth.additionalProviderErrorHandled();

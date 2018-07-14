@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+
 import { MatSnackBar } from '@angular/material';
 
 import { AuthenticatedUser } from '@interfaces/authenticated-user.interface';
@@ -41,7 +42,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     changePassword(): void {
         this.auth
             .changePassword({ ...this.form.value })
-            .take(1)
+            .pipe(take(1))
             .subscribe(() => this.passwordChanged.emit(), error => this.handlePasswordError(error));
     }
 

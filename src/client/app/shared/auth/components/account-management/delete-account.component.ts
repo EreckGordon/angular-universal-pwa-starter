@@ -6,8 +6,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { AuthService } from '../../auth.service';
 import { ConfirmDeleteAccountDialog } from './confirm-delete-account.dialog';
 
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-delete-account',
@@ -20,7 +20,7 @@ export class DeleteAccountComponent implements OnInit, OnDestroy {
     constructor(public auth: AuthService, private router: Router, public dialog: MatDialog) {}
 
     ngOnInit() {
-        this.auth.user$.takeUntil(this.destroy).subscribe(user => {
+        this.auth.user$.pipe(takeUntil(this.destroy)).subscribe(user => {
             if (user === null || (this.auth.isAuthenticatedUser(user) && !user.email)) {
                 return this.router.navigate(['/']);
             }
@@ -34,7 +34,7 @@ export class DeleteAccountComponent implements OnInit, OnDestroy {
 
         this.deleteAccountDialogRef
             .afterClosed()
-            .take(1)
+            .pipe(take(1))
             .subscribe(result => {
                 if (result === 'Deleting Account') {
                     this.deleteAccount();

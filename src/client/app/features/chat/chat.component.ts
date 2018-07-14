@@ -2,12 +2,8 @@ import { Component, OnInit, OnDestroy, Injector, PLATFORM_ID, Inject } from '@an
 import { isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { filter } from 'rxjs/operators/filter';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import { Subject, BehaviorSubject, Observable, of } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 import { SEOService } from '@seo/seo.service';

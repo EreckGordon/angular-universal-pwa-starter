@@ -5,8 +5,8 @@ import { AuthenticatedUser } from '@interfaces/authenticated-user.interface';
 
 import { AuthService } from '../../auth.service';
 
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-account-management',
@@ -23,7 +23,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
     constructor(public auth: AuthService, public router: Router) {}
 
     ngOnInit() {
-        this.auth.user$.takeUntil(this.destroy).subscribe(user => {
+        this.auth.user$.pipe(takeUntil(this.destroy)).subscribe(user => {
             if (user === null || (this.auth.isAuthenticatedUser(user) && !user.email)) {
                 return this.router.navigate(['/']);
             }

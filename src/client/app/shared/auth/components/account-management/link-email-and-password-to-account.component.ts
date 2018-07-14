@@ -4,8 +4,8 @@ import { AuthService } from '../../auth.service';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
 import { MatSnackBar } from '@angular/material';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { RecaptchaComponent } from 'ng-recaptcha';
 
 @Component({
@@ -27,13 +27,13 @@ export class LinkEmailAndPasswordToAccountComponent implements OnInit, OnDestroy
             recaptcha: [null, Validators.required],
         });
 
-        this.auth.user$.takeUntil(this.destroy).subscribe(user => {
+        this.auth.user$.pipe(takeUntil(this.destroy)).subscribe(user => {
             if (this.auth.isAuthenticatedUser(user) && user.authProviders.includes('emailAndPassword')) {
                 this.router.navigate(['/account']);
             }
         });
 
-        this.auth.additionalProviderError$.takeUntil(this.destroy).subscribe(error => {
+        this.auth.additionalProviderError$.pipe(takeUntil(this.destroy)).subscribe(error => {
             if (error === null) {
             } else if (error.error === 'Password Invalid') {
                 this.auth.additionalProviderErrorHandled();

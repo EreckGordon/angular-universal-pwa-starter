@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/takeUntil';
-import { Subject } from 'rxjs/Subject';
+
+import { Observable, Subject } from 'rxjs';
 
 import { TitleAndMetaTags } from '@interfaces/title-and-meta-tags.interface';
 

@@ -2,7 +2,7 @@ import { Component, Injector, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { views } from './app-nav-views';
