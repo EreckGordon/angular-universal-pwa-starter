@@ -5,8 +5,8 @@ import { articleProviders } from './article.providers';
 import { ArticleService } from './article.service';
 
 @Module({
-    modules: [DatabaseModule],
-    components: [...articleProviders, ArticleService],
+    imports: [DatabaseModule, ...articleProviders],
+    providers: [ArticleService],
     exports: [ArticleService],
 })
 export class ArticleModule {}

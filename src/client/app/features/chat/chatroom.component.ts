@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, PLATFORM_ID, Inject, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Injector, PLATFORM_ID, Inject, Input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
@@ -16,7 +16,7 @@ import { ChatService } from './chat.service';
     selector: 'app-chatroom',
     templateUrl: './chatroom.component.html',
 })
-export class ChatroomComponent implements OnInit {
+export class ChatroomComponent implements OnInit, OnDestroy {
     destroy = new Subject();
     titleAndMetaTags = {
         title: 'Angular Universal PWA Starter - Chat',
@@ -42,10 +42,10 @@ export class ChatroomComponent implements OnInit {
     ngOnInit() {
         this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());
         this.router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy)).subscribe(event => {
-            this.currentChatroomBehaviorSubject.next(this.route.snapshot.params['roomName']);
-            console.log(this.currentChatroomBehaviorSubject.getValue());
-            this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());
-        });
+                this.currentChatroomBehaviorSubject.next(this.route.snapshot.params['roomName']);
+                console.log(this.currentChatroomBehaviorSubject.getValue());
+                this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());
+            });
     }
 
     sendMessage(message) {

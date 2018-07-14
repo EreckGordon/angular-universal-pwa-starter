@@ -1,12 +1,13 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../user.entity';
 import { SecurityService } from '../../../common/security/security.service';
 
-@Component()
+@Injectable()
 export class AnonymousService {
     constructor(
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly securityService: SecurityService
     ) {}
 

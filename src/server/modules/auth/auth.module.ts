@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 
 import { DatabaseModule } from '../database/database.module';
 import { AuthController } from './auth.controller';
@@ -15,24 +15,23 @@ import { CommonModule } from '../common/common.module';
 import { checkCSRFTokenMiddleware, RetrieveUserIdFromRequestMiddleware } from '../common/middlewares';
 
 @Module({
-    modules: [CommonModule, DatabaseModule],
-    components: [
-        ...authProviders,
+    imports: [CommonModule, DatabaseModule, ...authProviders],
+    providers: [
         AuthService,
         EmailAndPasswordService,
         AnonymousService,
         GoogleService,
         FacebookService,
         AuthGateway,
-        AuthCache,
+        AuthCache
     ],
     controllers: [AuthController],
 })
 export class AuthModule implements NestModule {
-    configure(consumer: MiddlewaresConsumer): void {
-        consumer.apply([RetrieveUserIdFromRequestMiddleware]).forRoutes(AuthController);
+    configure(consumer: MiddlewareConsumer): void {
+        consumer.apply(RetrieveUserIdFromRequestMiddleware).forRoutes(AuthController);
         consumer
-            .apply([checkCSRFTokenMiddleware])
+            .apply(checkCSRFTokenMiddleware)
             .forRoutes(
                 { path: '/api/auth/reauthenticate', method: RequestMethod.ALL },
                 { path: '/api/auth/logout', method: RequestMethod.ALL },

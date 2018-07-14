@@ -1,5 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 
 import { SocialUser } from '../../../client/app/shared/auth/social-module/classes/social-user.class';
@@ -25,18 +26,16 @@ interface AuthResult {
     };
 }
 
-
-
 interface EmailAndPasswordUser {
     email: string;
     password: string;
     provider: 'emailAndPassword';
 }
 
-@Component()
+@Injectable()
 export class AuthService {
     constructor(
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly emailAndPasswordService: EmailAndPasswordService,
         private readonly anonymousService: AnonymousService,
         private readonly googleService: GoogleService,

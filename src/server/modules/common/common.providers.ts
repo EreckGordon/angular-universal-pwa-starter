@@ -1,10 +1,6 @@
-import { Connection, Repository } from 'typeorm';
 import { RefreshToken } from './security/refresh-token.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 export const commonProviders = [
-    {
-        provide: 'RefreshTokenRepositoryToken',
-        useFactory: (connection: Connection) => connection.getRepository(RefreshToken),
-        inject: ['DbConnectionToken'],
-    },
+    TypeOrmModule.forFeature([RefreshToken])
 ];

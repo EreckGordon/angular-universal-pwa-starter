@@ -1,5 +1,6 @@
-import { Component, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import FB from 'fb';
 
 import { environment } from '../../../../../environments/environment';
@@ -10,11 +11,11 @@ import { FacebookProvider } from './facebook-provider.entity';
 import { SecurityService } from '../../../common/security/security.service';
 import { UserSessionAndCSRFToken } from '../../interfaces/user-session-and-csrfToken.interface';
 
-@Component()
+@Injectable()
 export class FacebookService {
     constructor(
-        @Inject('UserRepositoryToken') private readonly userRepository: Repository<User>,
-        @Inject('FacebookProviderRepositoryToken') private readonly facebookProviderRepository: Repository<FacebookProvider>,
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(FacebookProvider) private readonly facebookProviderRepository: Repository<FacebookProvider>,
         private readonly securityService: SecurityService
     ) {}
 

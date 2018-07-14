@@ -1,11 +1,11 @@
-import { Component } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 const mailgun = require('mailgun-js')({
     apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_EMAIL_DOMAIN,
 });
 
-@Component()
+@Injectable()
 export class MailgunService {
     async sendPasswordResetEmail({ email, token }: { email: string; token: string }): Promise<any> {
         const html = `
