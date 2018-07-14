@@ -2,7 +2,7 @@ const path = require('path');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-let pathFolder __dirname.split(path.sep);
+let pathFolder = __dirname.split(path.sep);
 let folderLength = pathFolder.length;
 let currentFolder = pathFolder[folderLength - parseInt(1)];
 
