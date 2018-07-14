@@ -85,8 +85,7 @@ describe('Email and Password User Behavior', () => {
         auth.getOldPasswordInput().sendKeys(invalidPasswordTypo);
         auth.getNewPasswordInput().sendKeys(newPassword);
         auth.accountManagementPage.getChangePasswordButton().click();
-        auth
-            .getOldPasswordInput()
+        auth.getOldPasswordInput()
             .getAttribute('value')
             .then(inputValue => expect(inputValue).toBe(''));
     });
@@ -97,8 +96,7 @@ describe('Email and Password User Behavior', () => {
         auth.getOldPasswordInput().sendKeys(validPassword);
         auth.getNewPasswordInput().sendKeys(invalidPasswordTooShort);
         auth.accountManagementPage.getChangePasswordButton().click();
-        auth
-            .getNewPasswordInput()
+        auth.getNewPasswordInput()
             .getAttribute('value')
             .then(inputValue => expect(inputValue).toBe(''));
     });
@@ -136,8 +134,7 @@ describe('Email and Password User Behavior', () => {
         auth.getRecaptcha().click();
         auth.requestPasswordResetPage.waitForRequestPasswordResetToBeClickable();
         auth.requestPasswordResetPage.getRequestPasswordResetButton().click();
-        auth
-            .getEmailInput()
+        auth.getEmailInput()
             .getAttribute('value')
             .then(inputValue => expect(inputValue).toBe(''));
     });

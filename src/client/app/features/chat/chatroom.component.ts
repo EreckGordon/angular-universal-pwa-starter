@@ -41,7 +41,12 @@ export class ChatroomComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy)).subscribe(event => {
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                takeUntil(this.destroy)
+            )
+            .subscribe(event => {
                 this.currentChatroomBehaviorSubject.next(this.route.snapshot.params['roomName']);
                 console.log(this.currentChatroomBehaviorSubject.getValue());
                 this.chatService.joinRoom(this.currentChatroomBehaviorSubject.getValue());

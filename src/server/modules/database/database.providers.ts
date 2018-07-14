@@ -18,6 +18,4 @@ const defaultDB: TypeOrmModuleOptions & Partial<PostgresConnectionOptions> = {
     cache: true,
 };
 
-export const databaseProviders = [
-    TypeOrmModule.forRoot(defaultDB)
-];
+export const databaseProviders = [TypeOrmModule.forRoot(defaultDB)];

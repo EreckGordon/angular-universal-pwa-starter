@@ -51,8 +51,8 @@ export class SecurityService {
                 await this.refreshTokenRepository.remove(refreshTokenInDb);
                 return false;
             }
-        } catch(e){
-            return false
+        } catch (e) {
+            return false;
         }
     }
 

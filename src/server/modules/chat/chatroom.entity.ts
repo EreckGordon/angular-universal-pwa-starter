@@ -6,7 +6,8 @@ import { User } from '../auth/user.entity';
 export class Chatroom {
     @PrimaryGeneratedColumn() id: number;
 
-    @Column({unique: true}) name: string;
+    @Column({ unique: true })
+    name: string;
 
     @ManyToMany(type => User)
     @JoinTable()
@@ -15,5 +16,6 @@ export class Chatroom {
     @OneToMany(type => Message, message => message.user)
     messages: Message[];
 
-    @ManyToOne(type => User, user => user.chatroomOwner) ownedBy: User;
+    @ManyToOne(type => User, user => user.chatroomOwner)
+    ownedBy: User;
 }

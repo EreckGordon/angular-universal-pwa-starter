@@ -8,22 +8,17 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { NGSWUpdateService } from './shared/ngsw/ngsw-update.service';
 
 describe('AppComponent', () => {
-    beforeEach(
-        async(() => {
-            TestBed.configureTestingModule({
-                imports: [RouterTestingModule, CustomMaterialModule, ServiceWorkerModule.register('', { enabled: false })],
-                declarations: [AppComponent],
-                providers: [NGSWUpdateService],
-            }).compileComponents();
-        })
-    );
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [RouterTestingModule, CustomMaterialModule, ServiceWorkerModule.register('', { enabled: false })],
+            declarations: [AppComponent],
+            providers: [NGSWUpdateService],
+        }).compileComponents();
+    }));
 
-    it(
-        'should create the app',
-        async(() => {
-            const fixture = TestBed.createComponent(AppComponent);
-            const app = fixture.debugElement.componentInstance;
-            expect(app).toBeTruthy();
-        })
-    );
+    it('should create the app', async(() => {
+        const fixture = TestBed.createComponent(AppComponent);
+        const app = fixture.debugElement.componentInstance;
+        expect(app).toBeTruthy();
+    }));
 });

@@ -16,15 +16,7 @@ import { checkCSRFTokenMiddleware, RetrieveUserIdFromRequestMiddleware } from '.
 
 @Module({
     imports: [CommonModule, DatabaseModule, ...authProviders],
-    providers: [
-        AuthService,
-        EmailAndPasswordService,
-        AnonymousService,
-        GoogleService,
-        FacebookService,
-        AuthGateway,
-        AuthCache
-    ],
+    providers: [AuthService, EmailAndPasswordService, AnonymousService, GoogleService, FacebookService, AuthGateway, AuthCache],
     controllers: [AuthController],
 })
 export class AuthModule implements NestModule {

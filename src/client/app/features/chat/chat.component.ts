@@ -47,7 +47,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.router.events
-            .pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy))
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                takeUntil(this.destroy)
+            )
             .subscribe(event => this.isMainChatRouteSubject.next(this.router.url.endsWith('chat')));
     }
 
